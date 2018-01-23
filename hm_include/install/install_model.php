@@ -156,7 +156,7 @@ function install_db() {
     $mysqlConnection = mysql_connect($host, $username, $password);
     mysql_select_db($database, $mysqlConnection);
     mysql_query('SET NAMES "UTF8"');
-	
+
     $sql = "
 	CREATE TABLE IF NOT EXISTS `" . $prefix . "content` (
 		  `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -171,7 +171,7 @@ function install_db() {
 	";
     mysql_query($sql);
     echo '<p>Tạo bảng : ' . $prefix . 'content ...</p>';
-    /**--------------------------------------------------------*/ 
+    /**--------------------------------------------------------*/
 
     $sql = "
 	CREATE TABLE IF NOT EXISTS `" . $prefix . "field` (
@@ -186,7 +186,7 @@ function install_db() {
 	";
     mysql_query($sql);
     echo '<p>Tạo bảng : ' . $prefix . 'field ...</p>';
-    /**--------------------------------------------------------*/ 
+    /**--------------------------------------------------------*/
 
 	$sql = "
 	CREATE TABLE IF NOT EXISTS `" . $prefix . "media_groups` (
@@ -199,7 +199,7 @@ function install_db() {
 	";
     mysql_query($sql);
     echo '<p>Tạo bảng : ' . $prefix . 'media_groups ...</p>';
-    /**--------------------------------------------------------*/ 
+    /**--------------------------------------------------------*/
 
     $sql = "
 	CREATE TABLE IF NOT EXISTS `" . $prefix . "media` (
@@ -218,7 +218,7 @@ function install_db() {
 	";
     mysql_query($sql);
     echo '<p>Tạo bảng : ' . $prefix . 'media ...</p>';
-    /**--------------------------------------------------------*/ 
+    /**--------------------------------------------------------*/
 
     $sql = "
 	CREATE TABLE IF NOT EXISTS `" . $prefix . "object` (
@@ -232,7 +232,7 @@ function install_db() {
 	";
     mysql_query($sql);
     echo '<p>Tạo bảng : ' . $prefix . 'object ...</p>';
-    /**--------------------------------------------------------*/ 
+    /**--------------------------------------------------------*/
 
     $sql = "
 	CREATE TABLE IF NOT EXISTS `" . $prefix . "option` (
@@ -246,7 +246,7 @@ function install_db() {
 	";
     mysql_query($sql);
     echo '<p>Tạo bảng : ' . $prefix . 'option ...</p>';
-    /**--------------------------------------------------------*/ 
+    /**--------------------------------------------------------*/
 
     $sql = "
 	CREATE TABLE IF NOT EXISTS `" . $prefix . "plugin` (
@@ -258,7 +258,7 @@ function install_db() {
 	";
     mysql_query($sql);
     echo '<p>Tạo bảng : ' . $prefix . 'plugin ...</p>';
-    /**--------------------------------------------------------*/ 
+    /**--------------------------------------------------------*/
 
     $sql = "
 	CREATE TABLE IF NOT EXISTS `" . $prefix . "relationship` (
@@ -271,7 +271,7 @@ function install_db() {
 	";
     mysql_query($sql);
     echo '<p>Tạo bảng : ' . $prefix . 'relationship ...</p>';
-    /**--------------------------------------------------------*/ 
+    /**--------------------------------------------------------*/
 
     $sql = "
 	CREATE TABLE IF NOT EXISTS `" . $prefix . "request_uri` (
@@ -284,7 +284,7 @@ function install_db() {
 	";
     mysql_query($sql);
     echo '<p>Tạo bảng : ' . $prefix . 'request_uri ...</p>';
-    /**--------------------------------------------------------*/ 
+    /**--------------------------------------------------------*/
 
     $sql = "
 	CREATE TABLE IF NOT EXISTS `" . $prefix . "taxonomy` (
@@ -299,7 +299,7 @@ function install_db() {
 	";
     mysql_query($sql);
     echo '<p>Tạo bảng : ' . $prefix . 'taxonomy ...</p>';
-    /**--------------------------------------------------------*/ 
+    /**--------------------------------------------------------*/
 
     $sql = "
 	CREATE TABLE IF NOT EXISTS `" . $prefix . "users` (
@@ -317,73 +317,73 @@ function install_db() {
 	";
     mysql_query($sql);
     echo '<p>Tạo bảng : ' . $prefix . 'users ...</p>';
-    /**--------------------------------------------------------*/ 
+    /**--------------------------------------------------------*/
 
 	$sql = "
 	CREATE INDEX content ON `" . $prefix . "content` (key, parent, status, content_order); ;
 	";
     mysql_query($sql);
     echo '<p>Add Index : ' . $prefix . 'content ...</p>';
-	/**--------------------------------------------------------*/ 
+	/**--------------------------------------------------------*/
 
 	$sql = "
 	CREATE INDEX taxonomy ON `" . $prefix . "taxonomy` (key, parent, status, taxonomy_order); ;
 	";
     mysql_query($sql);
     echo '<p>Add Index : ' . $prefix . 'taxonomy ...</p>';
-	/**--------------------------------------------------------*/ 
+	/**--------------------------------------------------------*/
 
 	$sql = "
 	CREATE INDEX field ON `" . $prefix . "field` (object_id, object_type); ;
 	";
     mysql_query($sql);
     echo '<p>Add Index : ' . $prefix . 'field ...</p>';
-	/**--------------------------------------------------------*/ 
+	/**--------------------------------------------------------*/
 
 	$sql = "
 	CREATE INDEX media_groups ON `" . $prefix . "media_groups` (key, parent, order_number); ;
 	";
     mysql_query($sql);
     echo '<p>Add Index : ' . $prefix . 'media_groups ...</p>';
-	/**--------------------------------------------------------*/ 
+	/**--------------------------------------------------------*/
 
 	$sql = "
 	CREATE INDEX object ON `" . $prefix . "object` (parent); ;
 	";
     mysql_query($sql);
     echo '<p>Add Index : ' . $prefix . 'object ...</p>';
-	/**--------------------------------------------------------*/ 
+	/**--------------------------------------------------------*/
 
 	$sql = "
 	CREATE INDEX option ON `" . $prefix . "option` (section, key); ;
 	";
     mysql_query($sql);
     echo '<p>Add Index : ' . $prefix . 'option ...</p>';
-	/**--------------------------------------------------------*/ 
+	/**--------------------------------------------------------*/
 
 	$sql = "
 	CREATE INDEX plugin ON `" . $prefix . "plugin` (key, active); ;
 	";
     mysql_query($sql);
     echo '<p>Add Index : ' . $prefix . 'plugin ...</p>';
-	/**--------------------------------------------------------*/ 
+	/**--------------------------------------------------------*/
 
 	$sql = "
 	CREATE INDEX relationship ON `" . $prefix . "relationship` (object_id, target_id, relationship); ;
 	";
     mysql_query($sql);
     echo '<p>Add Index : ' . $prefix . 'relationship ...</p>';
-	/**--------------------------------------------------------*/ 
+	/**--------------------------------------------------------*/
 
 	$sql = "
 	CREATE INDEX request_uri ON `" . $prefix . "request_uri` (object_id, object_type, uri); ;
 	";
     mysql_query($sql);
     echo '<p>Add Index : ' . $prefix . 'request_uri ...</p>';
-	/**--------------------------------------------------------*/ 
+	/**--------------------------------------------------------*/
 
-	
-	
+
+
     /** user admin */
     $admin_salt      = rand(0, 999999);
     $password_encode = hm_encode_str(md5($admin_password . $admin_salt), $encryption_key);
@@ -393,7 +393,7 @@ function install_db() {
 	";
     mysql_query($sql);
     echo '<p>Tạo tài khoản quản trị : ' . $admin_username . ' ...</p>';
-    /**--------------------------------------------------------*/ 
+    /**--------------------------------------------------------*/
 
     /** default theme */
     $sql = "
@@ -404,12 +404,14 @@ function install_db() {
 	";
     mysql_query($sql);
     echo '<p>Kích hoạt cài đặt mặc định ...</p>';
-    /**--------------------------------------------------------*/ 
+    /**--------------------------------------------------------*/
 
     /** default plugin */
     $sql = "
 		INSERT INTO `" . $prefix . "plugin` (`id`, `key`, `active`) VALUES
-		(1, 'post', '1');
+		(1, 'post', '1'),
+		(2, 'hm_tinymce', '1'),
+		(3, 'hm_seo', '1');
 	";
     mysql_query($sql);
     /** Tạo .htaccess */
