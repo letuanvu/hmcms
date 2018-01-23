@@ -109,30 +109,30 @@ function update_core($href = FALSE) {
                     unlink($saveto);
                     return hm_json_encode(array(
                         'status' => 'success',
-                        'mes' => _('Đã tải về máy chủ') . ' : ' . $filename
+                        'mes' => hm_lang('server_download') . ' : ' . $filename
                     ));
                 } else {
                     return hm_json_encode(array(
                         'status' => 'error',
-                        'mes' => _('Không thể giải nén tệp tin')
+                        'mes' => hm_lang('unable_to_extract_file')
                     ));
                 }
             } else {
                 return hm_json_encode(array(
                     'status' => 'error',
-                    'mes' => _('Máy chủ không hỗ trợ class ZipArchive, vui lòng giải nén ' . $filename . ' bằng tay')
+                    'mes' => hm_lang('the_server_does_not_support_the_zipArchive_class_please_unpack_file_name_manually',array('file_name'=>$filename))
                 ));
             }
         } else {
             return hm_json_encode(array(
                 'status' => 'error',
-                'mes' => _('Không lưu được file')
+                'mes' => hm_lang('can_not_save_file')
             ));
         }
     } else {
         return hm_json_encode(array(
             'status' => 'error',
-            'mes' => _('Không kết nối được với máy chủ download')
+            'mes' => hm_lang('can_not_connect_with_the_server_download')
         ));
     }
 }

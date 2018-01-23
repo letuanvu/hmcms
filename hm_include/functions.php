@@ -14,13 +14,19 @@ if (!function_exists('_')) {
         return $str;
     }
 }
-function hm_lang($str) {
+function hm_lang($str, $replace = array()) {
     global $hmlang;
     if (!is_array($hmlang)) {
         require_once(BASEPATH . HM_FRONTENT_DIR . '/languages/' . LANG . '.php');
     }
     if (isset($hmlang[$str])) {
-        return $hmlang[$str];
+        $lang_text = $hmlang[$str];
+        if (sizeof($replace > 0)) {
+            foreach ($replace as $key => $val) {
+                $lang_text = str_replace('{' . $key . '}', $val, $lang_text);
+            }
+        }
+        return $lang_text;
     } else {
         return '{' . $str . '}';
     }
