@@ -1,5 +1,5 @@
 <?php
-$protocol = stripos($_SERVER['SERVER_PROTOCOL'], 'https') === true ? 'https://' : 'http://';
+$protocol = '//';
 $url_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 if ($_SERVER['SERVER_PORT'] == '80') {
     define('BASE_URL', $protocol . $_SERVER['SERVER_NAME'] . $url_path);
