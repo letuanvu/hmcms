@@ -1,7 +1,7 @@
 <?php
-/** 
+/**
  * Tệp tin model của update trong admin
- * Vị trí : admin/update/update_model.php 
+ * Vị trí : admin/update/update_model.php
  */
 if (!defined('BASEPATH'))
     exit('403');
@@ -74,8 +74,8 @@ function update_core_for_domain() {
 }
 /** Chạy các hàm xử lý sau khi update */
 function update_auto_load() {
-    if (file_exists(BASEPATH . HM_ADMINCP_DIR . '/update/update_mo.php')) {
-        unlink(BASEPATH . HM_ADMINCP_DIR . '/update/update_mo.php');
+    if (file_exists(BASEPATH . HM_ADMINCP_DIR . '/update/config.php')) {
+        unlink(BASEPATH . HM_ADMINCP_DIR . '/update/config.php');
     }
     if (file_exists(BASEPATH . HM_ADMINCP_DIR . '/update/.htaccess')) {
         unlink(BASEPATH . HM_ADMINCP_DIR . '/update/.htaccess');
@@ -86,11 +86,11 @@ function update_core($href = FALSE) {
     if (!$href) {
         $href = 'https://github.com/manhnam91/hmcms/archive/master.zip';
     }
-	$handle = curl_init($href);
-	curl_setopt($handle,  CURLOPT_RETURNTRANSFER, TRUE);
-	$response = curl_exec($handle);
-	$httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
-	if($httpCode != 404) {
+    $handle = curl_init($href);
+    curl_setopt($handle, CURLOPT_RETURNTRANSFER, TRUE);
+    $response = curl_exec($handle);
+    $httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
+    if ($httpCode != 404) {
         $filename = basename($href);
         $saveto   = BASEPATH . '/' . $filename;
         file_put_contents($saveto, fopen($href, 'r'));
@@ -102,6 +102,10 @@ function update_core($href = FALSE) {
                     $zip->extractTo(BASEPATH . '/');
                     $zip->close();
                     update_auto_load();
+                    if (file_exists(BASEPATH . '/hmcms-master')) {
+                        recurse_copy(BASEPATH . '/hmcms-master', BASEPATH . '/');
+                        delete_dir(BASEPATH . '/hmcms-master');
+                    }
                     unlink($saveto);
                     return hm_json_encode(array(
                         'status' => 'success',

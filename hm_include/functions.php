@@ -54,50 +54,50 @@ function hm_post($parameter, $default = NULL, $nullString = TRUE) {
 function hm_exit($str = NULL) {
     @header('Content-Type: text/html; charset=utf-8');
 ?>
-		<head>
-			<meta charset="utf-8">
-			<title>Thông báo</title>
-			<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
-		</head>
-		<body>
-			<style>
-				body {
-				  margin: 0px;
-				  padding: 0px;
-				  font-family: Arial;
-				}
-				.error_content {
-				  width: 100%;
-				  height: 100%;
-				  position: relative;
-				}
-				p.error {
-				  width: 800px;
-				  position: absolute;
-				  top: 0px;
-				  left: 0px;
-				  right: 0px;
-				  bottom: 0px;
-				  margin: auto;
-				  height: 36px;
-				  line-height: 36px;
-				  text-align: center;
-				  background: #e14d43;
-				  font-family: Arial;
-				  color: #ffffff;
-				  font-size: 14px;
-				  padding: 10px 20px 10px 20px;
-				  text-decoration: none;
-				  border-radius: 2px;
-				}
-			</style>
-			<div class="error_content">
-				<p class="error"><?php
+    		<head>
+    			<meta charset="utf-8">
+    			<title>Thông báo</title>
+    			<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+    		</head>
+    		<body>
+    			<style>
+    				body {
+    				  margin: 0px;
+    				  padding: 0px;
+    				  font-family: Arial;
+    				}
+    				.error_content {
+    				  width: 100%;
+    				  height: 100%;
+    				  position: relative;
+    				}
+    				p.error {
+    				  width: 800px;
+    				  position: absolute;
+    				  top: 0px;
+    				  left: 0px;
+    				  right: 0px;
+    				  bottom: 0px;
+    				  margin: auto;
+    				  height: 36px;
+    				  line-height: 36px;
+    				  text-align: center;
+    				  background: #e14d43;
+    				  font-family: Arial;
+    				  color: #ffffff;
+    				  font-size: 14px;
+    				  padding: 10px 20px 10px 20px;
+    				  text-decoration: none;
+    				  border-radius: 2px;
+    				}
+    			</style>
+    			<div class="error_content">
+    				<p class="error"><?php
     echo $str;
 ?></p>
-			</div>
-		</body>
-	<?php
+    			</div>
+    		</body>
+    	<?php
     exit();
 }
 function hm_redirect($to = BASE_URL, $time = 0) {
@@ -729,9 +729,9 @@ function input_captcha($field_array = array()) {
     echo '<div class="hm_captacha_img">' . "\n\r";
     echo '	<p><img src="' . BASE_URL . 'captcha.jpg" id="hm_captacha_img" /></p>' . "\n\r";
     echo '	<p><button type="button" onclick="
-			document.getElementById(\'hm_captacha_img\').src=\'' . BASE_URL . 'captcha.jpg?\'+Math.random();
-			document.getElementById(\'captcha-form\').focus();"
-			id="change-image">' . _('Đổi ảnh khác') . '</button></p>';
+    			document.getElementById(\'hm_captacha_img\').src=\'' . BASE_URL . 'captcha.jpg?\'+Math.random();
+    			document.getElementById(\'captcha-form\').focus();"
+    			id="change-image">' . _('Đổi ảnh khác') . '</button></p>';
     echo '	</div>' . "\n\r";
     input_text($field_array);
 }
@@ -1322,5 +1322,38 @@ function hm_json_encode($json) {
         return html_entity_decode('&#x' . $matches[1] . ';', ENT_COMPAT, 'UTF-8');
     }, $encoded);
     return $unescaped;
+}
+/** copy folder content */
+function recurse_copy($src, $dst) {
+    $dir = opendir($src);
+    @mkdir($dst);
+    while (false !== ($file = readdir($dir))) {
+        if (($file != '.') && ($file != '..')) {
+            if (is_dir($src . '/' . $file)) {
+                recurse_copy($src . '/' . $file, $dst . '/' . $file);
+            } else {
+                copy($src . '/' . $file, $dst . '/' . $file);
+            }
+        }
+    }
+    closedir($dir);
+}
+/** delete folder and content */
+function delete_dir($dirPath) {
+    if (!is_dir($dirPath)) {
+        return false;
+    }
+    if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+        $dirPath .= '/';
+    }
+    $files = glob($dirPath . '*', GLOB_MARK);
+    foreach ($files as $file) {
+        if (is_dir($file)) {
+            delete_dir($file);
+        } else {
+            unlink($file);
+        }
+    }
+    rmdir($dirPath);
 }
 ?>
