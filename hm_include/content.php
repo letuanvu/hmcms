@@ -201,7 +201,7 @@ function query_content($args = array()) {
         $status = $args['status'];
         if (is_array($status)) {
             $where_in_status = "('" . implode("','", $status) . "')";
-            $where_status    = " WHERE `status` IN " . $where_in_status . " ";
+            $where_status    = " WHERE `status` IN " . $where_in_status;
         } else {
             $where_status = " WHERE `status` = '" . $status . "' ";
         }
@@ -214,7 +214,7 @@ function query_content($args = array()) {
         /** Nếu content key là một mảng */
         if (is_array($content_key)) {
             $where_in_content_key = "('" . implode("','", $content_key) . "')";
-            $where_content_key    = " AND `key` IN " . $where_in_content_key . " ";
+            $where_content_key    = " AND `key` IN " . $where_in_content_key;
         } else {
             $where_content_key = " AND `key` = '" . $content_key . "' ";
         }
@@ -230,51 +230,36 @@ function query_content($args = array()) {
     }
     $hmdb->Release();
     $query_content_key = "SELECT `id` FROM `" . DB_PREFIX . "content` " . $where_status . $where_content_key;
-    $hmdb->Query($query_content_key);
-    $query_content_key_ids = array(
-        '0'
-    );
-    while ($row = $hmdb->Row()) {
-        $query_content_key_ids[] = $row->id;
-    }
-    $query_content_key_ids_str = implode(',', $query_content_key_ids);
+    
     /** Lọc theo taxonomy */
-    $where_taxonomy            = '';
-    $query_in_taxonomy         = '';
-	if (isset($args['taxonomy']) AND $args['taxonomy'] != false){
-		if (isset($args['taxonomy'])) {
-			/** Nếu yêu cầu trong một taxonomy nhất định thì lấy các object_id có relationship như query yêu cầu */
-			$taxonomy_id = $args['taxonomy'];
-			/** Nếu taxonomy là một mảng */
-			if (is_array($taxonomy_id)) {
-				$implode = implode($taxonomy_id, ',');
-				if ($implode != '') {
-					$where_taxonomy = ' WHERE `target_id` IN (' . $implode . ') ';
-				}
-			} else {
-				if (is_numeric($taxonomy_id)) {
-					$where_taxonomy = 'WHERE `target_id` = ' . $taxonomy_id;
-				}
-			}
-		} else {
-			/** Không yêu cầu taxonomy nhất định, kiểm tra xem có đang ở template taxonomy không */
-			if (is_taxonomy() == TRUE) {
-				$taxonomy_id    = get_id();
-				$where_taxonomy = 'WHERE `target_id` = ' . $taxonomy_id;
-			}
-		}
-	}
+    $where_taxonomy    = '';
+    $query_in_taxonomy = '';
+    if (isset($args['taxonomy']) AND $args['taxonomy'] != false) {
+        if (isset($args['taxonomy'])) {
+            /** Nếu yêu cầu trong một taxonomy nhất định thì lấy các object_id có relationship như query yêu cầu */
+            $taxonomy_id = $args['taxonomy'];
+            /** Nếu taxonomy là một mảng */
+            if (is_array($taxonomy_id)) {
+                $implode = implode($taxonomy_id, ',');
+                if ($implode != '') {
+                    $where_taxonomy = ' WHERE `target_id` IN (' . $implode . ') ';
+                }
+            } else {
+                if (is_numeric($taxonomy_id)) {
+                    $where_taxonomy = 'WHERE `target_id` = ' . $taxonomy_id;
+                }
+            }
+        } else {
+            /** Không yêu cầu taxonomy nhất định, kiểm tra xem có đang ở template taxonomy không */
+            if (is_taxonomy() == TRUE) {
+                $taxonomy_id    = get_id();
+                $where_taxonomy = 'WHERE `target_id` = ' . $taxonomy_id;
+            }
+        }
+    }
     if ($where_taxonomy != '') {
         $hmdb->Release();
         $query_in_taxonomy = "SELECT `object_id` FROM `" . DB_PREFIX . "relationship` " . $where_taxonomy . " AND `relationship` = 'contax'";
-        $hmdb->Query($query_in_taxonomy);
-        $query_in_taxonomy_ids = array(
-            '0'
-        );
-        while ($row = $hmdb->Row()) {
-            $query_in_taxonomy_ids[] = $row->object_id;
-        }
-        $query_in_taxonomy_ids_str = implode(',', $query_in_taxonomy_ids);
     }
     /** Lọc theo field */
     if (isset($args['field_query'])) {
@@ -323,9 +308,9 @@ function query_content($args = array()) {
                 $i = 0;
                 foreach ($all_field_query as $single_field_query) {
                     if ($i == 0) {
-                        $query_field .= " " . $single_field_query . " ";
+                        $query_field .= " " . $single_field_query;
                     } else {
-                        $query_field .= " OR " . $single_field_query . " ";
+                        $query_field .= " OR " . $single_field_query;
                     }
                     $i++;
                 }
@@ -334,9 +319,9 @@ function query_content($args = array()) {
                 $i = 0;
                 foreach ($all_field_query as $single_field_query) {
                     if ($i == 0) {
-                        $query_field .= " " . $single_field_query . " ";
+                        $query_field .= " " . $single_field_query;
                     } else {
-                        $query_field .= " AND " . $single_field_query . " ";
+                        $query_field .= " AND " . $single_field_query;
                     }
                     $i++;
                 }
@@ -350,14 +335,7 @@ function query_content($args = array()) {
     } else {
         @$query_field = $query_field . array_shift(array_values($all_field_query));
     }
-    $hmdb->Query($query_field);
-    $query_field_ids = array(
-        '0'
-    );
-    while ($row = $hmdb->Row()) {
-        $query_field_ids[] = $row->object_id;
-    }
-    $query_field_ids_str = implode(',', $query_field_ids);
+    
     /** Kiểm tra yêu cầu kết hợp kết quả từ content key, in taxonomy, field query là tất cả hay chỉ 1 */
     if (isset($args['join'])) {
         $join = $args['join'];
@@ -368,30 +346,30 @@ function query_content($args = array()) {
     switch ($join) {
         case 'or':
             if ($query_content_key) {
-                $query_join .= " AND `object_id` IN (" . $query_content_key_ids_str . ") ";
+                $query_join .= " AND `object_id` IN (" . $query_content_key . ")";
             }
             if ($query_in_taxonomy) {
-                $query_join .= " OR `object_id` IN (" . $query_in_taxonomy_ids_str . ") ";
+                $query_join .= " OR `object_id` IN (" . $query_in_taxonomy . ")";
             }
-            $query_join .= " OR `object_id` IN (" . $query_field_ids_str . ") ";
+            $query_join .= " OR `object_id` IN (" . $query_field . ") ";
             break;
         case 'and':
             if ($query_content_key) {
-                $query_join .= " AND `object_id` IN (" . $query_content_key_ids_str . ") ";
+                $query_join .= " AND `object_id` IN (" . $query_content_key . ")";
             }
             if ($query_in_taxonomy) {
-                $query_join .= " AND `object_id` IN (" . $query_in_taxonomy_ids_str . ") ";
+                $query_join .= " AND `object_id` IN (" . $query_in_taxonomy . ")";
             }
-            $query_join .= " AND `object_id` IN (" . $query_field_ids_str . ") ";
+            $query_join .= " AND `object_id` IN (" . $query_field . ")";
             break;
         default:
             if ($query_content_key) {
-                $query_join .= " AND `object_id` IN (" . $query_content_key_ids_str . ") ";
+                $query_join .= " AND `object_id` IN (" . $query_content_key . ")";
             }
             if ($query_in_taxonomy) {
-                $query_join .= " AND `object_id` IN (" . $query_in_taxonomy_ids_str . ") ";
+                $query_join .= " AND `object_id` IN (" . $query_in_taxonomy . ")";
             }
-            $query_join .= " AND `object_id` IN (" . $query_field_ids_str . ") ";
+            $query_join .= " AND `object_id` IN (" . $query_field . ")";
     }
     /** Kết thúc các query lấy các content id thỏa mãn yêu cầu */
     /** Order theo 1 field  và limit */
@@ -434,9 +412,9 @@ function query_content($args = array()) {
         $numerically = FALSE;
     }
     if ($numerically == 'number') {
-        $order_query = " AND `name` = '" . $order_field . "' ORDER BY CAST(val AS unsigned) " . $order . " ";
+        $order_query = " AND `name` = '" . $order_field . "' ORDER BY CAST(val AS unsigned) " . $order;
     } else {
-        $order_query = " AND `name` = '" . $order_field . "' ORDER BY `val` " . $order . " ";
+        $order_query = " AND `name` = '" . $order_field . "' ORDER BY `val` " . $order;
     }
     /** Tạo query LIMIT */
     if (is_numeric($limit)) {
@@ -454,10 +432,10 @@ function query_content($args = array()) {
     }
     /** Tạo câu lệnh select từ chuỗi các id thỏa mãn */
     $result = array();
-    $sql    = "SELECT `object_id`" . " FROM `" . DB_PREFIX . "field`" . " WHERE `object_type` = 'content'" . " " . $query_join . " " . " " . $order_query . " ";
+    $sql    = "SELECT DISTINCT `object_id`" . " FROM `" . DB_PREFIX . "field`" . " WHERE `object_type` = 'content'" . $query_join . $order_query;
     $hmdb->Query($sql);
     $total_result = $hmdb->RowCount();
-    $sql          = "SELECT `object_id`" . " FROM `" . DB_PREFIX . "field`" . " WHERE `object_type` = 'content'" . " " . $query_join . " " . " " . $order_query . " " . $limit_query . " " . $offset_query . " ";
+    $sql          = "SELECT DISTINCT `object_id`" . " FROM `" . DB_PREFIX . "field`" . " WHERE `object_type` = 'content'" . $query_join . $order_query . $limit_query . $offset_query;
     $hmdb->Query($sql);
     $base = get_current_uri();
     if ($base == '') {
