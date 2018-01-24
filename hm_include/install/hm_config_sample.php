@@ -73,7 +73,7 @@ define('SYSTEM_DASHBOARD', true);
 define('SIMPLE_CAPTCHA', true);
 
 /** Địa chỉ website */
-$protocol = stripos($_SERVER['SERVER_PROTOCOL'], 'https') === true ? 'https://' : 'http://';
+$protocol = '//';
 
 define('SITE_URL', $protocol . $_SERVER['SERVER_NAME'] . SERVER_PORT);
 
