@@ -106,24 +106,29 @@ function is_connect() {
     $password        = trim($_POST['password']);
     $database        = trim($_POST['database']);
     $prefix          = trim($_POST['prefix']);
-    $mysqlConnection = mysql_connect($host, $username, $password);
-    if (!$mysqlConnection) {
-        return FALSE;
-        session_destroy();
-    } else {
-        $db_selected = mysql_select_db($database, $mysqlConnection);
-        if (!$db_selected) {
-            return FALSE;
-            session_destroy();
-        } else {
-            $_SESSION['db']['host']     = $host;
-            $_SESSION['db']['username'] = $username;
-            $_SESSION['db']['password'] = $password;
-            $_SESSION['db']['database'] = $database;
-            $_SESSION['db']['prefix']   = $prefix;
-            return TRUE;
-        }
+
+    $charset = 'utf8';
+    $dsn = "mysql:host=$host;dbname=$database;charset=$charset";
+    try{
+      $opt = array(
+          PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+          PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+          PDO::ATTR_EMULATE_PREPARES   => false,
+      );
+      $pdo = new PDO($dsn, $username, $password, $opt);
+
+      $_SESSION['db']['host']     = $host;
+      $_SESSION['db']['username'] = $username;
+      $_SESSION['db']['password'] = $password;
+      $_SESSION['db']['database'] = $database;
+      $_SESSION['db']['prefix']   = $prefix;
+      return TRUE;
+
+    }catch(PDOException $ex){
+      return FALSE;
+      session_destroy();
     }
+
 }
 function generateRandomString($length = 30) {
     $characters       = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

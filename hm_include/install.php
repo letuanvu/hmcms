@@ -17,7 +17,7 @@ switch ($step) {
             if (isset($_POST['submit'])) {
                 if (is_connect()) {
                     header('Location: ?step=3');
-                    exit;
+                    exit();
                 } else {
                     $error = '<div class="alert alert-danger" role="alert">Không thể kết nối đến cơ sở dữ liệu</div>';
                 }
@@ -25,7 +25,7 @@ switch ($step) {
             require_once(BASEPATH . '/hm_include/install/step2.php');
         } else {
             header('Location: ?step=1');
-            exit;
+            exit();
         }
         break;
     case 3:
@@ -37,7 +37,7 @@ switch ($step) {
             }
         } else {
             header('Location: ?step=1');
-            exit;
+            exit();
         }
         break;
     default:
