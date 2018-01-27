@@ -14,23 +14,39 @@ require_once(dirname(__FILE__) . '/taxonomy/taxonomy_model.php');
 $session_admin_login = json_decode(hm_decode_str($_SESSION['admin_login']), TRUE);
 $user_id             = $session_admin_login['user_id'];
 user_role_redirect($user_id, 'content');
-$key    = hm_get('key');
-$id     = hm_get('id');
-$action = hm_get('action');
+$key            = hm_get('key');
+$id             = hm_get('id');
+$action         = hm_get('action');
+$content_access = user_field_data(array(
+    'id' => $_SESSION['admin_user']['user_id'],
+    'field' => 'content_access'
+));
+$content_access = json_decode($content_access, true);
+if (!is_array($content_access)) {
+    $content_access = array();
+}
 switch ($action) {
     case 'add':
-        /** Lấy thông tin content type trả về array */
-        $args = content_data($key);
-        if (isset($args['taxonomy_key']) AND $args['taxonomy_key'] != FALSE) {
-            $args_tax = taxonomy_data($args['taxonomy_key']);
+        if (isset($content_access[$key]['add']) AND in_array($content_access[$key]['add'], array(
+            'allow'
+        ))) {
+            /** Lấy thông tin content type trả về array */
+            $args = content_data($key);
+            if (isset($args['taxonomy_key']) AND $args['taxonomy_key'] != FALSE) {
+                $args_tax = taxonomy_data($args['taxonomy_key']);
+            } else {
+                $args_tax = FALSE;
+            }
+            /** Hiển thị giao diện thêm content bằng array ở trên */
+            function admin_content_page() {
+                global $args;
+                global $args_tax;
+                require_once(BASEPATH . HM_ADMINCP_DIR . '/' . LAYOUT_DIR . '/' . 'content_add.php');
+            }
         } else {
-            $args_tax = FALSE;
-        }
-        /** Hiển thị giao diện thêm content bằng array ở trên */
-        function admin_content_page() {
-            global $args;
-            global $args_tax;
-            require_once(BASEPATH . HM_ADMINCP_DIR . '/' . LAYOUT_DIR . '/' . 'content_add.php');
+            function admin_content_page() {
+                require_once(BASEPATH . HM_ADMINCP_DIR . '/' . LAYOUT_DIR . '/' . 'admincp_403.php');
+            }
         }
         hm_admin_require_layout(BASEPATH . HM_ADMINCP_DIR . '/' . LAYOUT_DIR . '/' . 'layout.php');
         break;
@@ -39,14 +55,22 @@ switch ($action) {
             /** Lấy thông tin content type trả về array */
             $args_con = content_data_by_id($id);
             $key      = $args_con['content']->key;
-            $args     = content_data($key);
-            $args_tax = taxonomy_data($args['taxonomy_key']);
-            /** Hiển thị giao diện thêm content bằng array ở trên */
-            function admin_content_page() {
-                global $args;
-                global $args_tax;
-                global $args_con;
-                require_once(BASEPATH . HM_ADMINCP_DIR . '/' . LAYOUT_DIR . '/' . 'content_add_chapter.php');
+            if (isset($content_access[$key]['add']) AND in_array($content_access[$key]['add'], array(
+                'allow'
+            ))) {
+                $args     = content_data($key);
+                $args_tax = taxonomy_data($args['taxonomy_key']);
+                /** Hiển thị giao diện thêm content bằng array ở trên */
+                function admin_content_page() {
+                    global $args;
+                    global $args_tax;
+                    global $args_con;
+                    require_once(BASEPATH . HM_ADMINCP_DIR . '/' . LAYOUT_DIR . '/' . 'content_add_chapter.php');
+                }
+            } else {
+                function admin_content_page() {
+                    require_once(BASEPATH . HM_ADMINCP_DIR . '/' . LAYOUT_DIR . '/' . 'admincp_403.php');
+                }
             }
         }
         hm_admin_require_layout(BASEPATH . HM_ADMINCP_DIR . '/' . LAYOUT_DIR . '/' . 'layout.php');
@@ -57,22 +81,41 @@ switch ($action) {
             /** Thực hiện sửa content */
             $args_con = content_data_by_id($id);
             $key      = $args_con['content']->key;
-            $args     = content_data($key);
-            if (isset($args['taxonomy_key']) AND $args['taxonomy_key'] != '') {
-                $args_tax = taxonomy_data($args['taxonomy_key']);
-            } else {
-                $args_tax = FALSE;
-            }
-            /** Hiển thị giao diện sửa content bằng array ở trên */
-            function admin_content_page() {
-                global $args;
-                global $args_tax;
-                global $args_con;
-                global $layout;
-                if ($layout == 'popup') {
-                    require_once(BASEPATH . HM_ADMINCP_DIR . '/' . LAYOUT_DIR . '/' . 'content_edit_popup.php');
+            if (isset($content_access[$key]['edit']) AND in_array($content_access[$key]['edit'], array(
+                'allow',
+                'owner_only'
+            ))) {
+                
+                if ($content_access[$key]['edit'] == 'owner_only') {
+                    if (!isset($args_con['field']['user_id']) OR $args_con['field']['user_id'] != $_SESSION['admin_user']['user_id']) {
+                        function admin_content_page() {
+                            require_once(BASEPATH . HM_ADMINCP_DIR . '/' . LAYOUT_DIR . '/' . 'admincp_403.php');
+                        }
+                        return false;
+                    }
+                }
+                
+                $args = content_data($key);
+                if (isset($args['taxonomy_key']) AND $args['taxonomy_key'] != '') {
+                    $args_tax = taxonomy_data($args['taxonomy_key']);
                 } else {
-                    require_once(BASEPATH . HM_ADMINCP_DIR . '/' . LAYOUT_DIR . '/' . 'content_edit.php');
+                    $args_tax = FALSE;
+                }
+                /** Hiển thị giao diện sửa content bằng array ở trên */
+                function admin_content_page() {
+                    global $args;
+                    global $args_tax;
+                    global $args_con;
+                    global $layout;
+                    if ($layout == 'popup') {
+                        require_once(BASEPATH . HM_ADMINCP_DIR . '/' . LAYOUT_DIR . '/' . 'content_edit_popup.php');
+                    } else {
+                        require_once(BASEPATH . HM_ADMINCP_DIR . '/' . LAYOUT_DIR . '/' . 'content_edit.php');
+                    }
+                }
+            } else {
+                function admin_content_page() {
+                    require_once(BASEPATH . HM_ADMINCP_DIR . '/' . LAYOUT_DIR . '/' . 'admincp_403.php');
                 }
             }
         } else {

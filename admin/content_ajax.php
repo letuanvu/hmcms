@@ -16,9 +16,17 @@ require_once(dirname(__FILE__) . '/admin.php');
 /** gọi model xử lý content */
 require_once(dirname(__FILE__) . '/content/content_model.php');
 require_once(dirname(__FILE__) . '/taxonomy/taxonomy_model.php');
-$key    = hm_get('key');
-$id     = hm_get('id');
-$action = hm_get('action');
+$key            = hm_get('key');
+$id             = hm_get('id');
+$action         = hm_get('action');
+$content_access = user_field_data(array(
+    'id' => $_SESSION['admin_user']['user_id'],
+    'field' => 'content_access'
+));
+$content_access = json_decode($content_access, true);
+if (!is_array($content_access)) {
+    $content_access = array();
+}
 switch ($action) {
     case 'data':
         $args                    = array();
@@ -53,22 +61,79 @@ switch ($action) {
         echo content_ajax_edit($id);
         break;
     case 'draft':
-        /** Thực hiện xóa content */
-        update_con_val(array(
-            'id' => hm_post('id'),
-            'name' => 'status',
-            'value' => 'draft'
-        ));
-        echo content_update_val(array(
-            'id' => hm_post('id'),
-            'value' => array(
-                'status' => 'draft'
-            )
-        ));
+        $content_data = content_data_by_id(hm_post('id'));
+        $key          = $content_data['content']->key;
+        if (isset($content_access[$key]['delete']) AND in_array($content_access[$key]['delete'], array(
+            'allow',
+            'owner_only'
+        ))) {
+            
+            if ($content_access[$key]['delete'] == 'owner_only') {
+                $user_id = get_con_val(array(
+                    'name' => 'user_id',
+                    'id' => hm_post('id')
+                ));
+                if (!isset($user_id) OR $user_id != $_SESSION['admin_user']['user_id']) {
+                    echo json_encode(array(
+                        'status' => false,
+                        'message' => hm_lang('you_do_not_have_permission_to_remove_this_content')
+                    ));
+                    return false;
+                }
+            }
+            
+            /** Thực hiện xóa content */
+            update_con_val(array(
+                'id' => hm_post('id'),
+                'name' => 'status',
+                'value' => 'draft'
+            ));
+            content_update_val(array(
+                'id' => hm_post('id'),
+                'value' => array(
+                    'status' => 'draft'
+                )
+            ));
+            echo json_encode(array(
+                'status' => true
+            ));
+        } else {
+            echo json_encode(array(
+                'status' => false,
+                'message' => hm_lang('you_do_not_have_permission_to_remove_this_content')
+            ));
+        }
         break;
     case 'delete_permanently':
-        /** Thực hiện xóa vĩnh viễn content */
-        echo content_delete_permanently(hm_post('id'));
+        $content_data = content_data_by_id(hm_post('id'));
+        $key          = $content_data['content']->key;
+        if (isset($content_access[$key]['delete']) AND in_array($content_access[$key]['delete'], array(
+            'allow',
+            'owner_only'
+        ))) {
+            
+            if ($content_access[$key]['delete'] == 'owner_only') {
+                $user_id = get_con_val(array(
+                    'name' => 'user_id',
+                    'id' => hm_post('id')
+                ));
+                if (!isset($user_id) OR $user_id != $_SESSION['admin_user']['user_id']) {
+                    echo json_encode(array(
+                        'status' => false,
+                        'message' => hm_lang('you_do_not_have_permission_to_remove_this_content')
+                    ));
+                    return false;
+                }
+            }
+            
+            /** Thực hiện xóa vĩnh viễn content */
+            echo content_delete_permanently(hm_post('id'));
+        } else {
+            echo json_encode(array(
+                'status' => false,
+                'message' => hm_lang('you_do_not_have_permission_to_remove_this_content')
+            ));
+        }
         break;
     case 'public':
         /** Thực hiện khôi phục content */

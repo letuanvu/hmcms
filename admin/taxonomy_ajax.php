@@ -15,9 +15,17 @@ if (version_compare(PHP_VERSION, '5.3', '>=')) {
 require_once(dirname(__FILE__) . '/admin.php');
 /** gọi model xử lý taxonomy */
 require_once(dirname(__FILE__) . '/taxonomy/taxonomy_model.php');
-$key    = hm_get('key');
-$id     = hm_get('id');
-$action = hm_get('action');
+$key             = hm_get('key');
+$id              = hm_get('id');
+$action          = hm_get('action');
+$taxonomy_access = user_field_data(array(
+    'id' => $_SESSION['admin_user']['user_id'],
+    'field' => 'taxonomy_access'
+));
+$taxonomy_access = json_decode($taxonomy_access, true);
+if (!is_array($taxonomy_access)) {
+    $taxonomy_access = array();
+}
 switch ($action) {
     case 'data':
         $status  = hm_get('status', 'public');
@@ -33,18 +41,72 @@ switch ($action) {
         echo taxonomy_ajax_edit($id);
         break;
     case 'draft':
-        /** Thực hiện xóa taxonomy */
-        taxonomy_update_val(array(
-            'id' => hm_post('id'),
-            'value' => array(
-                'status' => MySQL::SQLValue('draft'),
-                'parent' => MySQL::SQLValue('0')
-            )
-        ));
+        $taxonomy_data = taxonomy_data_by_id(hm_post('id'));
+        $key           = $taxonomy_data['taxonomy']->key;
+        if (isset($taxonomy_access[$key]['delete']) AND in_array($taxonomy_access[$key]['delete'], array(
+            'allow',
+            'owner_only'
+        ))) {
+            
+            if ($taxonomy_access[$key]['delete'] == 'owner_only') {
+                $user_id = get_tax_val(array(
+                    'name' => 'user_id',
+                    'id' => hm_post('id')
+                ));
+                if (!isset($user_id) OR $user_id != $_SESSION['admin_user']['user_id']) {
+                    echo json_encode(array(
+                        'status' => false,
+                        'message' => hm_lang('you_do_not_have_permission_to_remove_this_content')
+                    ));
+                    return false;
+                }
+            }
+            
+            /** Thực hiện xóa taxonomy */
+            taxonomy_update_val(array(
+                'id' => hm_post('id'),
+                'value' => array(
+                    'status' => MySQL::SQLValue('draft'),
+                    'parent' => MySQL::SQLValue('0')
+                )
+            ));
+        } else {
+            echo json_encode(array(
+                'status' => false,
+                'message' => hm_lang('you_do_not_have_permission_to_remove_this_content')
+            ));
+        }
         break;
     case 'delete_permanently':
-        /** Thực hiện xóa vĩnh viễn taxonomy */
-        taxonomy_delete_permanently(hm_post('id'));
+        $taxonomy_data = taxonomy_data_by_id(hm_post('id'));
+        $key           = $taxonomy_data['taxonomy']->key;
+        if (isset($taxonomy_access[$key]['delete']) AND in_array($taxonomy_access[$key]['delete'], array(
+            'allow',
+            'owner_only'
+        ))) {
+            
+            if ($taxonomy_access[$key]['delete'] == 'owner_only') {
+                $user_id = get_tax_val(array(
+                    'name' => 'user_id',
+                    'id' => hm_post('id')
+                ));
+                if (!isset($user_id) OR $user_id != $_SESSION['admin_user']['user_id']) {
+                    echo json_encode(array(
+                        'status' => false,
+                        'message' => hm_lang('you_do_not_have_permission_to_remove_this_content')
+                    ));
+                    return false;
+                }
+            }
+            
+            /** Thực hiện xóa vĩnh viễn taxonomy */
+            taxonomy_delete_permanently(hm_post('id'));
+        } else {
+            echo json_encode(array(
+                'status' => false,
+                'message' => hm_lang('you_do_not_have_permission_to_remove_this_content')
+            ));
+        }
         break;
     case 'public':
         /** Thực hiện khôi phục taxonomy */
