@@ -26,7 +26,7 @@ class MySQL {
     private $db_pass = DB_PASSWORD; // password
     private $db_dbname = DB_NAME; // database name
     private $db_charset = DB_CHARSET; // optional character set (i.e. utf8)
-    private $db_pcon = false; // use persistent connection?
+    public $pdo = null; // pdo class
     // constants for SQLValue function
     const SQLVALUE_BIT = "bit";
     const SQLVALUE_BOOLEAN = "boolean";
@@ -988,10 +988,9 @@ class MySQL {
      * @param string $username (Optional) User name
      * @param string $password (Optional) Password
      * @param string $charset  (Optional) Character set
-     * @param boolean $pcon    (Optional) Persistant connection
      * @return boolean Returns TRUE on success or FALSE on error
      */
-    public function Open($database = null, $server = null, $username = null, $password = null, $charset = null, $pcon = false) {
+    public function Open($database = null, $server = null, $username = null, $password = null, $charset = null) {
         $this->ResetError();
         // Use defaults?
         if ($database !== null)
@@ -1004,15 +1003,27 @@ class MySQL {
             $this->db_pass = $password;
         if ($charset !== null)
             $this->db_charset = $charset;
-        if (is_bool($pcon))
-            $this->db_pcon = $pcon;
         $this->active_row = -1;
-        // Open persistent or normal connection
-        if ($pcon) {
-            $this->mysql_link = @mysqli_pconnect('p:' . $this->db_host, $this->db_user, $this->db_pass);
-        } else {
-            $this->mysql_link = @mysqli_connect($this->db_host, $this->db_user, $this->db_pass);
+
+        // Open PDO
+        $dsn = "mysql:host=$this->db_host;dbname=$this->db_dbname;charset=$this->db_charset";
+        try {
+            $opt       = array(
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES => false
+            );
+            $pdo       = new PDO($dsn, $this->db_user, $this->db_pass, $opt);
+            $this->pdo = $pdo;
+            $this->pdo->exec('SET NAMES "UTF8"');
         }
+        catch (PDOException $ex) {
+            $this->SetError();
+        }
+
+        // Open normal connection
+        $this->mysql_link = @mysqli_connect($this->db_host, $this->db_user, $this->db_pass);
+
         // Connect to mysql server failed?
         if (!$this->IsConnected()) {
             $this->SetError();

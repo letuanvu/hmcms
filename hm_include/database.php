@@ -19,6 +19,6 @@ if (!$hmdb->IsConnected()) {
     if ($hmdb->Error()) {
         exit($hmdb->Kill());
     }
-    $hmdb->Query('SET NAMES "UTF8"');
+    $pdo = $hmdb->pdo;
 }
 ?>
