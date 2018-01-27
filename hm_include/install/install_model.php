@@ -514,7 +514,6 @@ function install_db() {
     echo '<p class="text-success">Add Index : ' . $prefix . 'request_uri</p>';
 	/**--------------------------------------------------------*/
 
-
     /** user admin */
     $admin_salt      = rand(0, 999999);
     $password_encode = hm_encode_str(md5($admin_password . $admin_salt), $encryption_key);
