@@ -1,6 +1,6 @@
 # Welcome to HMCMS
 
-> This is project for PHP Web framework, workarount with PHP.
+> This is simple cms project, workaround with PHP.
 
 ### Documents
 
