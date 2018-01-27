@@ -115,7 +115,7 @@ function is_connect() {
           PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
           PDO::ATTR_EMULATE_PREPARES   => false,
       );
-      $pdo = new PDO($dsn, $username, $password, $opt);
+      $hmdb = new PDO($dsn, $username, $password, $opt);
 
       $_SESSION['db']['host']     = $host;
       $_SESSION['db']['username'] = $username;
@@ -152,30 +152,43 @@ function install_db() {
     $password        = $_SESSION['db']['password'];
     $database        = $_SESSION['db']['database'];
     $prefix          = $_SESSION['db']['prefix'];
+    $charset         = 'utf8';
+    $dsn             = "mysql:host=$host;dbname=$database;charset=$charset";
     $admin_username  = trim($_POST['admin_username']);
     $admin_email     = trim($_POST['admin_email']);
     $admin_password  = trim($_POST['admin_password']);
     $encryption_key  = trim($_POST['encryption_key']);
     $url_path        = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
     /** install */
-    $mysqlConnection = mysql_connect($host, $username, $password);
-    mysql_select_db($database, $mysqlConnection);
-    mysql_query('SET NAMES "UTF8"');
+    $opt = array(
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES   => false,
+    );
+    $hmdb = new PDO($dsn, $username, $password, $opt);
+    $hmdb->exec('SET NAMES "UTF8"');
 
     $sql = "
 	CREATE TABLE IF NOT EXISTS `" . $prefix . "content` (
 		  `id` int(11) NOT NULL AUTO_INCREMENT,
 		  `name` varchar(500) NOT NULL,
 		  `slug` varchar(500) NOT NULL,
-		  `key` varchar(255) NOT NULL,
+		  `key` varchar(50) NOT NULL,
 		  `parent` int(11) NOT NULL,
-		  `status` varchar(255) NOT NULL,
+		  `status` varchar(50) NOT NULL,
 		  `content_order` int(11) NOT NULL,
 		  PRIMARY KEY (`id`)
-		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+		) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
 	";
-    mysql_query($sql);
-    echo '<p>Tạo bảng : ' . $prefix . 'content ...</p>';
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Created table: ' . $prefix . 'content</p>';
     /**--------------------------------------------------------*/
 
     $sql = "
@@ -184,13 +197,18 @@ function install_db() {
 		  `name` varchar(255) NOT NULL,
 		  `val` longtext NOT NULL,
 		  `object_id` int(11) NOT NULL,
-		  `object_type` varchar(255) NOT NULL,
-		  PRIMARY KEY (`id`),
-		  KEY `object_id` (`object_id`),
-		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+		  `object_type` varchar(50) NOT NULL,
+		  PRIMARY KEY (`id`)
+		) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
 	";
-    mysql_query($sql);
-    echo '<p>Tạo bảng : ' . $prefix . 'field ...</p>';
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Created table: ' . $prefix . 'field</p>';
     /**--------------------------------------------------------*/
 
 	$sql = "
@@ -199,11 +217,18 @@ function install_db() {
 		  `name` varchar(255) NOT NULL,
 		  `folder` varchar(255) NOT NULL,
 		  `parent` int(11) NOT NULL,
+          `order_number` int(11),
 		  PRIMARY KEY (`id`)
-		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+		) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
 	";
-    mysql_query($sql);
-    echo '<p>Tạo bảng : ' . $prefix . 'media_groups ...</p>';
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Created table: ' . $prefix . 'media_groups</p>';
     /**--------------------------------------------------------*/
 
     $sql = "
@@ -215,54 +240,77 @@ function install_db() {
 		  `file_name` varchar(255) NOT NULL,
 		  `file_folder` varchar(255) NOT NULL,
 		  PRIMARY KEY (`id`),
-		  INDEX `media_FI_media_groups` (`media_group_id`),
+		  INDEX `indexed_media_FI_media_groups` (`media_group_id`),
 		  CONSTRAINT `media_FK_media_groups`
 		  FOREIGN KEY (`media_group_id`)
 		  REFERENCES `" . $prefix . "media_groups` (`id`)
-		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+		) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
 	";
-    mysql_query($sql);
-    echo '<p>Tạo bảng : ' . $prefix . 'media ...</p>';
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Created table: ' . $prefix . 'media</p>';
     /**--------------------------------------------------------*/
 
     $sql = "
 	CREATE TABLE IF NOT EXISTS `" . $prefix . "object` (
 		  `id` int(11) NOT NULL AUTO_INCREMENT,
 		  `name` varchar(255) NOT NULL,
-		  `key` varchar(255) NOT NULL,
+		  `key` varchar(50) NOT NULL,
 		  `parent` int(11) NOT NULL,
 		  `order_number` int(11) NOT NULL,
 		  PRIMARY KEY (`id`)
-		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+		) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
 	";
-    mysql_query($sql);
-    echo '<p>Tạo bảng : ' . $prefix . 'object ...</p>';
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Created table: ' . $prefix . 'object</p>';
     /**--------------------------------------------------------*/
 
     $sql = "
 	CREATE TABLE IF NOT EXISTS `" . $prefix . "option` (
 		  `id` int(11) NOT NULL AUTO_INCREMENT,
 		  `section` varchar(500) NOT NULL,
-		  `key` varchar(255) NOT NULL,
+		  `key` varchar(50) NOT NULL,
 		  `value` text NOT NULL,
-		  PRIMARY KEY (`id`),
-		  KEY `section` (`section`)
-		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+		  PRIMARY KEY (`id`)
+		) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
 	";
-    mysql_query($sql);
-    echo '<p>Tạo bảng : ' . $prefix . 'option ...</p>';
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Created table: ' . $prefix . 'option</p>';
     /**--------------------------------------------------------*/
 
     $sql = "
 	CREATE TABLE IF NOT EXISTS `" . $prefix . "plugin` (
 		  `id` int(11) NOT NULL AUTO_INCREMENT,
-		  `key` varchar(255) NOT NULL,
+		  `key` varchar(50) NOT NULL,
 		  `active` int(1) NOT NULL,
 		  PRIMARY KEY (`id`)
-		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+		) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
 	";
-    mysql_query($sql);
-    echo '<p>Tạo bảng : ' . $prefix . 'plugin ...</p>';
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Created table: ' . $prefix . 'plugin</p>';
     /**--------------------------------------------------------*/
 
     $sql = "
@@ -272,23 +320,35 @@ function install_db() {
 		  `target_id` int(1) NOT NULL,
 		  `relationship` varchar(255) NOT NULL,
 		  PRIMARY KEY (`id`)
-		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+		) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
 	";
-    mysql_query($sql);
-    echo '<p>Tạo bảng : ' . $prefix . 'relationship ...</p>';
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Created table: ' . $prefix . 'relationship</p>';
     /**--------------------------------------------------------*/
 
     $sql = "
 	CREATE TABLE IF NOT EXISTS `" . $prefix . "request_uri` (
 		  `id` int(11) NOT NULL AUTO_INCREMENT,
 		  `object_id` int(11) NOT NULL,
-		  `object_type` varchar(255) NOT NULL,
+		  `object_type` varchar(50) NOT NULL,
 		  `uri` varchar(1000) NOT NULL,
 		  PRIMARY KEY (`id`)
-		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+		) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
 	";
-    mysql_query($sql);
-    echo '<p>Tạo bảng : ' . $prefix . 'request_uri ...</p>';
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Created table: ' . $prefix . 'request_uri</p>';
     /**--------------------------------------------------------*/
 
     $sql = "
@@ -296,14 +356,21 @@ function install_db() {
 		  `id` int(11) NOT NULL AUTO_INCREMENT,
 		  `name` varchar(255) NOT NULL,
 		  `slug` varchar(255) NOT NULL,
-		  `key` varchar(255) NOT NULL,
+		  `key` varchar(50) NOT NULL,
 		  `parent` int(11) NOT NULL,
 		  `status` varchar(255) NOT NULL,
+          `taxonomy_order` int(11),
 		  PRIMARY KEY (`id`)
-		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+		) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
 	";
-    mysql_query($sql);
-    echo '<p>Tạo bảng : ' . $prefix . 'taxonomy ...</p>';
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Created table: ' . $prefix . 'taxonomy</p>';
     /**--------------------------------------------------------*/
 
     $sql = "
@@ -318,75 +385,134 @@ function install_db() {
 		  `user_role` int(11) NOT NULL,
 		  `user_group` int(11) NOT NULL,
 		  PRIMARY KEY (`id`)
-		) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+		) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
 	";
-    mysql_query($sql);
-    echo '<p>Tạo bảng : ' . $prefix . 'users ...</p>';
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Created table: ' . $prefix . 'users</p>';
     /**--------------------------------------------------------*/
 
 	$sql = "
-	CREATE INDEX content ON `" . $prefix . "content` (key, parent, status, content_order); ;
+	CREATE INDEX `indexed_content` ON `" . $prefix . "content` (`key`, `parent`, `status`, `content_order`);
 	";
-    mysql_query($sql);
-    echo '<p>Add Index : ' . $prefix . 'content ...</p>';
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Add Index : ' . $prefix . 'content</p>';
 	/**--------------------------------------------------------*/
 
 	$sql = "
-	CREATE INDEX taxonomy ON `" . $prefix . "taxonomy` (key, parent, status, taxonomy_order); ;
+	CREATE INDEX `indexed_taxonomy` ON `" . $prefix . "taxonomy` (`key`, `parent`, `status`, `taxonomy_order`);
 	";
-    mysql_query($sql);
-    echo '<p>Add Index : ' . $prefix . 'taxonomy ...</p>';
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Add Index : ' . $prefix . 'taxonomy</p>';
 	/**--------------------------------------------------------*/
 
 	$sql = "
-	CREATE INDEX field ON `" . $prefix . "field` (object_id, object_type); ;
+	CREATE INDEX `indexed_field` ON `" . $prefix . "field` (`object_id`);
 	";
-    mysql_query($sql);
-    echo '<p>Add Index : ' . $prefix . 'field ...</p>';
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Add Index : ' . $prefix . 'field</p>';
 	/**--------------------------------------------------------*/
 
 	$sql = "
-	CREATE INDEX media_groups ON `" . $prefix . "media_groups` (key, parent, order_number); ;
+	CREATE INDEX `indexed_media_groups` ON `" . $prefix . "media_groups` (`parent`, `order_number`);
 	";
-    mysql_query($sql);
-    echo '<p>Add Index : ' . $prefix . 'media_groups ...</p>';
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Add Index : ' . $prefix . 'media_groups</p>';
 	/**--------------------------------------------------------*/
 
 	$sql = "
-	CREATE INDEX object ON `" . $prefix . "object` (parent); ;
+	CREATE INDEX `indexed_object` ON `" . $prefix . "object` (`key`, `parent`);
 	";
-    mysql_query($sql);
-    echo '<p>Add Index : ' . $prefix . 'object ...</p>';
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Add Index : ' . $prefix . 'object</p>';
 	/**--------------------------------------------------------*/
 
 	$sql = "
-	CREATE INDEX option ON `" . $prefix . "option` (section, key); ;
+	CREATE INDEX `indexed_option` ON `" . $prefix . "option` (`key`, `section`);
 	";
-    mysql_query($sql);
-    echo '<p>Add Index : ' . $prefix . 'option ...</p>';
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Add Index : ' . $prefix . 'option</p>';
 	/**--------------------------------------------------------*/
 
 	$sql = "
-	CREATE INDEX plugin ON `" . $prefix . "plugin` (key, active); ;
+	CREATE INDEX `indexed_plugin` ON `" . $prefix . "plugin` (`key`, `active`);
 	";
-    mysql_query($sql);
-    echo '<p>Add Index : ' . $prefix . 'plugin ...</p>';
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Add Index : ' . $prefix . 'plugin</p>';
 	/**--------------------------------------------------------*/
 
 	$sql = "
-	CREATE INDEX relationship ON `" . $prefix . "relationship` (object_id, target_id, relationship); ;
+	CREATE INDEX `indexed_relationship` ON `" . $prefix . "relationship` (`object_id`, `target_id`, `relationship`);
 	";
-    mysql_query($sql);
-    echo '<p>Add Index : ' . $prefix . 'relationship ...</p>';
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Add Index : ' . $prefix . 'relationship</p>';
 	/**--------------------------------------------------------*/
 
 	$sql = "
-	CREATE INDEX request_uri ON `" . $prefix . "request_uri` (object_id, object_type, uri); ;
+	CREATE INDEX `indexed_request_uri` ON `" . $prefix . "request_uri` (`object_id`, `object_type`);
 	";
-    mysql_query($sql);
-    echo '<p>Add Index : ' . $prefix . 'request_uri ...</p>';
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Add Index : ' . $prefix . 'request_uri</p>';
 	/**--------------------------------------------------------*/
-
 
 
     /** user admin */
@@ -396,19 +522,31 @@ function install_db() {
 		INSERT INTO `" . $prefix . "users` (`id`, `user_login`, `user_pass`, `salt`, `user_nicename`, `user_email`, `user_activation_key`, `user_role`, `user_group`) VALUES
 		(1, '" . $admin_username . "', '" . $password_encode . "', '" . $admin_salt . "', '" . $admin_username . "', '" . $admin_email . "', '0', '1', '0');
 	";
-    mysql_query($sql);
-    echo '<p>Tạo tài khoản quản trị : ' . $admin_username . ' ...</p>';
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Create user: ' . $admin_username . '</p>';
     /**--------------------------------------------------------*/
 
     /** default theme */
     $sql = "
-		INSERT INTO `hm_option` (`id`, `section`, `key`, `value`) VALUES
-		(1, 'system_setting', 'theme', 'dong'),
+		INSERT INTO `" . $prefix . "option` (`id`, `section`, `key`, `value`) VALUES
+		(1, 'system_setting', 'theme', 'hello'),
 		(2, 'system_setting', 'post_per_page', '10'),
 		(3, 'system_setting', 'from_email', '" . $admin_email . "');
 	";
-    mysql_query($sql);
-    echo '<p>Kích hoạt cài đặt mặc định ...</p>';
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Active default theme</p>';
     /**--------------------------------------------------------*/
 
     /** default plugin */
@@ -418,7 +556,16 @@ function install_db() {
 		(2, 'hm_tinymce', '1'),
 		(3, 'hm_seo', '1');
 	";
-    mysql_query($sql);
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Active default plugin</p>';
+    /**--------------------------------------------------------*/
+
     /** Tạo .htaccess */
     $htaccess = '<IfModule mod_rewrite.c>
 	RewriteEngine On
@@ -499,7 +646,7 @@ function install_db() {
         fwrite($fp, $htaccess);
         fclose($fp);
     } else {
-        echo '<p><strong>Quá trình tạo file : .htaccess thất bại, vui lòng tạo 1 file .htaccess (ngang hàng index.php) trên host với nội dung như sau:</strong></p>';
+        echo '<p class="text-danger"><strong>The process to create the file: .htaccess failed, please create a .htaccess file (peer index.php) on the host with the following content:</strong></p>';
         echo '<textarea class="form-control" rows="10">' . $htaccess . '</textarea>';
     }
     /** tạo file config */
@@ -518,10 +665,10 @@ function install_db() {
     if ($fp) {
         fwrite($fp, $hm_config);
         fclose($fp);
-        echo '<p class="alert alert-success" role="alert">Cài đặt mã nguồn thành công</p>';
-        echo '<p><a href="' . BASE_URL . 'admin/" class="btn btn-default">Đăng nhập quản trị</a></p>';
+        echo '<p class="alert alert-success" role="alert">Installation of source code successfully</p>';
+        echo '<p class="text-success"><a href="' . BASE_URL . 'admin/" class="btn btn-default btn-xs">Login Admin</a></p>';
     } else {
-        echo '<p><strong>Quá trình tạo file : hm_config.php thất bại, vui lòng tạo 1 file hm_config.php (ngang hàng index.php) trên host với nội dung như sau:</strong></p>';
+        echo '<p class="text-danger"><strong>The process to create the file: hm_config.php failed, please create a file hm_config.php (peer index.php) on the host with the following content:</strong></p>';
         echo '<textarea class="form-control" rows="10">' . $hm_config . '</textarea>';
     }
 }
