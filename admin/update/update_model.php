@@ -11,6 +11,7 @@ function update_check($type = 'core', $key = '', $server = '') {
             $check_url = HM_GIT_RAW . '/.version';
             @$content = file_get_contents($check_url);
             $content = json_decode($content, TRUE);
+
             if (isset($content['newest']) AND $content['newest'] == HM_VERSION) {
                 return TRUE;
             } else {
