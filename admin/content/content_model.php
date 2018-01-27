@@ -146,6 +146,8 @@ function content_ajax_add($args = array()) {
         if (!isset($input_post['number_order']) OR !is_numeric($input_post['number_order'])) {
             $input_post['number_order'] = 0;
         }
+        $input_post['user_id']      = $_SESSION['admin_user']['user_id'];
+        $input_post['last_edit_id'] = $_SESSION['admin_user']['user_id'];
         foreach ($input_post as $post_key => $post_val) {
             /** lưu content field vào data */
             if (is_numeric($insert_id)) {
@@ -261,41 +263,41 @@ function content_ajax_add($args = array()) {
                     'name' => MySQL::SQLValue('public_time')
                 );
                 $hmdb->AutoInsertUpdate($tableName, $values, $whereArray);
-				
-				#Lưu update time
-				$day       = $input_post['update_day'];
-				if (!is_numeric($day))
-					$day = 0;
-				$month = $input_post['update_month'];
-				if (!is_numeric($month))
-					$month = 0;
-				$year = $input_post['update_year'];
-				if (!is_numeric($year))
-					$year = 0;
-				$hour = $input_post['update_hour'];
-				if (!is_numeric($hour))
-					$hour = 0;
-				$minute = $input_post['update_minute'];
-				if (!is_numeric($minute))
-					$minute = 0;
-				$update_time           = strtotime($day . '-' . $month . '-' . $year . ' ' . $hour . ':' . $minute);
-				$values                = array();
-				$values["name"]        = MySQL::SQLValue('update_time');
-				$values["val"]         = MySQL::SQLValue($update_time);
-				$values["object_id"]   = MySQL::SQLValue($insert_id, MySQL::SQLVALUE_NUMBER);
-				$values["object_type"] = MySQL::SQLValue('content');
-				$whereArray = array(
+                
+                #Lưu update time
+                $day = $input_post['update_day'];
+                if (!is_numeric($day))
+                    $day = 0;
+                $month = $input_post['update_month'];
+                if (!is_numeric($month))
+                    $month = 0;
+                $year = $input_post['update_year'];
+                if (!is_numeric($year))
+                    $year = 0;
+                $hour = $input_post['update_hour'];
+                if (!is_numeric($hour))
+                    $hour = 0;
+                $minute = $input_post['update_minute'];
+                if (!is_numeric($minute))
+                    $minute = 0;
+                $update_time           = strtotime($day . '-' . $month . '-' . $year . ' ' . $hour . ':' . $minute);
+                $values                = array();
+                $values["name"]        = MySQL::SQLValue('update_time');
+                $values["val"]         = MySQL::SQLValue($update_time);
+                $values["object_id"]   = MySQL::SQLValue($insert_id, MySQL::SQLVALUE_NUMBER);
+                $values["object_type"] = MySQL::SQLValue('content');
+                $whereArray            = array(
                     'object_id' => MySQL::SQLValue($id_update, MySQL::SQLVALUE_NUMBER),
                     'object_type' => MySQL::SQLValue('content'),
                     'name' => MySQL::SQLValue('update_time')
                 );
-				$hmdb->AutoInsertUpdate($tableName, $values, $whereArray);
+                $hmdb->AutoInsertUpdate($tableName, $values, $whereArray);
             } else {
                 $hmdb->InsertRow($tableName, $values);
-				
-				#Lưu update time
-				$values["name"]    = MySQL::SQLValue('public_time');
-				$hmdb->InsertRow($tableName, $values);
+                
+                #Lưu update time
+                $values["name"] = MySQL::SQLValue('public_time');
+                $hmdb->InsertRow($tableName, $values);
             }
             unset($values);
         }

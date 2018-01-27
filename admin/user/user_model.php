@@ -111,12 +111,12 @@ function ajax_add_user($args = array()) {
     if (is_numeric($id_update)) {
         return hm_json_encode(array(
             'status' => 'updated',
-            'mes' => hm_lang('edit_account_information') . ' : ' . $user_login
+            'mes' => hm_lang('account_edited')
         ));
     } else {
         return hm_json_encode(array(
             'status' => 'success',
-            'mes' => hm_lang('account_added') . ' : ' . $user_login
+            'mes' => hm_lang('account_added')
         ));
     }
 }

@@ -52,7 +52,7 @@ function user_field($id = NULL) {
 function user_field_data($args = array()) {
     global $hmuser;
     hook_action('user_field_data');
-    $return = $hmuser->user_field_data($id);
+    $return = $hmuser->user_field_data($args);
     $return = hook_filter('user_field_data', $return);
     return $return;
 }
@@ -72,9 +72,9 @@ function is_admin_login() {
     if (isset($_SESSION['admin_login'])) {
         $session_admin_login = $_SESSION['admin_login'];
     }
-	if ($cookie_admin_login == $session_admin_login) {
-		setcookie('admin_login', $cookie_admin_login, time() + COOKIE_EXPIRES, '/');
-	}
+    if ($cookie_admin_login == $session_admin_login) {
+        setcookie('admin_login', $cookie_admin_login, time() + COOKIE_EXPIRES, '/');
+    }
     if ($cookie_admin_login == NULL OR $session_admin_login == NULL) {
         return FALSE;
     } else {

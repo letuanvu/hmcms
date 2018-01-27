@@ -97,4 +97,9 @@ $(document).ready(function(){
 		});
 	});
 	
+	$(document).on('change', '.select-role', function(){
+		var value = $(this).val();
+		$(this).attr('class','select-role select-role-'+value);
+	});
+	
 });

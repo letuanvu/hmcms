@@ -43,6 +43,7 @@ function admin_cp_login() {
                 $cookie_user  = hm_encode_str($cookie_array);
                 setcookie('admin_login', $cookie_user, time() + COOKIE_EXPIRES, '/');
                 $_SESSION['admin_login'] = $cookie_user;
+                $_SESSION['admin_user']  = $cookie_array;
                 return hm_json_encode(array(
                     'status' => 'success',
                     'mes' => _('Đăng nhập thành công')

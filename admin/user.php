@@ -32,10 +32,30 @@ switch ($action) {
             $id                  = $session_admin_login['user_id'];
             $args_use            = user_data($id);
         }
+        /** Phân quyền */
+        $content_access = user_field_data(array(
+            'id' => $id,
+            'field' => 'content_access'
+        ));
+        $content_access = json_decode($content_access, true);
+        if (!is_array($content_access)) {
+            $content_access = array();
+        }
+        $taxonomy_access = user_field_data(array(
+            'id' => $id,
+            'field' => 'taxonomy_access'
+        ));
+        $taxonomy_access = json_decode($taxonomy_access, true);
+        if (!is_array($taxonomy_access)) {
+            $taxonomy_access = array();
+        }
         /** Hiển thị giao diện chỉnh sửa user */
         function admin_content_page() {
             global $args_use;
+            global $hmcontent;
             global $hmtaxonomy;
+            global $content_access;
+            global $taxonomy_access;
             require_once(BASEPATH . HM_ADMINCP_DIR . '/' . LAYOUT_DIR . '/' . 'user_edit.php');
         }
         break;

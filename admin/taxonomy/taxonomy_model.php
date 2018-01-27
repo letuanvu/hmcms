@@ -122,6 +122,8 @@ function taxonomy_ajax_add($key, $id_update = NULL) {
                 unset($values);
             }
         }
+        $_POST['user_id']      = $_SESSION['admin_user']['user_id'];
+        $_POST['last_edit_id'] = $_SESSION['admin_user']['user_id'];
         foreach ($_POST as $post_key => $post_val) {
             /** fix parent */
             if ($post_key == 'parent') {

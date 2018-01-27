@@ -3,3 +3,21 @@
     padding: 5px;
     margin-bottom: 20px;
 }
+.select-role{
+    height: 22px;
+    line-height: 22px;
+    font-size: 12px;
+    width: 100%;
+}
+.select-role-allow {
+    border: solid 1px #5cb85c;
+    background: #dff0d8;
+}
+.select-role-denied {
+    border: solid 1px #d9534f;
+    background: #f2dede;
+}
+.select-role-owner_only {
+    border: solid 1px #f0ad4e;
+    background: #fcf8e3;
+}
