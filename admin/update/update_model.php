@@ -8,7 +8,7 @@ if (!defined('BASEPATH'))
 function update_check($type = 'core', $key = '', $server = '') {
     switch ($type) {
         case 'core':
-            $check_url = HM_API_SERVER . '/api/update/check';
+            $check_url = HM_GIT_RAW . '/.version';
             @$content = file_get_contents($check_url);
             $content = json_decode($content, TRUE);
             if (isset($content['newest']) AND $content['newest'] == HM_VERSION) {
