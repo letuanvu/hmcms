@@ -188,3 +188,7 @@ span.folder_item_name {
   text-align: center;
   padding: 10px 0px;
 }
+.folder_item_denied img {
+    -webkit-filter: grayscale(1);
+    filter: grayscale(1);
+}

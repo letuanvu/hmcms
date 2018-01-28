@@ -25,6 +25,18 @@ function ajax_media_box() {
     }
     require_once(BASEPATH . HM_ADMINCP_DIR . '/' . TEMPLATE_DIR . '/' . 'ajax_media_box.php');
 }
+/** Lấy id các thư mục curent user được tương tác */
+function get_media_access() {
+    $media_access = user_field_data(array(
+        'id' => $_SESSION['admin_user']['user_id'],
+        'field' => 'media_access'
+    ));
+    $media_access = json_decode($media_access, true);
+    if (!is_array($media_access)) {
+        $media_access = array();
+    }
+    return $media_access;
+}
 /** ID thư mục truy cập gần đây */
 function media_group_id() {
     $media_group_id = hm_get('media_group_id');
@@ -221,113 +233,123 @@ function add_media() {
     if (!is_numeric($media_group)) {
         $media_group = 0;
     }
-    $tableName  = DB_PREFIX . 'media_groups';
-    $whereArray = array(
-        'id' => MySQL::SQLValue($media_group)
-    );
-    $hmdb->SelectRows($tableName, $whereArray);
-    $count = $hmdb->RowCount();
-    if ($count != '0') {
-        $row         = $hmdb->Row();
-        $folder      = $row->folder;
-        $folder_part = get_media_group_part($media_group);
-        $dir         = BASEPATH . HM_CONTENT_DIR . '/uploads/' . $folder_part;
-        if (!file_exists($dir)) {
-            mkdir($dir);
-            chmod($dir, 0777);
+    $media_access = get_media_access();
+    if (isset($media_access[$media_group]['add']) AND $media_access[$media_group]['add'] == 'allow') {
+        $tableName  = DB_PREFIX . 'media_groups';
+        $whereArray = array(
+            'id' => MySQL::SQLValue($media_group)
+        );
+        $hmdb->SelectRows($tableName, $whereArray);
+        $count = $hmdb->RowCount();
+        if ($count != '0') {
+            $row         = $hmdb->Row();
+            $folder      = $row->folder;
+            $folder_part = get_media_group_part($media_group);
+            $dir         = BASEPATH . HM_CONTENT_DIR . '/uploads/' . $folder_part;
+            if (!file_exists($dir)) {
+                mkdir($dir);
+                chmod($dir, 0777);
+            }
+            $dir_dest = BASEPATH . HM_CONTENT_DIR . '/uploads/' . $folder_part;
+        } else {
+            $folder      = "/";
+            $media_group = 0;
+            $dir_dest    = BASEPATH . HM_CONTENT_DIR . '/uploads';
         }
-        $dir_dest = BASEPATH . HM_CONTENT_DIR . '/uploads/' . $folder_part;
-    } else {
-        $folder      = "/";
-        $media_group = 0;
-        $dir_dest    = BASEPATH . HM_CONTENT_DIR . '/uploads';
-    }
-    /** tạo .htaccess */
-    $fp               = fopen($dir_dest . '/.htaccess', 'w');
-    $content_htaccess = 'RemoveHandler .php .phtml .php3' . "\n" . 'RemoveType .php .phtml .php3' . "\n" . '<Files *>' . "\n" . 'SetHandler default-handler' . "\n" . '</Files>';
-    fwrite($fp, $content_htaccess);
-    fclose($fp);
-    $dir_pics = $dir_dest;
-    $files    = array();
-    foreach ($_FILES['file'] as $k => $l) {
-        foreach ($l as $i => $v) {
-            if (!array_key_exists($i, $files))
-                $files[$i] = array();
-            $files[$i][$k] = $v;
+        /** tạo .htaccess */
+        $fp               = fopen($dir_dest . '/.htaccess', 'w');
+        $content_htaccess = 'RemoveHandler .php .phtml .php3' . "\n" . 'RemoveType .php .phtml .php3' . "\n" . '<Files *>' . "\n" . 'SetHandler default-handler' . "\n" . '</Files>';
+        fwrite($fp, $content_htaccess);
+        fclose($fp);
+        $dir_pics = $dir_dest;
+        $files    = array();
+        foreach ($_FILES['file'] as $k => $l) {
+            foreach ($l as $i => $v) {
+                if (!array_key_exists($i, $files))
+                    $files[$i] = array();
+                $files[$i][$k] = $v;
+            }
         }
-    }
-    $status = 'success';
-    foreach ($files as $file) {
-        $handle = new Upload($file, LANG);
-        if ($handle->uploaded) {
-            $handle->Process($dir_dest);
-            if ($handle->processed) {
-                /** upload thành công, lưu database thông số file */
-                $file_is_image                   = 'false';
-                $file_info                       = array();
-                $file_info['file_src_name']      = $handle->file_src_name;
-                $file_info['file_src_name_body'] = $handle->file_src_name_body;
-                $file_info['file_src_name_ext']  = $handle->file_src_name_ext;
-                $file_info['file_src_mime']      = $handle->file_src_mime;
-                $file_info['file_src_size']      = $handle->file_src_size;
-                $file_info['file_dst_name']      = $handle->file_dst_name;
-                $file_info['file_dst_name_body'] = $handle->file_dst_name_body;
-                $file_info['file_dst_name_ext']  = $handle->file_dst_name_ext;
-                $file_info['file_is_image']      = $handle->file_is_image;
-                $file_name                       = $file_info['file_src_name'];
-                if ($file_info['file_is_image'] == TRUE) {
-                    $file_is_image                 = 'true';
-                    $file_info['image_src_x']      = $handle->image_src_x;
-                    $file_info['image_src_y']      = $handle->image_src_y;
-                    $file_info['image_src_bits']   = $handle->image_src_bits;
-                    $file_info['image_src_pixels'] = $handle->image_src_pixels;
-                    $file_info['image_src_type']   = $handle->image_src_type;
-                    $file_info['image_dst_x']      = $handle->image_dst_x;
-                    $file_info['image_dst_y']      = $handle->image_dst_y;
-                    $file_info['image_dst_type']   = $handle->image_dst_type;
-                    $handle->image_resize          = true;
-                    $handle->image_ratio_crop      = true;
-                    $handle->image_y               = 512;
-                    $handle->image_x               = 512;
-                    $handle->Process($dir_dest);
-                    $file_info['thumbnail'] = $handle->file_dst_name;
+        $status = 'success';
+        foreach ($files as $file) {
+            $handle = new Upload($file, LANG);
+            if ($handle->uploaded) {
+                $handle->Process($dir_dest);
+                if ($handle->processed) {
+                    /** upload thành công, lưu database thông số file */
+                    $file_is_image                   = 'false';
+                    $file_info                       = array();
+                    $file_info['file_src_name']      = $handle->file_src_name;
+                    $file_info['file_src_name_body'] = $handle->file_src_name_body;
+                    $file_info['file_src_name_ext']  = $handle->file_src_name_ext;
+                    $file_info['file_src_mime']      = $handle->file_src_mime;
+                    $file_info['file_src_size']      = $handle->file_src_size;
+                    $file_info['file_dst_name']      = $handle->file_dst_name;
+                    $file_info['file_dst_name_body'] = $handle->file_dst_name_body;
+                    $file_info['file_dst_name_ext']  = $handle->file_dst_name_ext;
+                    $file_info['file_is_image']      = $handle->file_is_image;
+                    $file_name                       = $file_info['file_src_name'];
+                    if ($file_info['file_is_image'] == TRUE) {
+                        $file_is_image                 = 'true';
+                        $file_info['image_src_x']      = $handle->image_src_x;
+                        $file_info['image_src_y']      = $handle->image_src_y;
+                        $file_info['image_src_bits']   = $handle->image_src_bits;
+                        $file_info['image_src_pixels'] = $handle->image_src_pixels;
+                        $file_info['image_src_type']   = $handle->image_src_type;
+                        $file_info['image_dst_x']      = $handle->image_dst_x;
+                        $file_info['image_dst_y']      = $handle->image_dst_y;
+                        $file_info['image_dst_type']   = $handle->image_dst_type;
+                        $handle->image_resize          = true;
+                        $handle->image_ratio_crop      = true;
+                        $handle->image_y               = 512;
+                        $handle->image_x               = 512;
+                        $handle->Process($dir_dest);
+                        $file_info['thumbnail'] = $handle->file_dst_name;
+                    }
+                    $file_info                = hm_json_encode($file_info);
+                    $tableName                = DB_PREFIX . 'media';
+                    $values["media_group_id"] = MySQL::SQLValue($media_group, MySQL::SQLVALUE_NUMBER);
+                    $values["file_info"]      = MySQL::SQLValue($file_info);
+                    $values["file_name"]      = MySQL::SQLValue($file_name);
+                    $values["file_folder"]    = MySQL::SQLValue($folder);
+                    $values["file_is_image"]  = MySQL::SQLValue($file_is_image);
+                    $insert_id                = $hmdb->InsertRow($tableName, $values);
+                    unset($values);
+                    $status    = 'success';
+                    $content[] = $insert_id;
+                } else {
+                    $status    = 'error';
+                    $content[] = $file_name . ' : ' . $handle->error;
                 }
-                $file_info                = hm_json_encode($file_info);
-                $tableName                = DB_PREFIX . 'media';
-                $values["media_group_id"] = MySQL::SQLValue($media_group, MySQL::SQLVALUE_NUMBER);
-                $values["file_info"]      = MySQL::SQLValue($file_info);
-                $values["file_name"]      = MySQL::SQLValue($file_name);
-                $values["file_folder"]    = MySQL::SQLValue($folder);
-                $values["file_is_image"]  = MySQL::SQLValue($file_is_image);
-                $insert_id                = $hmdb->InsertRow($tableName, $values);
-                unset($values);
-                $status    = 'success';
-                $content[] = $insert_id;
             } else {
                 $status    = 'error';
                 $content[] = $file_name . ' : ' . $handle->error;
             }
-        } else {
-            $status    = 'error';
-            $content[] = $file_name . ' : ' . $handle->error;
         }
+        if (is_array($content)) {
+            $content = implode(", ", $content);
+        }
+        return hm_json_encode(array(
+            'status' => $status,
+            'content' => $content,
+            'media_group' => $media_group
+        ));
+    } else {
+        return hm_json_encode(array(
+            'status' => 'error',
+            'content' => hm_lang('your_account_does_not_be_uploaded_file_to_this_directory'),
+            'media_group' => $media_group
+        ));
     }
-    if (is_array($content)) {
-        $content = implode(", ", $content);
-    }
-    return hm_json_encode(array(
-        'status' => $status,
-        'content' => $content,
-        'media_group' => $media_group
-    ));
 }
 /** Ajax hiển thị danh sách file */
 function show_media_file() {
-    $hmdb     = new MySQL(true, DB_NAME, DB_HOST, DB_USER, DB_PASSWORD, DB_CHARSET);
+    $hmdb         = new MySQL(true, DB_NAME, DB_HOST, DB_USER, DB_PASSWORD, DB_CHARSET);
+    $media_access = get_media_access();
     /** show theo trang */
-    $page     = hm_get('page', 1);
-    $per_page = hm_get('per_page', 20);
-    $start    = $page - 1;
+    $page         = hm_get('page', 1);
+    $per_page     = hm_get('per_page', 20);
+    $start        = $page - 1;
     if ($start < 0) {
         $start = 0;
     }
@@ -348,12 +370,14 @@ function show_media_file() {
                 $folder_slug   = $row->folder;
                 $folder_id     = $row->id;
                 $thumbnail_src = BASE_URL . HM_CONTENT_DIR . '/images/folder-icon.png';
-                echo '<li class="file_thumbnail col-md-2">';
-                echo '	<div class="folder_item" folder_id="' . $folder_id . '" folder_name="' . $folder_name . '" folder_slug="' . $folder_slug . '">';
-                echo '		<span class="folder_item_name">' . $folder_name . '</span>';
-                echo '		<img data-toggle="tooltip" data-placement="bottom" title="' . $folder_name . '" src="' . $thumbnail_src . '" class="img-responsive" />';
-                echo '	</div>';
-                echo '</li>';
+                if (isset($media_access[$folder_id]['view']) AND $media_access[$folder_id]['view'] == 'allow') {
+                    echo '<li class="file_thumbnail col-md-2">';
+                    echo '	<div class="folder_item" folder_id="' . $folder_id . '" folder_name="' . $folder_name . '" folder_slug="' . $folder_slug . '">';
+                    echo '		<span class="folder_item_name">' . $folder_name . '</span>';
+                    echo '		<img data-toggle="tooltip" data-placement="bottom" title="' . $folder_name . '" src="' . $thumbnail_src . '" class="img-responsive" />';
+                    echo '	</div>';
+                    echo '</li>';
+                }
             }
         }
     }
@@ -381,34 +405,36 @@ function show_media_file() {
             $file_name      = $row->file_name;
             $file_folder    = $row->file_folder;
             $media_group_id = $row->media_group_id;
-            $file_info      = json_decode($file_info, TRUE);
-            $file_src       = BASE_URL . HM_CONTENT_DIR . '/uploads' . $file_folder_part . $file_info['file_dst_name'];
-            echo '<li class="file_thumbnail col-md-2">';
-            if ($file_info['file_is_image'] == TRUE) {
-                $file_is_image = 1;
-            } else {
-                $file_is_image = 0;
-            }
-            if (isset($file_info['thumbnail'])) {
-                $thumbnail_src = BASE_URL . HM_CONTENT_DIR . '/uploads' . $file_folder_part . $file_info['thumbnail'];
-                echo '<div class="file_item" file_id="' . $id . '" file_is_image="' . $file_is_image . '" file_dst_name="' . $file_info['file_dst_name'] . '" file_src_name_ext="' . $file_info['file_src_name_ext'] . '" file_src_mime="' . $file_info['file_src_mime'] . '" file_src_size="' . $file_info['file_src_size'] . '" file_src="' . $file_src . '" >';
-                echo '<input type="checkbox" class="hide file_deep_checkbox" value="' . $id . '">';
-                echo '<img data-toggle="tooltip" data-placement="bottom" title="' . $file_info['file_src_name'] . '" src="' . $thumbnail_src . '" class="img-responsive" />';
-                echo '</div>';
-            } else {
-                $file_src_name_ext = strtolower($file_info['file_src_name_ext']);
-                $file_ext_icon     = './' . HM_CONTENT_DIR . '/icon/fileext/' . $file_src_name_ext . '.png';
-                if (file_exists($file_ext_icon)) {
-                    $thumbnail_src = BASE_URL . HM_CONTENT_DIR . '/icon/fileext/' . $file_src_name_ext . '.png';
+            if (isset($media_access[$media_group_id]['view']) AND $media_access[$media_group_id]['view'] == 'allow') {
+                $file_info = json_decode($file_info, TRUE);
+                $file_src  = BASE_URL . HM_CONTENT_DIR . '/uploads' . $file_folder_part . $file_info['file_dst_name'];
+                echo '<li class="file_thumbnail col-md-2">';
+                if ($file_info['file_is_image'] == TRUE) {
+                    $file_is_image = 1;
                 } else {
-                    $thumbnail_src = BASE_URL . HM_CONTENT_DIR . '/icon/fileext/blank.png';
+                    $file_is_image = 0;
                 }
-                echo '<div class="file_item" file_id="' . $id . '" file_is_image="' . $file_is_image . '" file_dst_name="' . $file_info['file_dst_name'] . '" file_src_name_ext="' . $file_info['file_src_name_ext'] . '" file_src_mime="' . $file_info['file_src_mime'] . '" file_src_size="' . $file_info['file_src_size'] . '" file_src="' . $file_src . '" >';
-                echo '<input type="checkbox" class="hide file_deep_checkbox" value="' . $id . '">';
-                echo '<img data-toggle="tooltip" data-placement="bottom" title="' . $file_info['file_src_name'] . '" src="' . $thumbnail_src . '" class="img-responsive" />';
-                echo '</div>';
+                if (isset($file_info['thumbnail'])) {
+                    $thumbnail_src = BASE_URL . HM_CONTENT_DIR . '/uploads' . $file_folder_part . $file_info['thumbnail'];
+                    echo '<div class="file_item" file_id="' . $id . '" file_is_image="' . $file_is_image . '" file_dst_name="' . $file_info['file_dst_name'] . '" file_src_name_ext="' . $file_info['file_src_name_ext'] . '" file_src_mime="' . $file_info['file_src_mime'] . '" file_src_size="' . $file_info['file_src_size'] . '" file_src="' . $file_src . '" >';
+                    echo '<input type="checkbox" class="hide file_deep_checkbox" value="' . $id . '">';
+                    echo '<img data-toggle="tooltip" data-placement="bottom" title="' . $file_info['file_src_name'] . '" src="' . $thumbnail_src . '" class="img-responsive" />';
+                    echo '</div>';
+                } else {
+                    $file_src_name_ext = strtolower($file_info['file_src_name_ext']);
+                    $file_ext_icon     = './' . HM_CONTENT_DIR . '/icon/fileext/' . $file_src_name_ext . '.png';
+                    if (file_exists($file_ext_icon)) {
+                        $thumbnail_src = BASE_URL . HM_CONTENT_DIR . '/icon/fileext/' . $file_src_name_ext . '.png';
+                    } else {
+                        $thumbnail_src = BASE_URL . HM_CONTENT_DIR . '/icon/fileext/blank.png';
+                    }
+                    echo '<div class="file_item" file_id="' . $id . '" file_is_image="' . $file_is_image . '" file_dst_name="' . $file_info['file_dst_name'] . '" file_src_name_ext="' . $file_info['file_src_name_ext'] . '" file_src_mime="' . $file_info['file_src_mime'] . '" file_src_size="' . $file_info['file_src_size'] . '" file_src="' . $file_src . '" >';
+                    echo '<input type="checkbox" class="hide file_deep_checkbox" value="' . $id . '">';
+                    echo '<img data-toggle="tooltip" data-placement="bottom" title="' . $file_info['file_src_name'] . '" src="' . $thumbnail_src . '" class="img-responsive" />';
+                    echo '</div>';
+                }
+                echo '</li>';
             }
-            echo '</li>';
         }
     }
     if ($rowCount_file == 0 AND $rowCount_folder == 0) {
@@ -417,7 +443,8 @@ function show_media_file() {
 }
 /** Ajax xóa file */
 function delete_media($id) {
-    $hmdb = new MySQL(true, DB_NAME, DB_HOST, DB_USER, DB_PASSWORD, DB_CHARSET);
+    $hmdb         = new MySQL(true, DB_NAME, DB_HOST, DB_USER, DB_PASSWORD, DB_CHARSET);
+    $media_access = get_media_access();
     if (is_numeric($id)) {
         $tableName  = DB_PREFIX . "media";
         $whereArray = array(
@@ -426,34 +453,37 @@ function delete_media($id) {
         $hmdb->SelectRows($tableName, $whereArray);
         $rowCount = $hmdb->RowCount();
         if ($rowCount != 0) {
-            $row         = $hmdb->Row();
-            $file_info   = $row->file_info;
-            $file_name   = $row->file_name;
-            $file_folder = $row->file_folder;
-            if ($file_folder != '/') {
-                $file_folder_part = '/' . get_media_group_part($file_folder) . '/';
-            } else {
-                $file_folder_part = '/';
-            }
-            /** remove file */
-            $file_info  = json_decode($file_info, TRUE);
-            $file_local = BASEPATH . HM_CONTENT_DIR . '/uploads' . $file_folder_part . $file_info['file_dst_name'];
-            unlink($file_local);
-            if (isset($file_info['thumbnail'])) {
-                $thumbnail_local = BASEPATH . HM_CONTENT_DIR . '/uploads' . $file_folder_part . $file_info['thumbnail'];
-                unlink($thumbnail_local);
-            }
-            if (is_array($file_info['crop'])) {
-                foreach ($file_info['crop'] as $crop_file_data) {
-                    $crop_file_name  = $crop_file_data['name'];
-                    $crop_file_local = BASEPATH . HM_CONTENT_DIR . '/uploads' . $file_folder_part . $crop_file_name;
-                    if (file_exists($crop_file_local)) {
-                        unlink($crop_file_local);
+            $row            = $hmdb->Row();
+            $file_info      = $row->file_info;
+            $file_name      = $row->file_name;
+            $file_folder    = $row->file_folder;
+            $media_group_id = $row->media_group_id;
+            if (isset($media_access[$media_group_id]['delete']) AND $media_access[$media_group_id]['delete'] == 'allow') {
+                if ($file_folder != '/') {
+                    $file_folder_part = '/' . get_media_group_part($file_folder) . '/';
+                } else {
+                    $file_folder_part = '/';
+                }
+                /** remove file */
+                $file_info  = json_decode($file_info, TRUE);
+                $file_local = BASEPATH . HM_CONTENT_DIR . '/uploads' . $file_folder_part . $file_info['file_dst_name'];
+                unlink($file_local);
+                if (isset($file_info['thumbnail'])) {
+                    $thumbnail_local = BASEPATH . HM_CONTENT_DIR . '/uploads' . $file_folder_part . $file_info['thumbnail'];
+                    unlink($thumbnail_local);
+                }
+                if (is_array($file_info['crop'])) {
+                    foreach ($file_info['crop'] as $crop_file_data) {
+                        $crop_file_name  = $crop_file_data['name'];
+                        $crop_file_local = BASEPATH . HM_CONTENT_DIR . '/uploads' . $file_folder_part . $crop_file_name;
+                        if (file_exists($crop_file_local)) {
+                            unlink($crop_file_local);
+                        }
                     }
                 }
+                /** remove database */
+                $hmdb->DeleteRows($tableName, $whereArray);
             }
-            /** remove database */
-            $hmdb->DeleteRows($tableName, $whereArray);
         }
     }
 }
@@ -462,38 +492,41 @@ function del_media_group($args) {
     $hmdb = new MySQL(true, DB_NAME, DB_HOST, DB_USER, DB_PASSWORD, DB_CHARSET);
     $id   = $args['group_id'];
     if (is_numeric($id)) {
-        /** Xóa thư mục */
-        $path = BASEPATH . '/' . HM_CONTENT_DIR . '/uploads/' . get_media_group_part($id);
-        DeleteDir($path);
-        $tableName  = DB_PREFIX . "media_groups";
-        $whereArray = array(
-            'id' => MySQL::SQLValue($id)
-        );
-        $hmdb->DeleteRows($tableName, $whereArray);
-        /** Xóa các file trong thư mục */
-        $tableName  = DB_PREFIX . "media";
-        $whereArray = array(
-            'media_group_id' => MySQL::SQLValue($id)
-        );
-        $hmdb->SelectRows($tableName, $whereArray);
-        if ($hmdb->HasRecords()) {
-            while ($row = $hmdb->Row()) {
-                $id_media_file = $row->id;
-                delete_media($id_media_file);
+        $media_access = get_media_access();
+        if (isset($media_access[$id]['delete']) AND $media_access[$id]['delete'] == 'allow') {
+            /** Xóa thư mục */
+            $path = BASEPATH . '/' . HM_CONTENT_DIR . '/uploads/' . get_media_group_part($id);
+            DeleteDir($path);
+            $tableName  = DB_PREFIX . "media_groups";
+            $whereArray = array(
+                'id' => MySQL::SQLValue($id)
+            );
+            $hmdb->DeleteRows($tableName, $whereArray);
+            /** Xóa các file trong thư mục */
+            $tableName  = DB_PREFIX . "media";
+            $whereArray = array(
+                'media_group_id' => MySQL::SQLValue($id)
+            );
+            $hmdb->SelectRows($tableName, $whereArray);
+            if ($hmdb->HasRecords()) {
+                while ($row = $hmdb->Row()) {
+                    $id_media_file = $row->id;
+                    delete_media($id_media_file);
+                }
             }
-        }
-        /** Xóa thư mục con */
-        $tableName  = DB_PREFIX . "media_groups";
-        $whereArray = array(
-            'parent' => MySQL::SQLValue($id)
-        );
-        $hmdb->SelectRows($tableName, $whereArray);
-        if ($hmdb->HasRecords()) {
-            while ($row = $hmdb->Row()) {
-                $id_sub_folder = $row->id;
-                del_media_group(array(
-                    'group_id' => $id_sub_folder
-                ));
+            /** Xóa thư mục con */
+            $tableName  = DB_PREFIX . "media_groups";
+            $whereArray = array(
+                'parent' => MySQL::SQLValue($id)
+            );
+            $hmdb->SelectRows($tableName, $whereArray);
+            if ($hmdb->HasRecords()) {
+                while ($row = $hmdb->Row()) {
+                    $id_sub_folder = $row->id;
+                    del_media_group(array(
+                        'group_id' => $id_sub_folder
+                    ));
+                }
             }
         }
     }
@@ -537,26 +570,29 @@ function move_media($args) {
             $file_info    = $row->file_info;
             $file_info    = json_decode($file_info, TRUE);
             $thumbnail    = $file_info['thumbnail'];
-            $old_part     = BASEPATH . HM_CONTENT_DIR . '/uploads/' . get_media_group_part($old_group_id);
-            $new_part     = BASEPATH . HM_CONTENT_DIR . '/uploads/' . get_media_group_part($group_id);
-            rename($old_part . '/' . $file_name, $new_part . '/' . $file_name);
-            rename($old_part . '/' . $thumbnail, $new_part . '/' . $thumbnail);
-            if (is_array($file_info['crop'])) {
-                foreach ($file_info['crop'] as $crop_file_data) {
-                    $crop_file_name = $crop_file_data['name'];
-                    rename($old_part . '/' . $crop_file_name, $new_part . '/' . $crop_file_name);
+            $media_access = get_media_access();
+            if (isset($media_access[$old_group_id]['move']) AND $media_access[$old_group_id]['move'] == 'allow') {
+                $old_part = BASEPATH . HM_CONTENT_DIR . '/uploads/' . get_media_group_part($old_group_id);
+                $new_part = BASEPATH . HM_CONTENT_DIR . '/uploads/' . get_media_group_part($group_id);
+                rename($old_part . '/' . $file_name, $new_part . '/' . $file_name);
+                rename($old_part . '/' . $thumbnail, $new_part . '/' . $thumbnail);
+                if (is_array($file_info['crop'])) {
+                    foreach ($file_info['crop'] as $crop_file_data) {
+                        $crop_file_name = $crop_file_data['name'];
+                        rename($old_part . '/' . $crop_file_name, $new_part . '/' . $crop_file_name);
+                    }
                 }
-            }
-            if (file_exists($new_part . '/' . $file_name)) {
-                $valuesArray = array(
-                    'media_group_id' => MySQL::SQLValue($group_id),
-                    'file_folder' => MySQL::SQLValue($file_folder),
-                    'file_info' => MySQL::SQLValue(json_encode($file_info))
-                );
-                $whereArray  = array(
-                    'id' => MySQL::SQLValue($file_id)
-                );
-                $hmdb->UpdateRows($tableName, $valuesArray, $whereArray);
+                if (file_exists($new_part . '/' . $file_name)) {
+                    $valuesArray = array(
+                        'media_group_id' => MySQL::SQLValue($group_id),
+                        'file_folder' => MySQL::SQLValue($file_folder),
+                        'file_info' => MySQL::SQLValue(json_encode($file_info))
+                    );
+                    $whereArray  = array(
+                        'id' => MySQL::SQLValue($file_id)
+                    );
+                    $hmdb->UpdateRows($tableName, $valuesArray, $whereArray);
+                }
             }
         }
     }
@@ -566,49 +602,54 @@ function rename_media_group($args = array()) {
     if (!is_array($args)) {
         parse_str($args, $args);
     }
-    $hmdb       = new MySQL(true, DB_NAME, DB_HOST, DB_USER, DB_PASSWORD, DB_CHARSET);
-    $group_name = $args['group_name'];
-    $group_id   = $args['group_id'];
-    $new_folder = sanitize_title($group_name);
-    $tableName  = DB_PREFIX . 'media_groups';
-    $whereArray = array(
-        'id' => MySQL::SQLValue($group_id)
-    );
-    $hmdb->SelectRows($tableName, $whereArray);
-    $count = $hmdb->RowCount();
-    if ($count != '0') {
-        $row         = $hmdb->Row();
-        $old_folder  = $row->folder;
-        $parent      = $row->parent;
-        $old_part    = BASEPATH . HM_CONTENT_DIR . '/uploads/' . get_media_group_part($group_id);
-        $parent_part = BASEPATH . HM_CONTENT_DIR . '/uploads/' . get_media_group_part($parent);
-        if ($old_folder != $new_folder) {
-            $new_part = $parent_part . '/' . $new_folder;
-            /** rename thư mục */
-            $rename   = rename($old_part, $new_part);
-            if ($rename == TRUE) {
-                /** update file */
-                $tableName_media   = DB_PREFIX . 'media';
-                $whereArray_media  = array(
-                    'media_group_id' => MySQL::SQLValue($group_id)
-                );
-                $valuesArray_media = array(
-                    'file_folder' => MySQL::SQLValue($new_folder)
-                );
-                $hmdb->UpdateRows($tableName_media, $valuesArray_media, $whereArray_media);
-                /** update media_groups */
-                $valuesArray = array(
-                    'name' => MySQL::SQLValue($group_name),
-                    'folder' => MySQL::SQLValue($new_folder)
-                );
-            } else {
-                /** update media_groups */
-                $valuesArray = array(
-                    'name' => MySQL::SQLValue($group_name)
-                );
+    $hmdb         = new MySQL(true, DB_NAME, DB_HOST, DB_USER, DB_PASSWORD, DB_CHARSET);
+    $group_name   = $args['group_name'];
+    $group_id     = $args['group_id'];
+    $media_access = get_media_access();
+    if (isset($media_access[$group_id]['rename']) AND $media_access[$group_id]['rename'] == 'allow') {
+        $new_folder = sanitize_title($group_name);
+        $tableName  = DB_PREFIX . 'media_groups';
+        $whereArray = array(
+            'id' => MySQL::SQLValue($group_id)
+        );
+        $hmdb->SelectRows($tableName, $whereArray);
+        $count = $hmdb->RowCount();
+        if ($count != '0') {
+            $row         = $hmdb->Row();
+            $old_folder  = $row->folder;
+            $parent      = $row->parent;
+            $old_part    = BASEPATH . HM_CONTENT_DIR . '/uploads/' . get_media_group_part($group_id);
+            $parent_part = BASEPATH . HM_CONTENT_DIR . '/uploads/' . get_media_group_part($parent);
+            if ($old_folder != $new_folder) {
+                $new_part = $parent_part . '/' . $new_folder;
+                /** rename thư mục */
+                $rename   = rename($old_part, $new_part);
+                if ($rename == TRUE) {
+                    /** update file */
+                    $tableName_media   = DB_PREFIX . 'media';
+                    $whereArray_media  = array(
+                        'media_group_id' => MySQL::SQLValue($group_id)
+                    );
+                    $valuesArray_media = array(
+                        'file_folder' => MySQL::SQLValue($new_folder)
+                    );
+                    $hmdb->UpdateRows($tableName_media, $valuesArray_media, $whereArray_media);
+                    /** update media_groups */
+                    $valuesArray = array(
+                        'name' => MySQL::SQLValue($group_name),
+                        'folder' => MySQL::SQLValue($new_folder)
+                    );
+                } else {
+                    /** update media_groups */
+                    $valuesArray = array(
+                        'name' => MySQL::SQLValue($group_name)
+                    );
+                }
             }
+            return $hmdb->UpdateRows($tableName, $valuesArray, $whereArray);
+        } else {
+            return FALSE;
         }
-        return $hmdb->UpdateRows($tableName, $valuesArray, $whereArray);
     } else {
         return FALSE;
     }

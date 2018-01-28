@@ -245,6 +245,19 @@ hm_admin_css('css/user.css');
 			</div>
 		</div>
 		
+		<div class="row">
+			<div class="col-md-12 admin_user">
+				<p class="page_action"><?php echo hm_lang('media_access'); ?></p>
+				<div class="row admin_user_box">
+					<ol class="media_access_tree_sub_group media_tree_sub_group_of_0">
+						<?php 
+						media_access_tree(0,$media_access); 
+						?>
+					</ol>
+				</div>
+			</div>
+		</div>
+		
 		<div class="col-md-12 admin_user">
 			<div class="row admin_user_box">
 				<div class="row add_user_noti"></div>

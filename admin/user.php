@@ -49,6 +49,14 @@ switch ($action) {
         if (!is_array($taxonomy_access)) {
             $taxonomy_access = array();
         }
+        $media_access = user_field_data(array(
+            'id' => $id,
+            'field' => 'media_access'
+        ));
+        $media_access = json_decode($media_access, true);
+        if (!is_array($media_access)) {
+            $media_access = array();
+        }
         /** Hiển thị giao diện chỉnh sửa user */
         function admin_content_page() {
             global $args_use;
@@ -56,6 +64,7 @@ switch ($action) {
             global $hmtaxonomy;
             global $content_access;
             global $taxonomy_access;
+            global $media_access;
             require_once(BASEPATH . HM_ADMINCP_DIR . '/' . LAYOUT_DIR . '/' . 'user_edit.php');
         }
         break;

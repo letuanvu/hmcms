@@ -182,4 +182,59 @@ function ajax_ban_user() {
         $hmdb->UpdateRows($tableName, $values, $whereArray);
     }
 }
+/** Tạo cây danh mục media */
+function media_access_tree($parent = 0, $checked_array = array()) {
+    $hmdb       = new MySQL(true, DB_NAME, DB_HOST, DB_USER, DB_PASSWORD, DB_CHARSET);
+    $tableName  = DB_PREFIX . "media_groups";
+    $whereArray = array(
+        'parent' => MySQL::SQLValue($parent)
+    );
+    $hmdb->SelectRows($tableName, $whereArray);
+    $rowCount = $hmdb->RowCount();
+    if ($rowCount != 0) {
+        if ($parent != 0) {
+            echo '<ol class="media_access_tree_sub_group media_access_tree_sub_group_of_' . $parent . '">';
+        }
+        while ($row = $hmdb->Row()) {
+            $groups[] = $row;
+        }
+        foreach ($groups as $group) {
+            $checked_view   = '';
+            $checked_add    = '';
+            $checked_delete = '';
+            $checked_move   = '';
+            $checked_rename = '';
+            if ($checked_array[$group->id]['view'] == 'allow') {
+                $checked_view = 'checked';
+            }
+            if ($checked_array[$group->id]['add'] == 'allow') {
+                $checked_add = 'checked';
+            }
+            if ($checked_array[$group->id]['delete'] == 'allow') {
+                $checked_delete = 'checked';
+            }
+            if ($checked_array[$group->id]['move'] == 'allow') {
+                $checked_move = 'checked';
+            }
+            if ($checked_array[$group->id]['rename'] == 'allow') {
+                $checked_rename = 'checked';
+            }
+            echo '<li data-id="' . $group->id . '" data-folder="' . $group->folder . '" class="media_access_tree_item media_access_tree_item_' . $group->id . '">';
+            echo '<label class="radio-inline">
+					<span class="media_access_name">' . $group->name . '</span>
+					<span class="media_access_btn">' . hm_lang('view') . '<input type="checkbox" ' . $checked_view . ' name="media_access[' . $group->id . '][view]" value="allow"></span>
+					<span class="media_access_btn">' . hm_lang('add') . '<input type="checkbox" ' . $checked_add . ' name="media_access[' . $group->id . '][add]" value="allow"></span>
+					<span class="media_access_btn">' . hm_lang('delete') . '<input type="checkbox" ' . $checked_delete . ' name="media_access[' . $group->id . '][delete]" value="allow"></span>
+					<span class="media_access_btn">' . hm_lang('move') . '<input type="checkbox" ' . $checked_move . ' name="media_access[' . $group->id . '][move]" value="allow"></span>
+					<span class="media_access_btn">' . hm_lang('rename') . '<input type="checkbox" ' . $checked_rename . ' name="media_access[' . $group->id . '][rename]" value="allow"></span>
+				 </label>';
+            media_access_tree($group->id, $checked_array);
+            echo '</li>';
+        }
+        unset($groups);
+        if ($parent != 0) {
+            echo '</ol>';
+        }
+    }
+}
 ?>
