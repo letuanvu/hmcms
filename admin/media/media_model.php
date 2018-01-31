@@ -234,7 +234,10 @@ function add_media() {
         $media_group = 0;
     }
     $media_access = get_media_access();
-    if (isset($media_access[$media_group]['add']) AND $media_access[$media_group]['add'] == 'allow') {
+    if ((isset($media_access[$media_group]['add']) AND $media_access[$media_group]['add'] == 'allow') OR !in_array($_SESSION['user_role'], array(
+        1,
+        2
+    ))) {
         $tableName  = DB_PREFIX . 'media_groups';
         $whereArray = array(
             'id' => MySQL::SQLValue($media_group)
@@ -370,7 +373,10 @@ function show_media_file() {
                 $folder_slug   = $row->folder;
                 $folder_id     = $row->id;
                 $thumbnail_src = BASE_URL . HM_CONTENT_DIR . '/images/folder-icon.png';
-                if (isset($media_access[$folder_id]['view']) AND $media_access[$folder_id]['view'] == 'allow') {
+                if ((isset($media_access[$folder_id]['view']) AND $media_access[$folder_id]['view'] == 'allow') OR !in_array($_SESSION['user_role'], array(
+                    1,
+                    2
+                ))) {
                     echo '<li class="file_thumbnail col-md-2">';
                     echo '	<div class="folder_item" folder_id="' . $folder_id . '" folder_name="' . $folder_name . '" folder_slug="' . $folder_slug . '">';
                     echo '		<span class="folder_item_name">' . $folder_name . '</span>';
@@ -405,7 +411,10 @@ function show_media_file() {
             $file_name      = $row->file_name;
             $file_folder    = $row->file_folder;
             $media_group_id = $row->media_group_id;
-            if (isset($media_access[$media_group_id]['view']) AND $media_access[$media_group_id]['view'] == 'allow') {
+            if ((isset($media_access[$media_group_id]['view']) AND $media_access[$media_group_id]['view'] == 'allow') OR !in_array($_SESSION['user_role'], array(
+                1,
+                2
+            ))) {
                 $file_info = json_decode($file_info, TRUE);
                 $file_src  = BASE_URL . HM_CONTENT_DIR . '/uploads' . $file_folder_part . $file_info['file_dst_name'];
                 echo '<li class="file_thumbnail col-md-2">';
@@ -458,7 +467,10 @@ function delete_media($id) {
             $file_name      = $row->file_name;
             $file_folder    = $row->file_folder;
             $media_group_id = $row->media_group_id;
-            if (isset($media_access[$media_group_id]['delete']) AND $media_access[$media_group_id]['delete'] == 'allow') {
+            if ((isset($media_access[$media_group_id]['delete']) AND $media_access[$media_group_id]['delete'] == 'allow') OR !in_array($_SESSION['user_role'], array(
+                1,
+                2
+            ))) {
                 if ($file_folder != '/') {
                     $file_folder_part = '/' . get_media_group_part($file_folder) . '/';
                 } else {
@@ -493,7 +505,10 @@ function del_media_group($args) {
     $id   = $args['group_id'];
     if (is_numeric($id)) {
         $media_access = get_media_access();
-        if (isset($media_access[$id]['delete']) AND $media_access[$id]['delete'] == 'allow') {
+        if ((isset($media_access[$id]['delete']) AND $media_access[$id]['delete'] == 'allow') OR !in_array($_SESSION['user_role'], array(
+            1,
+            2
+        ))) {
             /** Xóa thư mục */
             $path = BASEPATH . '/' . HM_CONTENT_DIR . '/uploads/' . get_media_group_part($id);
             DeleteDir($path);
@@ -571,7 +586,10 @@ function move_media($args) {
             $file_info    = json_decode($file_info, TRUE);
             $thumbnail    = $file_info['thumbnail'];
             $media_access = get_media_access();
-            if (isset($media_access[$old_group_id]['move']) AND $media_access[$old_group_id]['move'] == 'allow') {
+            if ((isset($media_access[$old_group_id]['move']) AND $media_access[$old_group_id]['move'] == 'allow') OR !in_array($_SESSION['user_role'], array(
+                1,
+                2
+            ))) {
                 $old_part = BASEPATH . HM_CONTENT_DIR . '/uploads/' . get_media_group_part($old_group_id);
                 $new_part = BASEPATH . HM_CONTENT_DIR . '/uploads/' . get_media_group_part($group_id);
                 rename($old_part . '/' . $file_name, $new_part . '/' . $file_name);
@@ -606,7 +624,10 @@ function rename_media_group($args = array()) {
     $group_name   = $args['group_name'];
     $group_id     = $args['group_id'];
     $media_access = get_media_access();
-    if (isset($media_access[$group_id]['rename']) AND $media_access[$group_id]['rename'] == 'allow') {
+    if ((isset($media_access[$group_id]['rename']) AND $media_access[$group_id]['rename'] == 'allow') OR !in_array($_SESSION['user_role'], array(
+        1,
+        2
+    ))) {
         $new_folder = sanitize_title($group_name);
         $tableName  = DB_PREFIX . 'media_groups';
         $whereArray = array(

@@ -91,7 +91,9 @@ hm_admin_css('css/user.css');
 				</div>
 			</div>
 		</div>
-		
+		<?php
+		if(in_array($_SESSION['user_role'],array(1,2))){
+		?>
 		<div class="row">
 			<div class="col-md-6 admin_user">
 				<p class="page_action"><?php echo hm_lang('content_access'); ?></p>
@@ -257,6 +259,10 @@ hm_admin_css('css/user.css');
 				</div>
 			</div>
 		</div>
+		
+		<?php
+		}
+		?>
 		
 		<div class="col-md-12 admin_user">
 			<div class="row admin_user_box">

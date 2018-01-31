@@ -43,9 +43,12 @@ switch ($action) {
     case 'draft':
         $taxonomy_data = taxonomy_data_by_id(hm_post('id'));
         $key           = $taxonomy_data['taxonomy']->key;
-        if (isset($taxonomy_access[$key]['delete']) AND in_array($taxonomy_access[$key]['delete'], array(
+        if ((isset($taxonomy_access[$key]['delete']) AND in_array($taxonomy_access[$key]['delete'], array(
             'allow',
             'owner_only'
+        ))) OR !in_array($_SESSION['user_role'], array(
+            1,
+            2
         ))) {
             
             if ($taxonomy_access[$key]['delete'] == 'owner_only') {
@@ -80,9 +83,12 @@ switch ($action) {
     case 'delete_permanently':
         $taxonomy_data = taxonomy_data_by_id(hm_post('id'));
         $key           = $taxonomy_data['taxonomy']->key;
-        if (isset($taxonomy_access[$key]['delete']) AND in_array($taxonomy_access[$key]['delete'], array(
+        if ((isset($taxonomy_access[$key]['delete']) AND in_array($taxonomy_access[$key]['delete'], array(
             'allow',
             'owner_only'
+        ))) OR !in_array($_SESSION['user_role'], array(
+            1,
+            2
         ))) {
             
             if ($taxonomy_access[$key]['delete'] == 'owner_only') {

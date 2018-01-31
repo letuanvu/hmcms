@@ -26,8 +26,11 @@ if (!is_array($taxonomy_access)) {
 }
 switch ($action) {
     case 'add':
-        if (isset($taxonomy_access[$key]['add']) AND in_array($taxonomy_access[$key]['add'], array(
+        if ((isset($taxonomy_access[$key]['add']) AND in_array($taxonomy_access[$key]['add'], array(
             'allow'
+        ))) OR !in_array($_SESSION['user_role'], array(
+            1,
+            2
         ))) {
             /** Thực hiện thêm taxonomy trả về array */
             $args = taxonomy_data($key);
@@ -45,9 +48,12 @@ switch ($action) {
     case 'edit':
         $args_tax = taxonomy_data_by_id($id);
         $key      = $args_tax['taxonomy']->key;
-        if (isset($taxonomy_access[$key]['edit']) AND in_array($taxonomy_access[$key]['edit'], array(
+        if ((isset($taxonomy_access[$key]['edit']) AND in_array($taxonomy_access[$key]['edit'], array(
             'allow',
             'owner_only'
+        ))) OR !in_array($_SESSION['user_role'], array(
+            1,
+            2
         ))) {
             
             if ($taxonomy_access[$key]['edit'] == 'owner_only') {

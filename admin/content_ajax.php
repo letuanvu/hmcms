@@ -63,9 +63,12 @@ switch ($action) {
     case 'draft':
         $content_data = content_data_by_id(hm_post('id'));
         $key          = $content_data['content']->key;
-        if (isset($content_access[$key]['delete']) AND in_array($content_access[$key]['delete'], array(
+        if ((isset($content_access[$key]['delete']) AND in_array($content_access[$key]['delete'], array(
             'allow',
             'owner_only'
+        ))) OR !in_array($_SESSION['user_role'], array(
+            1,
+            2
         ))) {
             
             if ($content_access[$key]['delete'] == 'owner_only') {
@@ -107,9 +110,12 @@ switch ($action) {
     case 'delete_permanently':
         $content_data = content_data_by_id(hm_post('id'));
         $key          = $content_data['content']->key;
-        if (isset($content_access[$key]['delete']) AND in_array($content_access[$key]['delete'], array(
+        if ((isset($content_access[$key]['delete']) AND in_array($content_access[$key]['delete'], array(
             'allow',
             'owner_only'
+        ))) OR !in_array($_SESSION['user_role'], array(
+            1,
+            2
         ))) {
             
             if ($content_access[$key]['delete'] == 'owner_only') {

@@ -27,8 +27,11 @@ if (!is_array($content_access)) {
 }
 switch ($action) {
     case 'add':
-        if (isset($content_access[$key]['add']) AND in_array($content_access[$key]['add'], array(
+        if ((isset($content_access[$key]['add']) AND in_array($content_access[$key]['add'], array(
             'allow'
+        ))) OR !in_array($_SESSION['user_role'], array(
+            1,
+            2
         ))) {
             /** Lấy thông tin content type trả về array */
             $args = content_data($key);
@@ -55,8 +58,11 @@ switch ($action) {
             /** Lấy thông tin content type trả về array */
             $args_con = content_data_by_id($id);
             $key      = $args_con['content']->key;
-            if (isset($content_access[$key]['add']) AND in_array($content_access[$key]['add'], array(
+            if ((isset($content_access[$key]['add']) AND in_array($content_access[$key]['add'], array(
                 'allow'
+            ))) OR !in_array($_SESSION['user_role'], array(
+                1,
+                2
             ))) {
                 $args     = content_data($key);
                 $args_tax = taxonomy_data($args['taxonomy_key']);
@@ -81,9 +87,12 @@ switch ($action) {
             /** Thực hiện sửa content */
             $args_con = content_data_by_id($id);
             $key      = $args_con['content']->key;
-            if (isset($content_access[$key]['edit']) AND in_array($content_access[$key]['edit'], array(
+            if ((isset($content_access[$key]['edit']) AND in_array($content_access[$key]['edit'], array(
                 'allow',
                 'owner_only'
+            ))) OR !in_array($_SESSION['user_role'], array(
+                1,
+                2
             ))) {
                 
                 if ($content_access[$key]['edit'] == 'owner_only') {
