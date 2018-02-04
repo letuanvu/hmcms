@@ -45,9 +45,20 @@ class MySQL {
     private $in_transaction = false; // used for transactions
     private $last_insert_id; // last id of record inserted
     private $last_result; // last mysql query result
-    private $last_sql = ""; // last mysql query
+    public $last_query = ""; // last mysql query
     private $time_diff = 0; // holds the difference in time
     private $time_start = 0; // start time for the timer
+    
+    public $where = null;
+    public $count = null;
+    public $table = null;
+    public $limit = null;
+    public $offset = null;
+    public $column = null;
+    public $value = null;
+    public $order_by = array('id', 'DESC');
+    
+    
     /**
      * Determines if an error throws an exception
      *
@@ -102,6 +113,35 @@ class MySQL {
      *                           formatted dates, ect).
      * @return boolean Returns TRUE on success or FALSE on error
      */
+    
+    public function where($where) {
+        $this->where = $where;
+    }
+    public function value($value) {
+        $this->value = $value;
+    }
+    public function count($count) {
+        $this->count = $count;
+    }
+    public function table($table) {
+        $this->table = $table;
+    }
+    public function limit($limit) {
+        $this->limit = $limit;
+    }
+    public function offset($offset) {
+        $this->offset = $offset;
+    }
+    public function column($column) {
+        $this->column = $column;
+    }
+    public function order_by($field, $order) {
+        $this->order_by = array(
+            $field,
+            $order
+        );
+    }
+    
     public function AutoInsertUpdate($tableName, $valuesArray, $whereArray) {
         $this->ResetError();
         $this->SelectRows($tableName, $whereArray);
@@ -319,7 +359,7 @@ class MySQL {
             if (!$success) {
                 $this->SetError();
             } else {
-                unset($this->last_sql);
+                unset($this->last_query);
                 unset($this->last_result);
                 unset($this->mysql_link);
             }
@@ -338,6 +378,21 @@ class MySQL {
      *                          then all values in the table are deleted.
      * @return boolean Returns TRUE on success or FALSE on error
      */
+    public function delete() {
+        $tableName   = $this->table;
+        $whereArray  = $this->where;
+        $columns     = $this->column;
+        $limit       = $this->limit;
+        $sortColumns = $select[0];
+        if (strtolower($select[1]) == 'asc') {
+            $sortAscending = true;
+        } else {
+            $sortAscending = false;
+        }
+        $return = $this->DeleteRows($tableName, $whereArray);
+        $this->Release();
+        return $return;
+    }
     public function DeleteRows($tableName, $whereArray = null) {
         $this->ResetError();
         if (!$this->IsConnected()) {
@@ -789,7 +844,7 @@ class MySQL {
      * @return string Current SQL query string
      */
     public function GetLastSQL() {
-        return $this->last_sql;
+        return $this->last_query;
     }
     /**
      * This function returns table names from the database
@@ -832,7 +887,7 @@ class MySQL {
         if (is_resource($this->last_result)) {
             // Show the row count and query
             $root->setAttribute('rows', ($this->RowCount() ? $this->RowCount() : 0));
-            $root->setAttribute('query', $this->last_sql);
+            $root->setAttribute('query', $this->last_query);
             $root->setAttribute('error', "");
             // process one row at a time
             $rowCount = 0;
@@ -856,7 +911,7 @@ class MySQL {
         } else {
             // Process any errors
             $root->setAttribute('rows', 0);
-            $root->setAttribute('query', $this->last_sql);
+            $root->setAttribute('query', $this->last_query);
             if ($this->Error()) {
                 $root->setAttribute('error', $this->Error());
             } else {
@@ -1004,7 +1059,7 @@ class MySQL {
         if ($charset !== null)
             $this->db_charset = $charset;
         $this->active_row = -1;
-
+        
         // Open PDO
         $dsn = "mysql:host=$this->db_host;dbname=$this->db_dbname;charset=$this->db_charset";
         try {
@@ -1020,10 +1075,10 @@ class MySQL {
         catch (PDOException $ex) {
             $this->SetError();
         }
-
+        
         // Open normal connection
         $this->mysql_link = @mysqli_connect($this->db_host, $this->db_user, $this->db_pass);
-
+        
         // Connect to mysql server failed?
         if (!$this->IsConnected()) {
             $this->SetError();
@@ -1062,7 +1117,7 @@ class MySQL {
      */
     public function Query($sql) {
         $this->Release();
-        $this->last_sql    = $sql;
+        $this->last_query  = $sql;
         $this->last_result = @mysqli_query($this->mysql_link, $sql);
         if (!$this->last_result) {
             $this->active_row = -1;
@@ -1216,6 +1271,10 @@ class MySQL {
      *
      * @return boolean Returns TRUE on success or FALSE on failure
      */
+    public function clean() {
+        $this->ResetError();
+        $this->Release();
+    }
     public function Release() {
         $this->ResetError();
         if (!$this->last_result) {
@@ -1225,6 +1284,14 @@ class MySQL {
             if (!$success)
                 $this->SetError();
         }
+        $this->where    = null;
+        $this->value    = null;
+        $this->column   = null;
+        $this->count    = null;
+        $this->table    = null;
+        $this->limit    = null;
+        $this->offset   = null;
+        $this->order_by = null;
         return $success;
     }
     /**
@@ -1414,7 +1481,25 @@ class MySQL {
      * @param integer/string $limit (Optional) The limit of rows to return
      * @return boolean Returns records on success or FALSE on error
      */
-    public function SelectRows($tableName, $whereArray = null, $columns = null, $sortColumns = null, $sortAscending = true, $limit = null) {
+    public function select() {
+        $tableName   = $this->table;
+        $whereArray  = $this->where;
+        $columns     = $this->column;
+        $limit       = $this->limit;
+        $sortColumns = $select[0];
+        if (strtolower($select[1]) == 'asc') {
+            $sortAscending = true;
+        } else {
+            $sortAscending = false;
+        }
+        $this->SelectRows($tableName, $whereArray, $columns, $sortColumns, $sortAscending, $limit);
+        while ($row = $this->Row()) {
+            $data[] = $row;
+        }
+        $this->Release();
+        return $data;
+    }
+    public function SelectRows($tableName = null, $whereArray = null, $columns = null, $sortColumns = null, $sortAscending = true, $limit = null) {
         $this->ResetError();
         if (!$this->IsConnected()) {
             $this->SetError("No connection");
@@ -1728,6 +1813,14 @@ class MySQL {
      *                           then all values in the table are updated.
      * @return boolean Returns TRUE on success or FALSE on error
      */
+    public function update() {
+        $tableName   = $this->table;
+        $valuesArray = $this->value;
+        $whereArray  = $this->where;
+        $return      = $this->UpdateRows($tableName, $valuesArray, $whereArray);
+        $this->Release();
+        return $return;
+    }
     public function UpdateRows($tableName, $valuesArray, $whereArray = null) {
         $this->ResetError();
         if (!$this->IsConnected()) {
