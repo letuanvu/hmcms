@@ -234,7 +234,7 @@ function add_media() {
         $media_group = 0;
     }
     $media_access = get_media_access();
-    if ((isset($media_access[$media_group]['add']) AND $media_access[$media_group]['add'] == 'allow') OR !in_array($_SESSION['user_role'], array(
+    if ((isset($media_access[$media_group]['add']) AND $media_access[$media_group]['add'] == 'allow') OR in_array($_SESSION['admin_user']['user_role'], array(
         1,
         2
     ))) {
@@ -373,7 +373,7 @@ function show_media_file() {
                 $folder_slug   = $row->folder;
                 $folder_id     = $row->id;
                 $thumbnail_src = BASE_URL . HM_CONTENT_DIR . '/images/folder-icon.png';
-                if ((isset($media_access[$folder_id]['view']) AND $media_access[$folder_id]['view'] == 'allow') OR !in_array($_SESSION['user_role'], array(
+                if ((isset($media_access[$folder_id]['view']) AND $media_access[$folder_id]['view'] == 'allow') OR in_array($_SESSION['admin_user']['user_role'], array(
                     1,
                     2
                 ))) {
@@ -411,7 +411,7 @@ function show_media_file() {
             $file_name      = $row->file_name;
             $file_folder    = $row->file_folder;
             $media_group_id = $row->media_group_id;
-            if ((isset($media_access[$media_group_id]['view']) AND $media_access[$media_group_id]['view'] == 'allow') OR !in_array($_SESSION['user_role'], array(
+            if ((isset($media_access[$media_group_id]['view']) AND $media_access[$media_group_id]['view'] == 'allow') OR in_array($_SESSION['admin_user']['user_role'], array(
                 1,
                 2
             ))) {
@@ -467,7 +467,7 @@ function delete_media($id) {
             $file_name      = $row->file_name;
             $file_folder    = $row->file_folder;
             $media_group_id = $row->media_group_id;
-            if ((isset($media_access[$media_group_id]['delete']) AND $media_access[$media_group_id]['delete'] == 'allow') OR !in_array($_SESSION['user_role'], array(
+            if ((isset($media_access[$media_group_id]['delete']) AND $media_access[$media_group_id]['delete'] == 'allow') OR in_array($_SESSION['admin_user']['user_role'], array(
                 1,
                 2
             ))) {
@@ -505,7 +505,7 @@ function del_media_group($args) {
     $id   = $args['group_id'];
     if (is_numeric($id)) {
         $media_access = get_media_access();
-        if ((isset($media_access[$id]['delete']) AND $media_access[$id]['delete'] == 'allow') OR !in_array($_SESSION['user_role'], array(
+        if ((isset($media_access[$id]['delete']) AND $media_access[$id]['delete'] == 'allow') OR in_array($_SESSION['admin_user']['user_role'], array(
             1,
             2
         ))) {
@@ -586,7 +586,7 @@ function move_media($args) {
             $file_info    = json_decode($file_info, TRUE);
             $thumbnail    = $file_info['thumbnail'];
             $media_access = get_media_access();
-            if ((isset($media_access[$old_group_id]['move']) AND $media_access[$old_group_id]['move'] == 'allow') OR !in_array($_SESSION['user_role'], array(
+            if ((isset($media_access[$old_group_id]['move']) AND $media_access[$old_group_id]['move'] == 'allow') OR in_array($_SESSION['admin_user']['user_role'], array(
                 1,
                 2
             ))) {
@@ -624,7 +624,7 @@ function rename_media_group($args = array()) {
     $group_name   = $args['group_name'];
     $group_id     = $args['group_id'];
     $media_access = get_media_access();
-    if ((isset($media_access[$group_id]['rename']) AND $media_access[$group_id]['rename'] == 'allow') OR !in_array($_SESSION['user_role'], array(
+    if ((isset($media_access[$group_id]['rename']) AND $media_access[$group_id]['rename'] == 'allow') OR in_array($_SESSION['admin_user']['user_role'], array(
         1,
         2
     ))) {
