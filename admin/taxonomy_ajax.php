@@ -46,7 +46,7 @@ switch ($action) {
         if ((isset($taxonomy_access[$key]['delete']) AND in_array($taxonomy_access[$key]['delete'], array(
             'allow',
             'owner_only'
-        ))) OR !in_array($_SESSION['user_role'], array(
+        ))) OR in_array($_SESSION['admin_user']['user_role'], array(
             1,
             2
         ))) {
@@ -86,7 +86,7 @@ switch ($action) {
         if ((isset($taxonomy_access[$key]['delete']) AND in_array($taxonomy_access[$key]['delete'], array(
             'allow',
             'owner_only'
-        ))) OR !in_array($_SESSION['user_role'], array(
+        ))) OR in_array($_SESSION['admin_user']['user_role'], array(
             1,
             2
         ))) {

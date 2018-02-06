@@ -29,7 +29,7 @@ switch ($action) {
     case 'add':
         if ((isset($content_access[$key]['add']) AND in_array($content_access[$key]['add'], array(
             'allow'
-        ))) OR !in_array($_SESSION['user_role'], array(
+        ))) OR in_array($_SESSION['admin_user']['user_role'], array(
             1,
             2
         ))) {
@@ -60,7 +60,7 @@ switch ($action) {
             $key      = $args_con['content']->key;
             if ((isset($content_access[$key]['add']) AND in_array($content_access[$key]['add'], array(
                 'allow'
-            ))) OR !in_array($_SESSION['user_role'], array(
+            ))) OR in_array($_SESSION['admin_user']['user_role'], array(
                 1,
                 2
             ))) {
@@ -90,7 +90,7 @@ switch ($action) {
             if ((isset($content_access[$key]['edit']) AND in_array($content_access[$key]['edit'], array(
                 'allow',
                 'owner_only'
-            ))) OR !in_array($_SESSION['user_role'], array(
+            ))) OR in_array($_SESSION['admin_user']['user_role'], array(
                 1,
                 2
             ))) {

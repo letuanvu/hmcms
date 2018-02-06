@@ -28,7 +28,7 @@ switch ($action) {
     case 'add':
         if ((isset($taxonomy_access[$key]['add']) AND in_array($taxonomy_access[$key]['add'], array(
             'allow'
-        ))) OR !in_array($_SESSION['user_role'], array(
+        ))) OR in_array($_SESSION['admin_user']['user_role'], array(
             1,
             2
         ))) {
@@ -51,7 +51,7 @@ switch ($action) {
         if ((isset($taxonomy_access[$key]['edit']) AND in_array($taxonomy_access[$key]['edit'], array(
             'allow',
             'owner_only'
-        ))) OR !in_array($_SESSION['user_role'], array(
+        ))) OR in_array($_SESSION['admin_user']['user_role'], array(
             1,
             2
         ))) {
