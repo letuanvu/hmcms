@@ -23,8 +23,8 @@ hm_admin_css('css/user.css');
 									'default_value'=>$args_use->user_login,
 									);
 						build_input_form($args);
-						
-						
+
+
 						$args=array(
 									'input_type'=>'password',
 									'name'=>'password',
@@ -34,7 +34,7 @@ hm_admin_css('css/user.css');
 									'placeholder'=>hm_lang('leave_blank_if_you_do_not_need_to_change_your_password'),
 									);
 						build_input_form($args);
-						
+
 						$args=array(
 									'input_type'=>'password',
 									'name'=>'password2',
@@ -44,7 +44,7 @@ hm_admin_css('css/user.css');
 									'placeholder'=>hm_lang('leave_blank_if_you_do_not_need_to_change_your_password'),
 									);
 						build_input_form($args);
-						
+
 						$args=array(
 									'input_type'=>'text',
 									'name'=>'nicename',
@@ -54,7 +54,7 @@ hm_admin_css('css/user.css');
 									'default_value'=>$args_use->user_nicename,
 									);
 						build_input_form($args);
-						
+
 						$args=array(
 									'input_type'=>'email',
 									'name'=>'user_email',
@@ -64,6 +64,8 @@ hm_admin_css('css/user.css');
 									'default_value'=>$args_use->user_email,
 									);
 						build_input_form($args);
+						
+						if ( in_array($_SESSION['admin_user']['user_role'], array( 1, 2 )) ) {
 						$args=array(
 									'input_type'=>'select',
 									'name'=>'userrole',
@@ -79,6 +81,8 @@ hm_admin_css('css/user.css');
 									'default_value'=>$args_use->user_role,
 									);
 						build_input_form($args);
+						}
+						
 						?>
 					</div>
 				</div>
@@ -92,7 +96,7 @@ hm_admin_css('css/user.css');
 			</div>
 		</div>
 		<?php
-		if(in_array($_SESSION['user_role'],array(1,2))){
+		if ( in_array($_SESSION['admin_user']['user_role'], array( 1, 2 )) ) {
 		?>
 		<div class="row">
 			<div class="col-md-6 admin_user">
@@ -246,14 +250,14 @@ hm_admin_css('css/user.css');
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="row">
 			<div class="col-md-12 admin_user">
 				<p class="page_action"><?php echo hm_lang('media_access'); ?></p>
 				<div class="row admin_user_box">
 					<ol class="media_access_tree_sub_group media_tree_sub_group_of_0">
-						<?php 
-						media_access_tree(0,$media_access); 
+						<?php
+						media_access_tree(0,$media_access);
 						?>
 					</ol>
 				</div>
@@ -263,7 +267,8 @@ hm_admin_css('css/user.css');
 		<?php
 		}
 		?>
-		
+
+
 		<div class="col-md-12 admin_user">
 			<div class="row admin_user_box">
 				<div class="row add_user_noti"></div>
@@ -272,7 +277,7 @@ hm_admin_css('css/user.css');
 				</div>
 			</div>
 		</div>
-		
+
 	</form>
-	
+
 </div>

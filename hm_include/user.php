@@ -121,7 +121,15 @@ function user_role($group) {
                 'dashboard' => array(),
                 'media' => array(),
                 'content' => array(),
-                'taxonomy' => array()
+                'taxonomy' => array(),
+                'user' => array()
+            );
+            break;
+        case '4':
+            /** Thành viên */
+            $role_array = array(
+                'dashboard' => array(),
+                'user' => array()
             );
             break;
         default:

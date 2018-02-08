@@ -15,6 +15,15 @@ function ajax_add_user($args = array()) {
     } else {
         $id_update = NULL;
     }
+    if (!in_array($_SESSION['admin_user']['user_role'], array(
+        1,
+        2
+    ))) {
+        unset($_POST['userrole']);
+        unset($_POST['content_access']);
+        unset($_POST['taxonomy_access']);
+        unset($_POST['media_access']);
+    }
     $user_login          = hm_post('user_login');
     $password            = hm_post('password');
     $password2           = hm_post('password2');

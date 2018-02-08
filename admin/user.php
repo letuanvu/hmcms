@@ -24,8 +24,10 @@ switch ($action) {
         }
         break;
     case 'edit':
-        /** Lấy thông tin user trả về array */
-        if (is_numeric($id)) {
+        if (is_numeric($id) AND in_array($_SESSION['admin_user']['user_role'], array(
+            1,
+            2
+        ))) {
             $args_use = user_data($id);
         } else {
             $session_admin_login = json_decode(hm_decode_str($_SESSION['admin_login']), TRUE);
