@@ -129,7 +129,17 @@ switch ($action) {
         break;
     case 'quick_edit':
         /** Tạo form quick edit taxonomy */
-        quick_edit_tax_form();
+        if ((isset($taxonomy_access[$key]['delete']) AND in_array($taxonomy_access[$key]['delete'], array(
+            'allow',
+            'owner_only'
+        ))) OR in_array($_SESSION['admin_user']['user_role'], array(
+            1,
+            2
+        ))) {
+            quick_edit_tax_form();
+        } else {
+            require_once(BASEPATH . HM_ADMINCP_DIR . '/' . LAYOUT_DIR . '/' . 'admincp_403.php');
+        }
         break;
     case 'multi':
         /** Xử lý nhiều danh mục cùng lúc */
