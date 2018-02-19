@@ -115,7 +115,21 @@ class MySQL {
      */
     
     public function where($where) {
-        $this->where = $where;
+        if (is_array($where)) {
+            $where_sql_value = array();
+            foreach ($where as $key => $value) {
+                if (!is_array($value)) {
+                    $where_sql_value[$key] = MySQL::SQLValue($value);
+                } else {
+                    $value_sub_sql = array();
+                    foreach ($value as $value_sub) {
+                        $value_sub_sql[] = MySQL::SQLValue($value_sub);
+                    }
+                    $where_sql_value[$key] = $value_sub_sql;
+                }
+            }
+        }
+        $this->where = $where_sql_value;
     }
     public function value($value) {
         $this->value = $value;
@@ -323,13 +337,19 @@ class MySQL {
      * @return string Returns a string containing the SQL WHERE clause
      */
     static public function BuildSQLWhereClause($whereArray) {
-        $where = "";
+        
+        $where   = "";
+        $compare = " = ";
         foreach ($whereArray as $key => $value) {
+            if (is_array($value)) {
+                $compare = " IN ";
+                $value   = "(" . implode(",", $value) . ")";
+            }
             if (strlen($where) == 0) {
                 if (is_null($value)) {
                     $where = " WHERE `" . $key . "` IS NULL";
                 } else if (is_string($key)) {
-                    $where = " WHERE `" . $key . "` = " . $value;
+                    $where = " WHERE `" . $key . "` " . $compare . " " . $value;
                 } else {
                     $where = " WHERE " . $value;
                 }
@@ -337,7 +357,7 @@ class MySQL {
                 if (is_null($value)) {
                     $where = " AND `" . $key . "` IS NULL";
                 } else if (is_string($key)) {
-                    $where .= " AND `" . $key . "` = " . $value;
+                    $where .= " AND `" . $key . "` " . $compare . " " . $value;
                 } else {
                     $where .= " AND " . $value;
                 }
@@ -957,12 +977,14 @@ class MySQL {
             return false;
         } else {
             // Execute the query
+            $this->TransactionBegin();
             $sql = self::BuildSQLInsert($tableName, $valuesArray);
             if (!$this->Query($sql)) {
                 return false;
             } else {
                 return $this->GetLastInsertID();
             }
+            $this->TransactionEnd();
         }
     }
     /**
@@ -1486,8 +1508,9 @@ class MySQL {
         $whereArray  = $this->where;
         $columns     = $this->column;
         $limit       = $this->limit;
-        $sortColumns = $select[0];
-        if (strtolower($select[1]) == 'asc') {
+        $order_by    = $this->order_by;
+        $sortColumns = $order_by[0];
+        if (strtolower($order_by[1]) == 'asc') {
             $sortAscending = true;
         } else {
             $sortAscending = false;
@@ -1499,6 +1522,7 @@ class MySQL {
         $this->Release();
         return $data;
     }
+    
     public function SelectRows($tableName = null, $whereArray = null, $columns = null, $sortColumns = null, $sortAscending = true, $limit = null) {
         $this->ResetError();
         if (!$this->IsConnected()) {
@@ -1827,6 +1851,7 @@ class MySQL {
             $this->SetError("No connection");
             return false;
         } else {
+            $this->TransactionBegin();
             $sql = self::BuildSQLUpdate($tableName, $valuesArray, $whereArray);
             // Execute the UPDATE
             if (!$this->Query($sql)) {
@@ -1834,6 +1859,7 @@ class MySQL {
             } else {
                 return true;
             }
+            $this->TransactionEnd();
         }
     }
 }
