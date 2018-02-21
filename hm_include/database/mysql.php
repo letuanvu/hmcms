@@ -132,7 +132,13 @@ class MySQL {
         $this->where = $where_sql_value;
     }
     public function value($value) {
-        $this->value = $value;
+		if (is_array($value)) {
+            $sql_value = array();
+            foreach ($value as $key => $value) {
+                $sql_value[$key] = MySQL::SQLValue($value);
+            }
+        }
+        $this->value = $sql_value;
     }
     public function count($count) {
         $this->count = $count;
