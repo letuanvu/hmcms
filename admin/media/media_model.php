@@ -291,7 +291,7 @@ function add_media() {
                     $file_info['file_dst_name_body'] = $handle->file_dst_name_body;
                     $file_info['file_dst_name_ext']  = $handle->file_dst_name_ext;
                     $file_info['file_is_image']      = $handle->file_is_image;
-                    $file_name                       = $file_info['file_src_name'];
+                    $file_name                       = $file_info['file_dst_name'];
                     if ($file_info['file_is_image'] == TRUE) {
                         $file_is_image                 = 'true';
                         $file_info['image_src_x']      = $handle->image_src_x;
