@@ -209,11 +209,13 @@ function get_file_location($id, $include_file_name = TRUE) {
         }
         $file_info = json_decode($file_info, TRUE);
         if ($include_file_name) {
-            $file_location = BASEPATH . HM_CONTENT_DIR . '/uploads' . $file_folder_part . $file_info['file_dst_name'];
+            $file_location = BASEPATH . HM_CONTENT_DIR . '/uploads' . $file_folder_part . $file_name;
         } else {
             $file_location = BASEPATH . HM_CONTENT_DIR . '/uploads' . $file_folder_part;
         }
         return $file_location;
+    } else {
+        return FALSE;
     }
 }
 /** Cắt ảnh theo cỡ tùy chọn */
@@ -229,7 +231,11 @@ function create_image($args) {
         'crop' => FALSE,
         'w' => '200',
         'h' => '200',
-        'q' => get_option( array('section'=>'system_setting','key'=>'cropping_quality','default_value'=>'100') )
+        'q' => get_option(array(
+            'section' => 'system_setting',
+            'key' => 'cropping_quality',
+            'default_value' => '100'
+        ))
     );
     $args          = hm_parse_args($args, $default_array);
     $file_id       = $args['file'];
@@ -239,12 +245,17 @@ function create_image($args) {
         $crop = TRUE;
     }
     if (isset_image($file_id)) {
-        $row                 = get_file_data($file_id);
-        $file_info           = json_decode($row->file_info, TRUE);
-        $file_dst_name_body  = $file_info['file_dst_name_body'];
-        $file_dst_name_ext   = $file_info['file_dst_name_ext'];
-        $source_file         = get_file_location($file_id);
-        $source_file_dir     = get_file_location($file_id, FALSE);
+        $row                = get_file_data($file_id);
+        $file_info          = json_decode($row->file_info, TRUE);
+        $file_name          = $row->file_name;
+        $file_dst_name_body = $file_info['file_dst_name_body'];
+        $file_dst_name_ext  = pathinfo($file_name, PATHINFO_EXTENSION);
+        $file_dst_name_body = basename($file_name, '.' . $file_dst_name_ext);
+        $source_file        = get_file_location($file_id);
+        $source_file_dir    = get_file_location($file_id, FALSE);
+        if ($source_file == FALSE) {
+            return BASE_URL . HM_FRONTENT_DIR . '/images/lostimage.png';
+        }
         $label_image_quality = '';
         if ($image_quality != 100) {
             $label_image_quality = '-' . $image_quality;
@@ -335,7 +346,7 @@ function create_image($args) {
                 $file_info['crop'] = array();
             }
             if (!in_array($new_image_name, $file_info['crop'])) {
-                $file_info['crop'][] = array(
+                $file_info['crop'][$args['w'] . '-' . $args['h'] . '-' . $image_quality] = array(
                     'file_id' => $file_id,
                     'w' => $args['w'],
                     'h' => $args['h'],
