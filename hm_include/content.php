@@ -230,7 +230,7 @@ function query_content($args = array()) {
     }
     $hmdb->Release();
     $query_content_key = "SELECT `id` FROM `" . DB_PREFIX . "content` " . $where_status . $where_content_key;
-    
+
     /** Lọc theo taxonomy */
     $where_taxonomy    = '';
     $query_in_taxonomy = '';
@@ -265,9 +265,14 @@ function query_content($args = array()) {
     if (isset($args['field_query'])) {
         $field_query = $args['field_query'];
     } else {
+        $order_field = get_option(array(
+            'section' => 'system_setting',
+            'key' => 'type_of_arrangement',
+            'default_value' => 'numerical_order'
+        ));
         $field_query = array(
             array(
-                'field' => 'public_time',
+                'field' => $order_field,
                 'compare' => '<=',
                 'value' => time()
             )
@@ -335,7 +340,7 @@ function query_content($args = array()) {
     } else {
         @$query_field = $query_field . array_shift(array_values($all_field_query));
     }
-    
+
     /** Kiểm tra yêu cầu kết hợp kết quả từ content key, in taxonomy, field query là tất cả hay chỉ 1 */
     if (isset($args['join'])) {
         $join = $args['join'];

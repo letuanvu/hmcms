@@ -17,8 +17,8 @@
             'default_value'=>get_option( array('section'=>'system_setting','key'=>'website_name','default_value'=>'Một trang web sử dụng HoaMaiCMS') ),
           );
           build_input_form($args);
-		  
-		  /** Admin email */
+
+          /** Admin email */
           $args = array(
             'nice_name'=>hm_lang('admin_email'),
             'name'=>'admin_email',
@@ -45,6 +45,21 @@
             'input_type'=>'number',
             'required'=>FALSE,
             'default_value'=>get_option( array('section'=>'system_setting','key'=>'post_per_page','default_value'=>'12') ),
+          );
+          build_input_form($args);
+
+          /** Kiểu sắp xếp */
+          $args = array(
+            'nice_name'=>hm_lang('type_of_arrangement'),
+            'name'=>'type_of_arrangement',
+            'input_type'=>'select',
+            'input_option'=>array(
+              array('value'=>'number_order','label'=>hm_lang('numerical_order')),
+              array('value'=>'public_time','label'=>hm_lang('public_time')),
+              array('value'=>'update_time','label'=>hm_lang('update_time')),
+            ),
+            'required'=>TRUE,
+            'default_value'=>get_option( array('section'=>'system_setting','key'=>'type_of_arrangement','default_value'=>'numerical_order') ),
           );
           build_input_form($args);
 
@@ -156,24 +171,24 @@
         </div>
       </div>
     </div>
-	<div class="col-md-6">
+  <div class="col-md-6">
       <p class="page_action"><?php echo hm_lang('media_setting'); ?></p>
       <div class="row admin_mainbar_box">
         <div class="list-form-input">
-			<?php
-			  $args = array(
-				'nice_name'=>hm_lang('image_quality_after_cropping'),
-				'name'=>'cropping_quality',
-				'input_type'=>'number',
-				'required'=>FALSE,
-				'default_value'=>get_option( array('section'=>'system_setting','key'=>'cropping_quality','default_value'=>'80') ),
-			  );
-			  build_input_form($args);
-			?>
-		</div>
+      <?php
+        $args = array(
+        'nice_name'=>hm_lang('image_quality_after_cropping'),
+        'name'=>'cropping_quality',
+        'input_type'=>'number',
+        'required'=>FALSE,
+        'default_value'=>get_option( array('section'=>'system_setting','key'=>'cropping_quality','default_value'=>'80') ),
+        );
+        build_input_form($args);
+      ?>
+    </div>
       </div>
     </div>
-	
+
     <div class="col-md-12">
       <div class="form-group">
         <button name="save_system_setting" type="submit" class="btn btn-primary"><?php echo hm_lang('save'); ?></button>

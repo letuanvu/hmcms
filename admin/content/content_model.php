@@ -1,7 +1,7 @@
 <?php
-/** 
+/**
  * Tệp tin model của content trong admin
- * Vị trí : admin/content/content_model.php 
+ * Vị trí : admin/content/content_model.php
  */
 if (!defined('BASEPATH'))
     exit('403');
@@ -263,7 +263,7 @@ function content_ajax_add($args = array()) {
                     'name' => MySQL::SQLValue('public_time')
                 );
                 $hmdb->AutoInsertUpdate($tableName, $values, $whereArray);
-                
+
                 #Lưu update time
                 $day = $input_post['update_day'];
                 if (!is_numeric($day))
@@ -294,7 +294,7 @@ function content_ajax_add($args = array()) {
                 $hmdb->AutoInsertUpdate($tableName, $values, $whereArray);
             } else {
                 $hmdb->InsertRow($tableName, $values);
-                
+
                 #Lưu update time
                 $values["name"] = MySQL::SQLValue('public_time');
                 $hmdb->InsertRow($tableName, $values);
@@ -588,6 +588,22 @@ function content_show_data($key, $args) {
                 'id' => $cid,
                 'name' => 'content_thumbnail'
             ));
+            $public_time       = get_con_val(array(
+                'id' => $cid,
+                'name' => 'public_time'
+            ));
+            $update_time       = get_con_val(array(
+                'id' => $cid,
+                'name' => 'update_time'
+            ));
+            $title             = get_con_val(array(
+                'id' => $cid,
+                'name' => 'title'
+            ));
+            $meta_keywords     = get_con_val(array(
+                'id' => $cid,
+                'name' => 'meta_keywords'
+            ));
             $thumbnail         = create_image("file=$content_thumbnail&w=48&h=48");
             if ($thumbnail == FALSE) {
                 $thumbnail = ADMIN_LAYOUT_PATH . '/images/noimage.png';
@@ -601,7 +617,11 @@ function content_show_data($key, $args) {
                 'slug' => $slug,
                 'status' => $status,
                 'number_order' => $number_order,
-                'thumbnail' => $thumbnail
+                'thumbnail' => $thumbnail,
+                'public_time' => date(DATE_FORMAT, $public_time),
+                'update_time' => date(DATE_FORMAT, $update_time),
+                'title' => $title,
+                'meta_keywords' => $meta_keywords
             );
         }
         ksort($array_con);
