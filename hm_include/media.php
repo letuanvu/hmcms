@@ -184,7 +184,7 @@ function get_file_url($id, $include_file_name = TRUE) {
         }
         $file_info = json_decode($file_info, TRUE);
         if ($include_file_name) {
-            $file_url = BASE_URL . HM_CONTENT_DIR . '/uploads' . $file_folder_part . $file_info['file_dst_name'];
+            $file_url = BASE_URL . HM_CONTENT_DIR . '/uploads' . $file_folder_part . $file_name;
         } else {
             $file_url = BASE_URL . HM_CONTENT_DIR . '/uploads' . $file_folder_part;
         }
@@ -248,7 +248,6 @@ function create_image($args) {
         $row                = get_file_data($file_id);
         $file_info          = json_decode($row->file_info, TRUE);
         $file_name          = $row->file_name;
-        $file_dst_name_body = $file_info['file_dst_name_body'];
         $file_dst_name_ext  = pathinfo($file_name, PATHINFO_EXTENSION);
         $file_dst_name_body = basename($file_name, '.' . $file_dst_name_ext);
         $source_file        = get_file_location($file_id);

@@ -1,17 +1,17 @@
 <?php
-/** 
+/**
  * Tệp tin model của optimize trong admin
- * Vị trí : admin/optimize/optimize_model.php 
+ * Vị trí : admin/optimize/optimize_model.php
  */
 if (!defined('BASEPATH'))
     exit('403');
 /** Danh sách hình ảnh **/
 function delete_unknown_files($dir, $source_files) {
     $ffs = scandir($dir);
-    
+
     unset($ffs[array_search('.', $ffs, true)]);
     unset($ffs[array_search('..', $ffs, true)]);
-    
+
     if (count($ffs) < 1) {
         return;
     }
@@ -25,7 +25,7 @@ function delete_unknown_files($dir, $source_files) {
             if (in_array($dir . '/' . $ff, $source_files)) {
                 echo '<font color="green">Saved: ' . $dir . '/' . $ff . '</font>';
             } else {
-                unlink($dir . '/' . $ff);
+                #unlink($dir . '/' . $ff);
                 echo '<font color="red">Remove: ' . $dir . '/' . $ff . '</font>';
             }
         }
@@ -69,7 +69,7 @@ function optimize_images() {
                 $crop_file_name  = $crop_file['name'];
                 $crop_file_local = BASEPATH . HM_CONTENT_DIR . '/uploads' . $file_folder_part . $crop_file_name;
                 if (file_exists($crop_file_local)) {
-                    unlink($crop_file_local);
+                    #unlink($crop_file_local);
                     echo '<p><font color="red">Remove: ' . $crop_file_local . '</font></p>';
                 }
             }
@@ -87,8 +87,8 @@ function optimize_images() {
         if (isset($file_info['thumbnail'])) {
             $source_files[] = BASEPATH . HM_CONTENT_DIR . '/uploads' . $file_folder_part . $file_info['thumbnail'];
         }
-        
-        
+
+
     }
     delete_unknown_files(BASEPATH . HM_CONTENT_DIR . '/uploads', $source_files);
 }
