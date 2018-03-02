@@ -1,7 +1,7 @@
 <?php
-/** 
+/**
  * Tệp tin xử lý content bằng ajax trong admin
- * Vị trí : admin/content_ajax.php 
+ * Vị trí : admin/content_ajax.php
  */
 if (!defined('BASEPATH'))
     exit('403');
@@ -37,9 +37,10 @@ switch ($action) {
         $args['search_order_by'] = hm_get('search_order_by', '');
         $args['search_order']    = hm_get('search_order', 'ASC');
         $args['taxonomy']        = hm_get('taxonomy', '');
-        if ($args['status'] == 'public') {
+        if ($args['status'] == 'all') {
             $args['status'] = array(
                 'public',
+                'draft',
                 'hide'
             );
         }
@@ -70,7 +71,7 @@ switch ($action) {
             1,
             2
         ))) {
-            
+
             if ($content_access[$key]['delete'] == 'owner_only') {
                 $user_id = get_con_val(array(
                     'name' => 'user_id',
@@ -84,7 +85,7 @@ switch ($action) {
                     return false;
                 }
             }
-            
+
             /** Thực hiện xóa content */
             update_con_val(array(
                 'id' => hm_post('id'),
@@ -117,7 +118,7 @@ switch ($action) {
             1,
             2
         ))) {
-            
+
             if ($content_access[$key]['delete'] == 'owner_only') {
                 $user_id = get_con_val(array(
                     'name' => 'user_id',
@@ -131,7 +132,7 @@ switch ($action) {
                     return false;
                 }
             }
-            
+
             /** Thực hiện xóa vĩnh viễn content */
             echo content_delete_permanently(hm_post('id'));
         } else {

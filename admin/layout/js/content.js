@@ -51,6 +51,9 @@ $(document).ready(function(){
   $('.ajaxFormcontentEditPopup').ajaxForm(options);
 
   $('.content_status').click(function() {
+    $('.content_table .content_table_content').html('<tr><td colspan="7">{lang:loading} ...</td></tr>');
+    $('.content_status').removeClass('btn-warning');
+    $(this).addClass('btn-warning');
     var content_key = getParameterByName('key');
     var status = $(this).attr('data-status');
     var perpage = $('.select_perpage').val();
@@ -112,6 +115,7 @@ $(document).ready(function(){
 
   var update_table = function (){
 
+    $('.content_table .content_table_content').html('<tr><td colspan="7">{lang:loading} ...</td></tr>');
     var content_key = getParameterByName('key');
     var status = $('select.select_perpage').attr('data-status');
     var perpage = $('.select_perpage').val();
@@ -138,7 +142,7 @@ $(document).ready(function(){
   }
 
   var build_table = function (data,status){
-    $('.content_table .content_table_content').html('<tr><td colspan="6">{lang:loading} ...</td></tr>');
+    $('.content_table .content_table_content').html('<tr><td colspan="7">{lang:loading} ...</td></tr>');
     var obj = jQuery.parseJSON(data);
     var html_content = [];
     var content = obj.content;

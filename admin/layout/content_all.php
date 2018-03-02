@@ -15,8 +15,10 @@ hm_admin_css('perfect-scrollbar/perfect-scrollbar.min.css');
     <div class="page_action">
       <div class="pull-left">
         <span><?php echo $args['all_items']; ?></span>
-        <button class="btn btn-default btn-xs content_status" data-status="public"><?php echo hm_lang('available'); ?></button>
+        <button class="btn btn-default btn-xs content_status" data-status="all"><?php echo hm_lang('all'); ?></button>
+        <button class="btn btn-default btn-xs content_status btn-warning" data-status="public"><?php echo hm_lang('public'); ?></button>
         <button class="btn btn-default btn-xs content_status" data-status="draft"><?php echo hm_lang('draft'); ?></button>
+        <button class="btn btn-default btn-xs content_status" data-status="hide"><?php echo hm_lang('hide'); ?></button>
         <a href="?run=content.php&key=<?php echo hm_get('key'); ?>&action=add" class="btn btn-default btn-xs media_btn"><?php echo $args['add_new_item']; ?></a>
       </div>
     </div>
