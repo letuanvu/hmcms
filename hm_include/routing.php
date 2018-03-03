@@ -91,11 +91,11 @@ function get_uri_data($args) {
     }
 }
 function get_current_uri() {
-    getenv('REQUEST_URI_PATH') = parse_url(getenv('REQUEST_URI'), PHP_URL_PATH);
+    $_SERVER['REQUEST_URI_PATH'] = parse_url(getenv('REQUEST_URI'), PHP_URL_PATH);
     if (FOLDER_PATH != '/') {
-        $request_slug = str_replace(FOLDER_PATH, '', getenv('REQUEST_URI_PATH'));
+        $request_slug = str_replace(FOLDER_PATH, '', $_SERVER['REQUEST_URI_PATH']);
     } else {
-        $request_slug = substr(getenv('REQUEST_URI_PATH'), 1);
+        $request_slug = substr($_SERVER['REQUEST_URI_PATH'], 1);
     }
     $request_slug = urldecode($request_slug);
     $last         = substr($request_slug, -1);
@@ -118,11 +118,11 @@ function get_current_uri() {
 }
 function get_current_pagination($request_slug = FALSE) {
     if (!$request_slug) {
-        getenv('REQUEST_URI_PATH') = parse_url(getenv('REQUEST_URI'), PHP_URL_PATH);
+        $_SERVER['REQUEST_URI_PATH'] = parse_url(getenv('REQUEST_URI'), PHP_URL_PATH);
         if (FOLDER_PATH != '/') {
-            $request_slug = str_replace(FOLDER_PATH, '', getenv('REQUEST_URI_PATH'));
+            $request_slug = str_replace(FOLDER_PATH, '', $_SERVER['REQUEST_URI_PATH']);
         } else {
-            $request_slug = substr(getenv('REQUEST_URI_PATH'), 1);
+            $request_slug = substr($_SERVER['REQUEST_URI_PATH'], 1);
         }
         $request_slug = urldecode($request_slug);
     }
