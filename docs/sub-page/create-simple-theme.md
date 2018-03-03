@@ -306,15 +306,25 @@ register_menu_location($args);
 Trong đó:
 
 * **name**: là key duy nhất của menu, không trùng với menu khác.
+
 * **nice_name**: là tên của menu đó.
+
 * **wrapper**: thẻ bao ngoài của menu, nếu bạn để trống mặc định sẽ là thẻ <ul>.
+
 * **wrapper_class** và **wrapper_id**: id và class của thẻ bao ngoài dùng cho css.
+
 * **item**: thẻ bao ngoài của một phần tử menu, mặc định là thẻ <li>.
+
 * **item_class** và **item_id**: tương tự là class và id của một phần tử trong menu.
-* **permalink_class**: class của đường link trong menu item, dùng cho css, sẽ thêm vào thẻ <a>
-* **permalink_attr**: các attributes của đường link, bạn có thể ghi thêm ví dụ như `onclick="menu_click();"` data-color="red" ..., dùng nếu bạn cần áp dụng javascript cho menu.
+
+* **permalink_class**: class của đường link trong menu item, dùng cho css, sẽ thêm vào thẻ <a>.
+
+* **permalink_attr**: các attributes của đường link, bạn có thể ghi thêm ví dụ như `onclick="menu_click();"`. data-color="red" ..., dùng nếu bạn cần áp dụng javascript cho menu.
+
 * **permalink_before**: thẻ bao quanh đường link của menu_item, ví dụ bạn có thể khai báo là <span class="menu_link">.
+
 * **permalink_after**: thẻ đóng của thẻ bạn đã khai báo trong permalink_before.
+
 * **echo**: echo menu ra giao diện, nếu để mặc định FALSE thì trong giao diện bạn sẽ phải echo menu ra.
 
 Sau khi khai báo menu, để menu hiển thị được trong giao diện bạn sử dụng lệnh:
