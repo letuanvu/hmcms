@@ -112,9 +112,9 @@ các hàm trên ngoài tên file bạn có thể truyền thêm 1 mảng chứa 
 
 **echo img('myimg.jpg',array('id'=>'myimg','alt'=>'alt_of_img'))**;
 
-Ngoài ra trong thẻ <head> của giao diện bạn cần sử dụng hàm **hm_head()**;
+Ngoài ra trong thẻ `<head>` của giao diện bạn cần sử dụng hàm **hm_head()**;
 
-Đây là hàm hiển thị thẻ **<title>** và các thẻ **<meta>** của trang, ngoài ra các plugin hay giao diện dùng hook của hàm **hm_head()** để chèn thêm css, js hay các thẻ khác vào trong **<head>**, vì vậy đây là hàm quan trọng và **gần như bắt buộc** khi bạn viết một theme
+Đây là hàm hiển thị thẻ `<title>` và các thẻ `<meta>` của trang, ngoài ra các plugin hay giao diện dùng hook của hàm **hm_head()** để chèn thêm css, js hay các thẻ khác vào trong `<head>`, vì vậy đây là hàm quan trọng và **gần như bắt buộc** khi bạn viết một theme
 
 ví dụ đây là một phần của file **header.php** mẫu:
 
@@ -309,19 +309,19 @@ Trong đó:
 
 * **nice_name**: là tên của menu đó.
 
-* **wrapper**: thẻ bao ngoài của menu, nếu bạn để trống mặc định sẽ là thẻ <ul>.
+* **wrapper**: thẻ bao ngoài của menu, nếu bạn để trống mặc định sẽ là thẻ `ul`.
 
 * **wrapper_class** và **wrapper_id**: id và class của thẻ bao ngoài dùng cho css.
 
-* **item**: thẻ bao ngoài của một phần tử menu, mặc định là thẻ <li>.
+* **item**: thẻ bao ngoài của một phần tử menu, mặc định là thẻ `li`.
 
 * **item_class** và **item_id**: tương tự là class và id của một phần tử trong menu.
 
-* **permalink_class**: class của đường link trong menu item, dùng cho css, sẽ thêm vào thẻ <a>.
+* **permalink_class**: class của đường link trong menu item, dùng cho css, sẽ thêm vào thẻ `a`.
 
 * **permalink_attr**: các attributes của đường link, bạn có thể ghi thêm ví dụ như `onclick="menu_click();"`. data-color="red" ..., dùng nếu bạn cần áp dụng javascript cho menu.
 
-* **permalink_before**: thẻ bao quanh đường link của menu_item, ví dụ bạn có thể khai báo là <span class="menu_link">.
+* **permalink_before**: thẻ bao quanh đường link của menu_item, ví dụ bạn có thể khai báo là `<span class="menu_link">`.
 
 * **permalink_after**: thẻ đóng của thẻ bạn đã khai báo trong permalink_before.
 
