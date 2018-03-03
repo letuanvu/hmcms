@@ -74,11 +74,22 @@ class ComposerStaticInit91613644eb233354afd5ad5ce3489148
         ),
     );
 
+    public static $prefixesPsr0 = array (
+        'P' => 
+        array (
+            'PHPImageWorkshop' => 
+            array (
+                0 => __DIR__ . '/..' . '/sybio/image-workshop/src',
+            ),
+        ),
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit91613644eb233354afd5ad5ce3489148::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit91613644eb233354afd5ad5ce3489148::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit91613644eb233354afd5ad5ce3489148::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }

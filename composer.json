@@ -15,6 +15,7 @@
         "vlucas/phpdotenv": "2.4.0",
         "intervention/image": "2.4.1",
         "spatie/db-dumper": "2.8.2",
-        "monolog/monolog": "1.23.0"
+        "monolog/monolog": "1.23.0",
+        "sybio/image-workshop": "2.0.9"
     }
 }

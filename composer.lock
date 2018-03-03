@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "335cb9a0b37f8e0174bc982b28222b5d",
+    "content-hash": "adaa21c480bc74b96aa21dcb65515ac7",
     "packages": [
         {
             "name": "guzzlehttp/psr7",
@@ -367,6 +367,64 @@
             "time": "2018-01-20T14:47:45+00:00"
         },
         {
+            "name": "sybio/image-workshop",
+            "version": "2.0.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Sybio/ImageWorkshop.git",
+                "reference": "b7f678b51b21c96049bd0a535382520a596d6526"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Sybio/ImageWorkshop/zipball/b7f678b51b21c96049bd0a535382520a596d6526",
+                "reference": "b7f678b51b21c96049bd0a535382520a596d6526",
+                "shasum": ""
+            },
+            "require": {
+                "ext-exif": "*",
+                "ext-gd": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PHPImageWorkshop": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Clément Guillemain",
+                    "homepage": "http://clementguillemain.fr",
+                    "role": "Developer / Freelancer"
+                },
+                {
+                    "name": "ImageWorkshop Community",
+                    "homepage": "https://github.com/Sybio/ImageWorkshop/graphs/contributors"
+                }
+            ],
+            "description": "Powerful PHP class using GD library to work easily with images including layer notion (like Photoshop or GIMP)",
+            "homepage": "http://phpimageworkshop.com",
+            "keywords": [
+                "class",
+                "crop",
+                "gd",
+                "image",
+                "library",
+                "resize",
+                "rotate",
+                "thumbnail",
+                "watermark"
+            ],
+            "time": "2015-07-05T09:09:12+00:00"
+        },
+        {
             "name": "symfony/process",
             "version": "v3.4.5",
             "source": {
@@ -473,6 +531,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
+        "php": ">=5.6",
         "ext-mbstring": "*",
         "ext-gd": "*"
     },
