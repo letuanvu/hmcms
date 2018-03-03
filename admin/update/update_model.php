@@ -26,53 +26,7 @@ function update_check($type = 'core', $key = '', $server = '') {
             break;
     }
 }
-/** Cài đặt update theo domain */
-function update_core_for_domain() {
-    $domain                = $_SERVER['HTTP_HOST'];
-    $args                  = array(
-        'section' => 'update_core_for_domain',
-        'key' => 'version',
-        'default_value' => '0'
-    );
-    $old_version           = get_option($args);
-    $available_plugin      = json_decode(available_plugin(), TRUE);
-    $available_plugin_send = array();
-    foreach ($available_plugin['plugins'] as $plugin_key => $plugin_val) {
-        $available_plugin_send[] = $plugin_key;
-    }
-    $available_plugin_send = implode(',', $available_plugin_send);
-    $check_url             = HM_API_SERVER . '/api/update/for_domain/' . '?domain=' . $domain . '&old_version=' . $old_version . '&cms_version=' . HM_VERSION . '&available_plugin=' . $available_plugin_send;
-    @$content = file_get_contents($check_url);
-    $content = json_decode($content, TRUE);
-    if (isset($content['version']) AND isset($content['download'])) {
-        $version = $content['version'];
-        $href    = $content['download'];
-        if ($old_version < $version) {
-            if (is_url_exist($href)) {
-                $filename = basename($href);
-                $saveto   = BASEPATH . '/' . $filename;
-                file_put_contents($saveto, fopen($href, 'r'));
-                if (file_exists($saveto)) {
-                    if (class_exists('ZipArchive')) {
-                        $zip = new ZipArchive;
-                        $res = $zip->open($saveto);
-                        if ($res === TRUE) {
-                            $zip->extractTo(BASEPATH . '/');
-                            $zip->close();
-                            unlink($saveto);
-                        }
-                    }
-                }
-            }
-            $args = array(
-                'section' => 'update_core_for_domain',
-                'key' => 'version',
-                'value' => $version
-            );
-            set_option($args);
-        }
-    }
-}
+
 /** Chạy các hàm xử lý sau khi update */
 function update_auto_load() {
     if (file_exists(BASEPATH . HM_ADMINCP_DIR . '/update/config.php')) {
