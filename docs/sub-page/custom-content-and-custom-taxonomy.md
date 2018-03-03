@@ -123,4 +123,4 @@ File giao diện của 1 custom taxonomy có tên file là **taxonomy-[taxonom
 
 Đây là kết quả của đoạn mã ví dụ :
 
-![alt text](https://raw.githubusercontent.com/manhnam91/hmcms/master/docs/images/custom-content-and-custom-taxonomy/1.png)
+![](https://raw.githubusercontent.com/manhnam91/hmcms/master/docs/images/custom-content-and-custom-taxonomy/1.png)
