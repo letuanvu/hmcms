@@ -19,7 +19,7 @@ function update_check($type = 'core', $key = '', $server = '') {
             }
             break;
         case 'plugin':
-            $check_url = HM_API_SERVER . '/api/plugin/check/?plugin=' . $key;
+            $check_url = HM_PLUGIN_GIT_RAW . '/' . $key . '/.version';
             @$content = file_get_contents($check_url);
             $content = json_decode($content, TRUE);
             return $content;

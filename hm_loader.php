@@ -46,6 +46,8 @@ define('HM_VERSION_NAME', '1.4 Bồ Công Anh');
 define('HM_API_SERVER', 'http://hoamaisoft.com');
 /** Git Raw */
 define('HM_GIT_RAW', 'https://raw.githubusercontent.com/manhnam91/hmcms/master');
+/** Git Raw */
+define('HM_PLUGIN_GIT_RAW', 'https://raw.githubusercontent.com/manhnam91/hmcms_plugin/master');
 /** Database */
 require_once(BASEPATH . HM_INC . '/database.php');
 /** Hook */
