@@ -251,6 +251,36 @@ $(document).ready(function(){
         +'</div>'
         +'</td>';
       }
+      if(status_obj == 'deleted'){
+        var line =
+         '<td>'
+        +'<input name="content_ids[]" value="'+id+'" type="checkbox" class="checkall_item_1">'
+        +'</td>'
+        +'<td>'
+        +'<i class="fa fa-trash" aria-hidden="true"></i> {lang:deleted}'
+        +'</td>'
+        +'<td><span class="content_number_order" data-id="'+id+'">'+number_order+'</span></td>'
+        +'<td><span class="content_thumbnail" data-id="'+id+'"><img src="'+thumbnail+'" /></span></td>'
+        +'<td>'
+        +'<p><a href="?run=content.php&action=edit&id='+id+'">'+name+'</a></p>'
+        +'<p class="input_description">{lang:public_time}: '+public_time+'</p>'
+        +'<p class="input_description">{lang:update_time}: '+update_time+'</p>'
+        +'</td>'
+        +'<td>'
+        +'<p><a href="?run=content.php&action=view&id='+id+'">'+slug+'</a>'
+        +'<p class="input_description">'+title+'</p>'
+        +'<p class="input_description">'+meta_keywords+'</p>'
+        +'</td>'
+        +'<td class="td_action td_action_'+id+'">'
+        +'<div class="action_btn_wap">'
+        +'<span class="action_btn_wap_button"><i class="glyphicon glyphicon-cog"></i></span>'
+        +'<a class="btn btn-default btn-xs" href="?run=content.php&action=edit&id='+id+'">{lang:edit}</a>'
+        +'<button type="button" data-id="'+id+'" class="quick_edit_popup_content_button btn btn-info btn-xs" data-toggle="modal" data-target="#popup_box_modal">{lang:quick_edit}</button>'
+        +'<button type="button" data-id="'+id+'" class="quick_public_content_button btn btn-info btn-xs">{lang:rehibilitate}</button>'+add_chapter_btn
+        +'<button type="button" data-id="'+id+'" class="quick_delete_permanently_content_button btn btn-danger btn-xs">{lang:delete_permanently}</button>'
+        +'</div>'
+        +'</td>';
+      }
       html_content.push('<tr class="content_tr content_'+id+'" data-id="'+id+'">'+line+'</tr>');
     });
     html_content = html_content.join(' ');
@@ -365,7 +395,7 @@ $(document).ready(function(){
 
   $(document).on('click', '.quick_delete_content_button', function(){
     var id = $(this).attr('data-id');
-    $.post( '?run=content_ajax.php&action=draft', { id:id }, function( data ) {
+    $.post( '?run=content_ajax.php&action=delete', { id:id }, function( data ) {
       obj = jQuery.parseJSON( data );
       if(obj.status == true){
         $('.content_tr.content_'+id).addClass('danger');

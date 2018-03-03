@@ -19,6 +19,7 @@ hm_admin_css('perfect-scrollbar/perfect-scrollbar.min.css');
         <button class="btn btn-default btn-xs content_status btn-warning" data-status="public"><?php echo hm_lang('public'); ?></button>
         <button class="btn btn-default btn-xs content_status" data-status="draft"><?php echo hm_lang('draft'); ?></button>
         <button class="btn btn-default btn-xs content_status" data-status="hide"><?php echo hm_lang('hide'); ?></button>
+        <button class="btn btn-default btn-xs content_status" data-status="deleted"><?php echo hm_lang('deleted'); ?></button>
         <a href="?run=content.php&key=<?php echo hm_get('key'); ?>&action=add" class="btn btn-default btn-xs media_btn"><?php echo $args['add_new_item']; ?></a>
       </div>
     </div>

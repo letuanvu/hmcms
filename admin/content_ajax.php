@@ -86,7 +86,7 @@ switch ($action) {
                 }
             }
 
-            /** Thực hiện xóa content */
+            /** Thực hiện chuyển sang nháp */
             update_con_val(array(
                 'id' => hm_post('id'),
                 'name' => 'status',
@@ -96,6 +96,53 @@ switch ($action) {
                 'id' => hm_post('id'),
                 'value' => array(
                     'status' => 'draft'
+                )
+            ));
+            echo json_encode(array(
+                'status' => true
+            ));
+        } else {
+            echo json_encode(array(
+                'status' => false,
+                'message' => hm_lang('you_do_not_have_permission_to_remove_this_content')
+            ));
+        }
+        break;
+    case 'delete':
+        $content_data = content_data_by_id(hm_post('id'));
+        $key          = $content_data['content']->key;
+        if ((isset($content_access[$key]['delete']) AND in_array($content_access[$key]['delete'], array(
+            'allow',
+            'owner_only'
+        ))) OR in_array($_SESSION['admin_user']['user_role'], array(
+            1,
+            2
+        ))) {
+
+            if ($content_access[$key]['delete'] == 'owner_only') {
+                $user_id = get_con_val(array(
+                    'name' => 'user_id',
+                    'id' => hm_post('id')
+                ));
+                if (!isset($user_id) OR $user_id != $_SESSION['admin_user']['user_id']) {
+                    echo json_encode(array(
+                        'status' => false,
+                        'message' => hm_lang('you_do_not_have_permission_to_remove_this_content')
+                    ));
+                    return false;
+                }
+            }
+
+            /** Thực hiện xóa content */
+            update_con_val(array(
+                'id' => hm_post('id'),
+                'name' => 'status',
+                'value' => 'deleted'
+            ));
+            content_update_val(array(
+                'id' => hm_post('id'),
+                'value' => array(
+                    'status' => 'deleted'
                 )
             ));
             echo json_encode(array(
@@ -144,11 +191,20 @@ switch ($action) {
         break;
     case 'public':
         /** Thực hiện khôi phục content */
-        echo content_update_val(array(
+        content_update_val(array(
             'id' => hm_post('id'),
             'value' => array(
                 'status' => 'public'
             )
+        ));
+        content_update_val(array(
+            'id' => hm_post('id'),
+            'value' => array(
+                'status' => 'public'
+            )
+        ));
+        echo json_encode(array(
+            'status' => true
         ));
         break;
     case 'ajax_slug':
