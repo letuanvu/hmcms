@@ -5,7 +5,7 @@ if (!file_exists(BASEPATH . 'hm_config.php')) {
   /** Gọi file install */
   require_once(BASEPATH . '/hm_include/install.php');
 } else {
-  /** Composer */
+  /** Vendor */
   require_once(BASEPATH . 'vendor/autoload.php');
 
   /** Load file cấu hình */

@@ -1,16 +1,17 @@
 <?php
-/** 
+/**
  * Xử lý admin cp theo đường dẫn
- * Vị trí : admin/index.php 
+ * Vị trí : admin/index.php
  */
 define('IN_ADMIN', TRUE);
 if (!defined('BASEPATH')) {
     define('BASEPATH', dirname(__DIR__) . '/');
+    require_once(BASEPATH . 'vendor/autoload.php');
     require_once(BASEPATH . 'hm_config.php');
     require_once(BASEPATH . 'hm_loader.php');
     require_once(BASEPATH . 'hm_setup.php');
 }
-;
+
 /** gọi tệp tin admin base */
 require_once(dirname(__FILE__) . '/admin.php');
 /**

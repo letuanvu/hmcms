@@ -5,11 +5,11 @@ use Monolog\Handler\StreamHandler;
 /** create log channel */
 $hmlog = array();
 $hmlog['sql'] = new Logger('sql');
-$hmlog['sql']->pushHandler(new StreamHandler(BASEPATH . HM_CONTENT_DIR . 'logs/sql.log', Logger::DEBUG));
+$hmlog['sql']->pushHandler(new StreamHandler(BASEPATH . HM_CONTENT_DIR . '/logs/sql.log', Logger::DEBUG));
 $hmlog['media_file'] = new Logger('media_file');
-$hmlog['media_file']->pushHandler(new StreamHandler(BASEPATH . HM_CONTENT_DIR . 'logs/media_file.log', Logger::DEBUG));
+$hmlog['media_file']->pushHandler(new StreamHandler(BASEPATH . HM_CONTENT_DIR . '/logs/media_file.log', Logger::DEBUG));
 $hmlog['request'] = new Logger('request');
-$hmlog['request']->pushHandler(new StreamHandler(BASEPATH . HM_CONTENT_DIR . 'logs/request.log', Logger::DEBUG));
+$hmlog['request']->pushHandler(new StreamHandler(BASEPATH . HM_CONTENT_DIR . '/logs/request.log', Logger::DEBUG));
 
 /**
  * Load các thư viện và file cần thiết

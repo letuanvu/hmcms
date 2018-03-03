@@ -14,7 +14,6 @@
         "ext-gd": "*",
         "vlucas/phpdotenv": "2.4.0",
         "intervention/image": "2.4.1",
-        "nette/database": "2.4.5",
         "spatie/db-dumper": "2.8.2",
         "monolog/monolog": "1.23.0"
     }
