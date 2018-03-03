@@ -57,9 +57,9 @@ function update_core($href = FALSE) {
                     $zip->extractTo(BASEPATH . '/');
                     $zip->close();
                     update_auto_load();
-                    if (file_exists(BASEPATH . '/hmcms-master')) {
-                        recurse_copy(BASEPATH . '/hmcms-master', BASEPATH . '/');
-                        delete_dir(BASEPATH . '/hmcms-master');
+                    if (file_exists(BASEPATH . 'hmcms-master')) {
+                        recurse_copy(BASEPATH . 'hmcms-master', BASEPATH);
+                        delete_dir(BASEPATH . 'hmcms-master');
                     }
                     unlink($saveto);
                     return hm_json_encode(array(
