@@ -1,6 +1,8 @@
 {
     "name": "manhnam91/hmcms",
-    "description": "HoaMai CMS",
+    "description": "HoaMai CMS - Simple and fast content management system",
+    "keywords": ["cms", "hmcms"],
+    "license": "MIT",
     "authors": [
     {
         "name": "Nguyễn Nam",
@@ -8,6 +10,12 @@
     }],
     "require": {
         "php": "^5.3.3 || ^7.0",
-        "ext-gd": "*"
+        "ext-mbstring": "*",
+        "ext-gd": "*",
+        "vlucas/phpdotenv": "2.4.0",
+        "intervention/image": "2.4.1",
+        "nette/database": "2.4.5",
+        "spatie/db-dumper": "2.8.2",
+        "monolog/monolog": "1.23.0"
     }
 }

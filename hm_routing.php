@@ -94,6 +94,7 @@ if (!file_exists('.htaccess')) {
 /** Lấy uri trang đang xem */
 $request_slug = get_current_uri();
 $segments     = explode('/', $request_slug);
+$hmlog['request']->info($request_slug);
 /** Kiểm tra segments 1 có phải là 1 module */
 $modules      = $hmmodule->hmmodule;
 $module_key   = FALSE;
