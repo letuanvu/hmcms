@@ -9,6 +9,7 @@
         "email": "ad.gtmb@gmail.com"
     }],
     "require": {
+        "php": ">=5.6",
         "ext-mbstring": "*",
         "ext-gd": "*",
         "vlucas/phpdotenv": "2.4.0",

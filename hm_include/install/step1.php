@@ -16,15 +16,15 @@
 		<div class="form_content">
 			<?php
 			$check = array();
-			
+
 			if(allow_version()){
 				$check['allow_version'] = '1';
-				echo '<div class="alert alert-success" role="alert">Phiên bản PHP lớn hơn 5.3</div>';
+				echo '<div class="alert alert-success" role="alert">Phiên bản PHP lớn hơn 5.6</div>';
 			}else{
 				$check['allow_version'] = '0';
-				echo '<div class="alert alert-danger" role="alert">Phiên bản PHP lớn hơn 5.3</div>';
+				echo '<div class="alert alert-danger" role="alert">Phiên bản PHP lớn hơn 5.6</div>';
 			}
-			
+
 			if($gdv = gdVersion()) {
 				if ($gdv >=2) {
 					$check['gdVersion'] = '1';
@@ -37,8 +37,8 @@
 				$check['gdVersion'] = '0';
 				echo '<div class="alert alert-danger" role="alert">Thư viện GD chưa được cài đặt</div>';
 			}
-			
-			
+
+
 			if(is_writable('hm_content/uploads')){
 				$check['uploadWritable'] = '1';
 				echo '<div class="alert alert-success" role="alert">Thư mục hm_content/uploads được ghi</div>';
@@ -51,7 +51,7 @@
 					echo '<div class="alert alert-danger" role="alert">Thư mục hm_content/uploads không được ghi, vui lòng cmod 777</div>';
 				}
 			}
-			
+
 			if(function_exists('mcrypt_encrypt')){
 				$check['mcrypt'] = '1';
 				echo '<div class="alert alert-success" role="alert">Hỗ trợ hàm mcrypt_encrypt</div>';
@@ -59,7 +59,7 @@
 				$check['mcrypt'] = '0';
 				echo '<div class="alert alert-danger" role="alert">Không hỗ trợ hàm mcrypt_encrypt</div>';
 			}
-			
+
 			if(function_exists('mysqli_connect')){
 				$check['mysqli'] = '1';
 				echo '<div class="alert alert-success" role="alert">Hỗ trợ hàm mysqli_connect</div>';
@@ -67,7 +67,7 @@
 				$check['mysqli'] = '0';
 				echo '<div class="alert alert-danger" role="alert">Không hỗ trợ hàm mysqli_connect</div>';
 			}
-			
+
 			if(!in_array('0',$check)){
 				echo '<a href="?step=2" class="btn btn-default">Bước tiếp</a>';
 			}
