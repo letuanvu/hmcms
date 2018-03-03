@@ -75,7 +75,7 @@ define('SIMPLE_CAPTCHA', true);
 /** Địa chỉ website */
 $protocol = '//';
 
-define('SITE_URL', $protocol . $_SERVER['SERVER_NAME'] . SERVER_PORT);
+define('SITE_URL', $protocol . getenv('SERVER_NAME') . SERVER_PORT);
 
 /** Đường dẫn thư mục */
 define('FOLDER_PATH', '');

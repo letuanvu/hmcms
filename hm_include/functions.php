@@ -111,18 +111,18 @@ function hm_redirect($to = BASE_URL, $time = 0) {
     exit();
 }
 function hm_ip() {
-    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-        $ip = $_SERVER['HTTP_CLIENT_IP'];
-    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    if (!empty(getenv('HTTP_CLIENT_IP'))) {
+        $ip = getenv('HTTP_CLIENT_IP');
+    } elseif (!empty(getenv('HTTP_X_FORWARDED_FOR'))) {
+        $ip = getenv('HTTP_X_FORWARDED_FOR');
     } else {
-        $ip = $_SERVER['REMOTE_ADDR'];
+        $ip = getenv('REMOTE_ADDR');
     }
     return $ip;
 }
 function hm_agent() {
-    if (!empty($_SERVER['HTTP_USER_AGENT'])) {
-        $agent = $_SERVER['HTTP_USER_AGENT'];
+    if (!empty(getenv('HTTP_USER_AGENT'))) {
+        $agent = getenv('HTTP_USER_AGENT');
     }
     return $agent;
 }

@@ -158,7 +158,7 @@ function install_db() {
     $admin_email     = trim($_POST['admin_email']);
     $admin_password  = trim($_POST['admin_password']);
     $encryption_key  = trim($_POST['encryption_key']);
-    $url_path        = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    $url_path        = parse_url(getenv('REQUEST_URI'), PHP_URL_PATH);
 
     /** install */
     $opt = array(
@@ -657,8 +657,8 @@ function install_db() {
     $hm_config = str_replace("define('DB_PREFIX', '');", "define('DB_PREFIX', '" . $prefix . "');", $hm_config);
     $hm_config = str_replace("define('ENCRYPTION_KEY', '');", "define('ENCRYPTION_KEY', '" . $encryption_key . "');", $hm_config);
     $hm_config = str_replace("define('FOLDER_PATH', '');", "define('FOLDER_PATH', '" . $url_path . "');", $hm_config);
-    if ($_SERVER['SERVER_PORT'] != '80') {
-        $hm_config = str_replace("define('SERVER_PORT', '');", "define('SERVER_PORT', ':" . $_SERVER['SERVER_PORT'] . "');", $hm_config);
+    if (getenv('SERVER_PORT') != '80') {
+        $hm_config = str_replace("define('SERVER_PORT', '');", "define('SERVER_PORT', ':" . getenv('SERVER_PORT') . "');", $hm_config);
     }
     $fp = fopen('hm_config.php', 'w');
     if ($fp) {

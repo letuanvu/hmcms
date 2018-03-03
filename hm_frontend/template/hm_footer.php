@@ -1,8 +1,8 @@
 <?php
-$ref = $_SERVER['HTTP_REFERER'];
-$ref_domain = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
-if ( strpos($ref, HM_ADMINCP_DIR) !== false AND $ref_domain == $_SERVER['SERVER_NAME']) {
-    
+$ref = getenv('HTTP_REFERER');
+$ref_domain = parse_url(getenv('HTTP_REFERER'), PHP_URL_HOST);
+if ( strpos($ref, HM_ADMINCP_DIR) !== false AND $ref_domain == getenv('SERVER_NAME')) {
+
 }
 ?>
 <link class="hm_footer_hide_in_iframe" rel="stylesheet" href="<?php echo BASE_URL . HM_FRONTENT_DIR; ?>/css/hm_footer_menu.css">

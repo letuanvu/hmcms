@@ -21,7 +21,7 @@ if (!in_array(hm_get('run'), $disallow_check)) {
         $session_admin_login = $_SESSION['admin_login'];
     }
     if ($cookie_admin_login == NULL OR $session_admin_login == NULL) {
-        $login_page = BASE_URL . HM_ADMINCP_DIR . '?run=login.php&back=' . urlencode(SITE_URL . $_SERVER['REQUEST_URI']);
+        $login_page = BASE_URL . HM_ADMINCP_DIR . '?run=login.php&back=' . urlencode(SITE_URL . getenv('REQUEST_URI'));
         hm_redirect($login_page);
         hm_exit(_('Đang chuyển hướng đến trang đăng nhập'));
     }
@@ -30,7 +30,7 @@ if (!in_array(hm_get('run'), $disallow_check)) {
         setcookie('admin_login', $cookie_admin_login, time() + COOKIE_EXPIRES, '/');
         define('ADMIN_LOGIN', $session_admin_login);
     } else {
-        $login_page = BASE_URL . HM_ADMINCP_DIR . '?run=login.php&back=' . SITE_URL . $_SERVER['REQUEST_URI'];
+        $login_page = BASE_URL . HM_ADMINCP_DIR . '?run=login.php&back=' . SITE_URL . getenv('REQUEST_URI');
         hm_redirect($login_page);
         hm_exit(_('Đang chuyển hướng đến trang đăng nhập'));
     }

@@ -539,7 +539,7 @@ function pagination($args = array()) {
         } else {
             $base = BASE_URL;
         }
-        $query_str = $_SERVER['QUERY_STRING'];
+        $query_str = getenv('QUERY_STRING');
         if ($args['query_id']) {
             $query_id = $args['query_id'];
             $total    = $hmcontent->get_val($query_id . '_total_result');

@@ -1,10 +1,10 @@
 <?php
 $protocol = '//';
-$url_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-if ($_SERVER['SERVER_PORT'] == '80') {
-    define('BASE_URL', $protocol . $_SERVER['SERVER_NAME'] . $url_path);
+$url_path = parse_url(getenv('REQUEST_URI'), PHP_URL_PATH);
+if (getenv('SERVER_PORT') == '80') {
+    define('BASE_URL', $protocol . getenv('SERVER_NAME') . $url_path);
 } else {
-    define('BASE_URL', $protocol . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $url_path);
+    define('BASE_URL', $protocol . getenv('SERVER_NAME') . ':' . getenv('SERVER_PORT') . $url_path);
 }
 require_once(BASEPATH . '/hm_include/install/install_model.php');
 $step = $_GET['step'];

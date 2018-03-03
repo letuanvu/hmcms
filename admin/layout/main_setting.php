@@ -24,7 +24,7 @@
             'name'=>'admin_email',
             'input_type'=>'text',
             'required'=>TRUE,
-            'default_value'=>get_option( array('section'=>'system_setting','key'=>'admin_email','default_value'=>'admin@'.$_SERVER['SERVER_NAME']) ),
+            'default_value'=>get_option( array('section'=>'system_setting','key'=>'admin_email','default_value'=>'admin@'.getenv('SERVER_NAME')) ),
           );
           build_input_form($args);
 

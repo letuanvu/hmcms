@@ -1,7 +1,7 @@
 <?php
-/** 
+/**
  * Tệp tin model của taxonomy trong admin
- * Vị trí : admin/taxonomy/taxonomy_model.php 
+ * Vị trí : admin/taxonomy/taxonomy_model.php
  */
 if (!defined('BASEPATH'))
     exit('403');
@@ -352,7 +352,7 @@ function taxonomy_ajax_slug() {
 }
 function quick_edit_tax_form() {
     hook_action('quick_edit_tax_form');
-    if ($_SERVER['HTTP_HOST'] == parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST)) {
+    if (getenv('HTTP_HOST') == parse_url(getenv('HTTP_REFERER'), PHP_URL_HOST)) {
         $args                = taxonomy_data(hm_get('key'));
         $args['object_id']   = hm_get('id');
         $args['object_type'] = 'taxonomy';
