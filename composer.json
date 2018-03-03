@@ -1,5 +1,13 @@
 {
+    "name": "manhnam91/hmcms",
+    "description": "HoaMai CMS",
+    "authors": [
+    {
+        "name": "Nguyễn Nam",
+        "email": "ad.gtmb@gmail.com"
+    }],
     "require": {
+        "php": "^5.3.3 || ^7.0",
         "ext-gd": "*"
     }
 }
