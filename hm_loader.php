@@ -47,6 +47,8 @@ if (!defined('ALLOW_COMMAND_PAGE')) {
 if (!defined('ALLOW_UPDATE')) {
     define('ALLOW_UPDATE', TRUE);
 }
+/** session */
+session_start();
 
 /** BASE_URL */
 $base_url = SITE_URL . FOLDER_PATH . SERVER_PORT;
