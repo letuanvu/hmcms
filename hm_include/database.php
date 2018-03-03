@@ -6,8 +6,6 @@
 if (!defined('BASEPATH'))
     exit('403');
 
-$db = new Nette\Database\Connection(DB_HOST, DB_USER, DB_CHARSET);
-
 /**
  * Gọi thư viện mysql
  */
