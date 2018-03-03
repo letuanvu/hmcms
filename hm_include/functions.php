@@ -1346,20 +1346,19 @@ function recurse_copy($src, $dst) {
 }
 /** delete folder and content */
 function delete_dir($dirPath) {
-    if (!is_dir($dirPath)) {
-        return false;
-    }
-    if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
-        $dirPath .= '/';
-    }
-    $files = glob($dirPath . '*', GLOB_MARK);
-    foreach ($files as $file) {
-        if (is_dir($file)) {
-            delete_dir($file);
-        } else {
-            unlink($file);
+    if (is_dir($dirPath)) {
+        $objects = scandir($dirPath);
+        foreach ($objects as $object) {
+            if ($object != "." && $object != "..") {
+                if (filetype($dirPath . "/" . $object) == "dir") {
+                    delete_dir($dirPath . "/" . $object);
+                } else {
+                    unlink($dirPath . "/" . $object);
+                }
+            }
         }
+        reset($objects);
+        rmdir($dirPath);
     }
-    rmdir($dirPath);
 }
 ?>
