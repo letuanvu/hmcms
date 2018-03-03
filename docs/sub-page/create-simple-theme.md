@@ -136,7 +136,7 @@ ví dụ đây là một phần của file **header.php** mẫu:
 
 Tiếp theo chúng ta sẽ tìm hiểu các lấy vài viết ra ngoài giao diện. Để làm được điều này bạn cần hiểu khái niệm *content và taxonomy*, có thể tham khảo :
 
-![Cơ bản về việc sử dụng custom content và custom taxonomy](https://github.com/manhnam91/hmcms/blob/master/docs/sub-page/custom-content-and-custom-taxonomy.md)
+[Cơ bản về việc sử dụng custom content và custom taxonomy](https://github.com/manhnam91/hmcms/blob/master/docs/sub-page/custom-content-and-custom-taxonomy.md)
 
 Trong ví dụ này chúng ta sẽ làm việc với kiểu nội dung mặc định là `post` và kiểu phân loại `category`
 
@@ -307,12 +307,12 @@ Trong đó:
 
 * **name**: là key duy nhất của menu, không trùng với menu khác.
 * **nice_name**: là tên của menu đó.
-* **wrapper**: thẻ bao ngoài của menu, nếu bạn để trống mặc định sẽ là thẻ <ul>, bạn có thể sử dụng ol hoặc div tùy vào nhu cầu tùy biến.
+* **wrapper**: thẻ bao ngoài của menu, nếu bạn để trống mặc định sẽ là thẻ <ul>.
 * **wrapper_class** và **wrapper_id**: id và class của thẻ bao ngoài dùng cho css.
 * **item**: thẻ bao ngoài của một phần tử menu, mặc định là thẻ <li>.
 * **item_class** và **item_id**: tương tự là class và id của một phần tử trong menu.
 * **permalink_class**: class của đường link trong menu item, dùng cho css, sẽ thêm vào thẻ <a>
-* **permalink_attr**: các attributes của đường link, bạn có thể ghi thêm ví dụ như onclick="menu_click();" data-color="red" ..., dùng nếu bạn cần áp dụng javascript cho menu.
+* **permalink_attr**: các attributes của đường link, bạn có thể ghi thêm ví dụ như `onclick="menu_click();"` data-color="red" ..., dùng nếu bạn cần áp dụng javascript cho menu.
 * **permalink_before**: thẻ bao quanh đường link của menu_item, ví dụ bạn có thể khai báo là <span class="menu_link">.
 * **permalink_after**: thẻ đóng của thẻ bạn đã khai báo trong permalink_before.
 * **echo**: echo menu ra giao diện, nếu để mặc định FALSE thì trong giao diện bạn sẽ phải echo menu ra.
@@ -322,3 +322,108 @@ Sau khi khai báo menu, để menu hiển thị được trong giao diện bạn
 echo **menu_location('topmenu')**;
 
 trong đó `topmenu` là `key của menu mà bạn đã khai` báo lúc dùng hàm: **register_menu_location()**.
+
+Bắt đầu từ phiên bản 1.1.4 HoaMai CMS được nâng cấp thêm tính năng block, đây là tính năng dành cho nhà phát triển tạo ra các theme `có tính tùy biến cao hơn` so với việc sử dụng trang cài đặt giao diện trong admincp.
+
+Tại menu Giao diện => Kéo thả bố cục bạn sẽ thấy hỗ trợ sẵn 3 block đơn giản là: Văn bản, hình ảnh và trình đơn.
+
+![](https://raw.githubusercontent.com/manhnam91/hmcms/master/docs/images/create-simple-theme/10.png)
+
+Tuy nhiên bạn cần tạo vị trí để kéo thả chúng vào giao diện, được gọi là `Block Container`. Để làm việc này trong file **init.php** của giao diện bạn dùng hàm **register_block_container()** để tạo 1 vị trí kéo thả:
+
+```
+$args = array(
+			'name'			=>'homeblock',
+			'nice_name' 		=> _('Khối trang chủ'),
+		);
+register_block_container($args);
+```
+
+Sau đó quay lại trang kéo thả giao diện bạn sẽ thấy `Block Container` mà bạn đã tạo, kéo thả thử vài `Block` vào vị trí đó
+
+![](https://raw.githubusercontent.com/manhnam91/hmcms/master/docs/images/create-simple-theme/11.png)
+
+Bạn có thể kéo thả lên xuống để xếp vị trí các Block, `bấm vào tên Block` để thu gọn hoặc mở phần cài đặt của Block đó.
+
+Tại phía ngoài giao diện, bạn cần gọi vị trí bạn muốn hiển thị các Block này bằng hàm :
+
+**block_container('ten_block')**;
+
+Trong ví dụ này chúng ta đã tạo Block Container `tên là homeblock`, nên tại giao diện ta gọi:
+
+**<?php block_container('homeblock'); ?>**
+
+và sẽ thấy các Block xuất hiện:
+
+![](https://raw.githubusercontent.com/manhnam91/hmcms/master/docs/images/create-simple-theme/12.png)
+
+Bạn có thể tạo nhiều Block Container khác nhau tùy vào giao diện của bạn, và tất nhiên `bạn có thể tạo ra các Block khác của riêng bạn`. Ví dụ như tại trang chủ có các khối danh mục, bạn muốn biến các khối này thành các Block để kéo thả vị trí, thêm hoặc xóa được linh động hơn, bạn có thể vào lại **init.php** của giao diện và tạo thêm Block bằng đoạn code như sau:
+
+```
+function homecatblockgrid($block_id){
+	$cat_id = get_blo_val(array('name'=>'cat_id','id'=>$block_id));
+	$cat_name = get_blo_val(array('name'=>'cat_name','id'=>$block_id));
+	$num_product = get_blo_val(array('name'=>'product_number','id'=>$block_id));
+	echo 'Block '.$cat_name.' có id là '.$cat_id.' và muốn hiện ra '.$num_product.' bài  <br>';
+}
+
+$args = array(
+			'name'		=> 	'homecatblockgrid',
+			'nice_name' 	=> 	_('List bài từ danh mục'),
+			'iuput'		=> 	array(
+							array(
+								'nice_name'=>'Tên khối danh mục',
+								'name'=>'cat_name',
+								'input_type'=>'text',
+								'required'=>TRUE,
+							),
+							array(
+								'nice_name'=>'Số bài hiển thị',
+								'default_value'=>'12',
+								'name'=>'product_number',
+								'input_type'=>'number',
+								'required'=>TRUE,
+							),
+							array(
+								'nice_name'=>'Chọn danh mục',
+								'name'=>'cat_id',
+								'input_type'=>'taxonomy_select',
+								'data_key'=>array('category'),
+								'required'=>FALSE,
+							),
+						),
+			'function'	=> 	'homecatblockgrid',
+		);
+register_block($args);
+```
+
+Quay lại trang kéo thả giao diện và kéo vào block trên
+
+![](https://raw.githubusercontent.com/manhnam91/hmcms/master/docs/images/create-simple-theme/13.png)
+
+và kết quả:
+
+![](https://raw.githubusercontent.com/manhnam91/hmcms/master/docs/images/create-simple-theme/14.png)
+
+Hàm **register_block()** khi sử dụng cần đủ các phần tử sau của mảng truyền vào:
+
+* **name**: tên Block, viết thường không dấu và liền mạch
+
+* **nice_name**: Tên hiển thị trong admin
+
+* **input**: Mảng các input của block này
+
+* **function**: Hàm thực thi Block, trong hàm này bạn sử dụng **get_blo_val()** để gọi các giá trị của input mà bạn tạo cho Block này, hàm này do bạn tạo ra nhưng luôn phải theo cấu trúc : **ten_ham_cua_ban($block_id)**; tức là luôn phải có input **$block_id** mặc dù biến này sẽ được tự sinh ra khi bạn kéo thả Block trong admin và gán cho từng Block, biến này cũng dùng cho hàm **get_blo_val()** để lấy chính xác các giá trị của Block đó.
+
+Trong ví dụ trên bạn có thể thấy cách lấy các giá trị của Block, tuy nhiên việc bạn viết vòng lặp **query_content()** hay html vào trong hàm hiển trị của block sẽ rất rối code và khó chỉnh sửa sau này. Vì vậy chúng tôi khuyến khích bạn `nên gọi template giao diện và truyền các input vào`, đối với ví dụ trên ta có thể dùng:
+
+```
+function homecatblockgrid($block_id){
+	$cat_id = get_blo_val(array('name'=>'cat_id','id'=>$block_id));
+	$cat_name = get_blo_val(array('name'=>'cat_name','id'=>$block_id));
+	$num_product = get_blo_val(array('name'=>'product_number','id'=>$block_id));
+	get_template_part("block-list-post", array('cat_name'=>$cat_name,'cat_id'=>$cat_id,'num_product'=>$num_product,'block_id'=>$block_id));
+}
+```
+
+Và bây giờ trong thư mục chứa giao diện bạn chỉ cần tạo file **block-list-post.php** và dùng sẵn các biến đã truyền vào ở trên để tạo ra template list các bài viết theo danh mục.
