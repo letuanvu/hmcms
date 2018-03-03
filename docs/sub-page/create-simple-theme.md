@@ -50,19 +50,19 @@ Với nội dung file **header.php**:
 
 ```
 <body>
-	<header>
-		<h1>Header</h1>
-		<hr>
-	</header>
+  <header>
+  <h1>Header</h1>
+  <hr>
+  </header>
 ```
 
 và **footer.php**:
 
 ```
-	<footer>
-		<hr>
-		<h1>Footer</h1>
-	</footer>
+  <footer>
+  <hr>
+  <h1>Footer</h1>
+  </footer>
 </body>
 ```
 
@@ -122,15 +122,15 @@ ví dụ đây là một phần của file **header.php** mẫu:
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<?php hm_head(); ?>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<!-- Bootstrap Core CSS -->
-	<?php echo css('asset/css/bootstrap.css'); ?>
-	<!-- Custom CSS -->
-	<?php echo css('asset/css/menu.css'); ?>
-	<?php echo css('asset/css/style.css'); ?>
+  <?php hm_head(); ?>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap Core CSS -->
+  <?php echo css('asset/css/bootstrap.css'); ?>
+  <!-- Custom CSS -->
+  <?php echo css('asset/css/menu.css'); ?>
+  <?php echo css('asset/css/style.css'); ?>
 </head>
 ```
 
@@ -149,13 +149,13 @@ Lấy dữ liệu trả về từ hàm này vào biến `$ids` và `print_r` đ�
 get_template_part('header');
 ?>
 <article>
-	<h1>Chào mừng bạn đến với giao diện của tôi</h1>
-	<pre>
-	<?php
-	$ids = query_content();
-	print_r($ids);
-	?>
-	</pre>
+  <h1>Chào mừng bạn đến với giao diện của tôi</h1>
+  <pre>
+  <?php
+  $ids = query_content();
+  print_r($ids);
+  ?>
+  </pre>
 </article>
 <?php
 get_template_part('footer');
@@ -203,15 +203,15 @@ Sửa lại file **index.php** hoàn chỉnh như sau:
 get_template_part('header');
 ?>
 <article>
-	<h1>Chào mừng bạn đến với giao diện của tôi</h1>
-	<?php
-	$ids = query_content();
-	foreach($ids as $id){
-		$name = get_con_val("name=name&id=$id");
-		$link = request_uri("type=content&id=$id");
-		echo '<a href="' . $link . '"> ' . $name . ' </a><br/>';
-	}
-	?>
+  <h1>Chào mừng bạn đến với giao diện của tôi</h1>
+  <?php
+  $ids = query_content();
+  foreach($ids as $id){
+  $name = get_con_val("name=name&id=$id");
+  $link = request_uri("type=content&id=$id");
+  echo '<a href="' . $link . '"> ' . $name . ' </a><br/>';
+  }
+  ?>
 </article>
 <?php
 get_template_part('footer');
@@ -229,17 +229,17 @@ Về phần danh mục chúng ta tạo 1 danh mục ví dụ là : `Danh mục 1
 get_template_part('header');
 ?>
 <article>
-	<h1><?php echo get_tax_val("name=name&id=$id"); ?></h1>
-	<?php
-	$ids = query_content();
-	foreach($ids as $id){
-		$name = get_con_val("name=name&id=$id");
-		$link = request_uri("type=content&id=$id");
-		$content_thumbnail = get_con_val("name=content_thumbnail&id=$id");
-		$img = create_image("file=$content_thumbnail&w=300&h=200");
-		echo '<a href="' . $link . '"> <img src="' . $img . '" alt="" >' . $name . ' </a>';
-	}
-	?>
+  <h1><?php echo get_tax_val("name=name&id=$id"); ?></h1>
+  <?php
+  $ids = query_content();
+  foreach($ids as $id){
+  $name = get_con_val("name=name&id=$id");
+  $link = request_uri("type=content&id=$id");
+  $content_thumbnail = get_con_val("name=content_thumbnail&id=$id");
+  $img = create_image("file=$content_thumbnail&w=300&h=200");
+  echo '<a href="' . $link . '"> <img src="' . $img . '" alt="" >' . $name . ' </a>';
+  }
+  ?>
 </article>
 <?php
 get_template_part('footer');
@@ -266,10 +266,10 @@ Ngoài ra trong trang này bạn có thể sử dụng một số hàm sau:
 get_template_part('header');
 ?>
 <article>
-	<h1 class="post-title"><?php echo get_con_val("name=name&id=$id"); ?></h1>
-	<div>
-		<?php echo get_con_val("name=content&id=$id"); ?>
-	</div>
+  <h1 class="post-title"><?php echo get_con_val("name=name&id=$id"); ?></h1>
+  <div>
+  <?php echo get_con_val("name=content&id=$id"); ?>
+  </div>
 </article>
 <?php
 get_template_part('footer');
@@ -287,20 +287,20 @@ Tương tự như với file **taxonomy.php**, biến `$id` trong **content.php*
 ```
 /** Đăng ký vị trí menu đầu trang */
 $args = array(
-			'name'			=>'topmenu',
-			'nice_name' 		=> _('Menu đầu trang'),
-			'wrapper' 		=> 'ul',
-			'wrapper_class' 	=> ''
-			'wrapper_id' 		=> '',
-			'item' 			=> 'li',
-			'item_class' 		=> '',
-			'item_id' 		=> '',
-			'permalink_class' 	=> '',
-			'permalink_attr' 	=> '',
-			'permalink_before'	=> '',
-			'permalink_after'	=> '',
-			'echo'			=> FALSE,
-		);
+  'name'      =>'topmenu',
+  'nice_name'     => _('Menu đầu trang'),
+  'wrapper'     => 'ul',
+  'wrapper_class'   => ''
+  'wrapper_id'     => '',
+  'item'       => 'li',
+  'item_class'     => '',
+  'item_id'     => '',
+  'permalink_class'   => '',
+  'permalink_attr'   => '',
+  'permalink_before'  => '',
+  'permalink_after'  => '',
+  'echo'      => FALSE,
+  );
 register_menu_location($args);
 ```
 Trong đó:
@@ -319,7 +319,7 @@ Trong đó:
 
 * **permalink_class**: class của đường link trong menu item, dùng cho css, sẽ thêm vào thẻ `a`.
 
-* **permalink_attr**: các attributes của đường link, bạn có thể ghi thêm ví dụ như `onclick="menu_click();"`. data-color="red" ..., dùng nếu bạn cần áp dụng javascript cho menu.
+* **permalink_attr**: các attributes của đường link, bạn có thể ghi thêm ví dụ như `onclick="menu_click();"`,  `data-color="red"` ..., dùng nếu bạn cần áp dụng javascript cho menu.
 
 * **permalink_before**: thẻ bao quanh đường link của menu_item, ví dụ bạn có thể khai báo là `<span class="menu_link">`.
 
@@ -343,9 +343,9 @@ Tuy nhiên bạn cần tạo vị trí để kéo thả chúng vào giao diện,
 
 ```
 $args = array(
-			'name'			=>'homeblock',
-			'nice_name' 		=> _('Khối trang chủ'),
-		);
+  'name'      =>'homeblock',
+  'nice_name'     => _('Khối trang chủ'),
+  );
 register_block_container($args);
 ```
 
@@ -371,39 +371,39 @@ Bạn có thể tạo nhiều Block Container khác nhau tùy vào giao diện c
 
 ```
 function homecatblockgrid($block_id){
-	$cat_id = get_blo_val(array('name'=>'cat_id','id'=>$block_id));
-	$cat_name = get_blo_val(array('name'=>'cat_name','id'=>$block_id));
-	$num_product = get_blo_val(array('name'=>'product_number','id'=>$block_id));
-	echo 'Block '.$cat_name.' có id là '.$cat_id.' và muốn hiện ra '.$num_product.' bài  <br>';
+  $cat_id = get_blo_val(array('name'=>'cat_id','id'=>$block_id));
+  $cat_name = get_blo_val(array('name'=>'cat_name','id'=>$block_id));
+  $num_product = get_blo_val(array('name'=>'product_number','id'=>$block_id));
+  echo 'Block '.$cat_name.' có id là '.$cat_id.' và muốn hiện ra '.$num_product.' bài  <br>';
 }
 
 $args = array(
-			'name'		=> 	'homecatblockgrid',
-			'nice_name' 	=> 	_('List bài từ danh mục'),
-			'iuput'		=> 	array(
-							array(
-								'nice_name'=>'Tên khối danh mục',
-								'name'=>'cat_name',
-								'input_type'=>'text',
-								'required'=>TRUE,
-							),
-							array(
-								'nice_name'=>'Số bài hiển thị',
-								'default_value'=>'12',
-								'name'=>'product_number',
-								'input_type'=>'number',
-								'required'=>TRUE,
-							),
-							array(
-								'nice_name'=>'Chọn danh mục',
-								'name'=>'cat_id',
-								'input_type'=>'taxonomy_select',
-								'data_key'=>array('category'),
-								'required'=>FALSE,
-							),
-						),
-			'function'	=> 	'homecatblockgrid',
-		);
+  'name'    =>   'homecatblockgrid',
+  'nice_name'   =>   _('List bài từ danh mục'),
+  'iuput'    =>   array(
+  array(
+  'nice_name'=>'Tên khối danh mục',
+  'name'=>'cat_name',
+  'input_type'=>'text',
+  'required'=>TRUE,
+  ),
+  array(
+  'nice_name'=>'Số bài hiển thị',
+  'default_value'=>'12',
+  'name'=>'product_number',
+  'input_type'=>'number',
+  'required'=>TRUE,
+  ),
+  array(
+  'nice_name'=>'Chọn danh mục',
+  'name'=>'cat_id',
+  'input_type'=>'taxonomy_select',
+  'data_key'=>array('category'),
+  'required'=>FALSE,
+  ),
+  ),
+  'function'  =>   'homecatblockgrid',
+  );
 register_block($args);
 ```
 
@@ -429,10 +429,10 @@ Trong ví dụ trên bạn có thể thấy cách lấy các giá trị của Bl
 
 ```
 function homecatblockgrid($block_id){
-	$cat_id = get_blo_val(array('name'=>'cat_id','id'=>$block_id));
-	$cat_name = get_blo_val(array('name'=>'cat_name','id'=>$block_id));
-	$num_product = get_blo_val(array('name'=>'product_number','id'=>$block_id));
-	get_template_part("block-list-post", array('cat_name'=>$cat_name,'cat_id'=>$cat_id,'num_product'=>$num_product,'block_id'=>$block_id));
+  $cat_id = get_blo_val(array('name'=>'cat_id','id'=>$block_id));
+  $cat_name = get_blo_val(array('name'=>'cat_name','id'=>$block_id));
+  $num_product = get_blo_val(array('name'=>'product_number','id'=>$block_id));
+  get_template_part("block-list-post", array('cat_name'=>$cat_name,'cat_id'=>$cat_id,'num_product'=>$num_product,'block_id'=>$block_id));
 }
 ```
 
