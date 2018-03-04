@@ -172,17 +172,17 @@ function install_db() {
     $hmdb->exec('SET NAMES "UTF8"');
 
     $sql = "
-	CREATE TABLE IF NOT EXISTS `" . $prefix . "content` (
-		  `id` int(11) NOT NULL AUTO_INCREMENT,
-		  `name` varchar(500) NOT NULL,
-		  `slug` varchar(500) NOT NULL,
-		  `key` varchar(50) NOT NULL,
-		  `parent` int(11) NOT NULL,
-		  `status` varchar(50) NOT NULL,
-		  `content_order` int(11) NOT NULL,
-		  PRIMARY KEY (`id`)
-		) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
-	";
+    CREATE TABLE IF NOT EXISTS `" . $prefix . "content` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `name` varchar(500) NOT NULL,
+      `slug` varchar(500) NOT NULL,
+      `key` varchar(50) NOT NULL,
+      `parent` int(11) NOT NULL,
+      `status` varchar(50) NOT NULL,
+      `content_order` int(11) NOT NULL,
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+  ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
         $hmdb->exec($sql);
@@ -194,15 +194,15 @@ function install_db() {
     /**--------------------------------------------------------*/
 
     $sql = "
-	CREATE TABLE IF NOT EXISTS `" . $prefix . "field` (
-		  `id` int(11) NOT NULL AUTO_INCREMENT,
-		  `name` varchar(255) NOT NULL,
-		  `val` longtext NOT NULL,
-		  `object_id` int(11) NOT NULL,
-		  `object_type` varchar(50) NOT NULL,
-		  PRIMARY KEY (`id`)
-		) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
-	";
+    CREATE TABLE IF NOT EXISTS `" . $prefix . "field` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `name` varchar(255) NOT NULL,
+      `val` longtext NOT NULL,
+      `object_id` int(11) NOT NULL,
+      `object_type` varchar(50) NOT NULL,
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+  ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
         $hmdb->exec($sql);
@@ -213,16 +213,16 @@ function install_db() {
     echo '<p class="text-success">Created table: ' . $prefix . 'field</p>';
     /**--------------------------------------------------------*/
 
-	$sql = "
-	CREATE TABLE IF NOT EXISTS `" . $prefix . "media_groups` (
-		  `id` int(11) NOT NULL AUTO_INCREMENT,
-		  `name` varchar(255) NOT NULL,
-		  `folder` varchar(255) NOT NULL,
-		  `parent` int(11) NOT NULL,
-          `order_number` int(11),
-		  PRIMARY KEY (`id`)
-		) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
-	";
+  $sql = "
+    CREATE TABLE IF NOT EXISTS `" . $prefix . "media_groups` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `name` varchar(255) NOT NULL,
+      `folder` varchar(255) NOT NULL,
+      `parent` int(11) NOT NULL,
+      `order_number` int(11),
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+  ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
         $hmdb->exec($sql);
@@ -234,20 +234,16 @@ function install_db() {
     /**--------------------------------------------------------*/
 
     $sql = "
-	CREATE TABLE IF NOT EXISTS `" . $prefix . "media` (
-		  `id` int(11) NOT NULL AUTO_INCREMENT,
-		  `media_group_id` int(11) NOT NULL,
-		  `file_info` text NOT NULL,
-		  `file_is_image` varchar(5) NOT NULL,
-		  `file_name` varchar(255) NOT NULL,
-		  `file_folder` varchar(255) NOT NULL,
-		  PRIMARY KEY (`id`),
-		  INDEX `indexed_media_FI_media_groups` (`media_group_id`),
-		  CONSTRAINT `media_FK_media_groups`
-		  FOREIGN KEY (`media_group_id`)
-		  REFERENCES `" . $prefix . "media_groups` (`id`)
-		) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
-	";
+    CREATE TABLE IF NOT EXISTS `" . $prefix . "media` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `media_group_id` int(11) NOT NULL,
+      `file_info` text NOT NULL,
+      `file_is_image` varchar(5) NOT NULL,
+      `file_name` varchar(255) NOT NULL,
+      `file_folder` varchar(255) NOT NULL,
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+  ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
         $hmdb->exec($sql);
@@ -259,15 +255,15 @@ function install_db() {
     /**--------------------------------------------------------*/
 
     $sql = "
-	CREATE TABLE IF NOT EXISTS `" . $prefix . "object` (
-		  `id` int(11) NOT NULL AUTO_INCREMENT,
-		  `name` varchar(255) NOT NULL,
-		  `key` varchar(50) NOT NULL,
-		  `parent` int(11) NOT NULL,
-		  `order_number` int(11) NOT NULL,
-		  PRIMARY KEY (`id`)
-		) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
-	";
+    CREATE TABLE IF NOT EXISTS `" . $prefix . "object` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `name` varchar(255) NOT NULL,
+      `key` varchar(50) NOT NULL,
+      `parent` int(11) NOT NULL,
+      `order_number` int(11) NOT NULL,
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+  ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
         $hmdb->exec($sql);
@@ -279,14 +275,14 @@ function install_db() {
     /**--------------------------------------------------------*/
 
     $sql = "
-	CREATE TABLE IF NOT EXISTS `" . $prefix . "option` (
-		  `id` int(11) NOT NULL AUTO_INCREMENT,
-		  `section` varchar(500) NOT NULL,
-		  `key` varchar(50) NOT NULL,
-		  `value` text NOT NULL,
-		  PRIMARY KEY (`id`)
-		) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
-	";
+    CREATE TABLE IF NOT EXISTS `" . $prefix . "option` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `section` varchar(500) NOT NULL,
+      `key` varchar(50) NOT NULL,
+      `value` text NOT NULL,
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+  ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
         $hmdb->exec($sql);
@@ -298,13 +294,13 @@ function install_db() {
     /**--------------------------------------------------------*/
 
     $sql = "
-	CREATE TABLE IF NOT EXISTS `" . $prefix . "plugin` (
-		  `id` int(11) NOT NULL AUTO_INCREMENT,
-		  `key` varchar(50) NOT NULL,
-		  `active` int(1) NOT NULL,
-		  PRIMARY KEY (`id`)
-		) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
-	";
+    CREATE TABLE IF NOT EXISTS `" . $prefix . "plugin` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `key` varchar(50) NOT NULL,
+      `active` int(1) NOT NULL,
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+  ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
         $hmdb->exec($sql);
@@ -316,14 +312,14 @@ function install_db() {
     /**--------------------------------------------------------*/
 
     $sql = "
-	CREATE TABLE IF NOT EXISTS `" . $prefix . "relationship` (
-		  `id` int(11) NOT NULL AUTO_INCREMENT,
-		  `object_id` int(11) NOT NULL,
-		  `target_id` int(1) NOT NULL,
-		  `relationship` varchar(255) NOT NULL,
-		  PRIMARY KEY (`id`)
-		) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
-	";
+    CREATE TABLE IF NOT EXISTS `" . $prefix . "relationship` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `object_id` int(11) NOT NULL,
+      `target_id` int(1) NOT NULL,
+      `relationship` varchar(255) NOT NULL,
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+  ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
         $hmdb->exec($sql);
@@ -335,14 +331,14 @@ function install_db() {
     /**--------------------------------------------------------*/
 
     $sql = "
-	CREATE TABLE IF NOT EXISTS `" . $prefix . "request_uri` (
-		  `id` int(11) NOT NULL AUTO_INCREMENT,
-		  `object_id` int(11) NOT NULL,
-		  `object_type` varchar(50) NOT NULL,
-		  `uri` varchar(1000) NOT NULL,
-		  PRIMARY KEY (`id`)
-		) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
-	";
+    CREATE TABLE IF NOT EXISTS `" . $prefix . "request_uri` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `object_id` int(11) NOT NULL,
+      `object_type` varchar(50) NOT NULL,
+      `uri` varchar(1000) NOT NULL,
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+  ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
         $hmdb->exec($sql);
@@ -354,17 +350,17 @@ function install_db() {
     /**--------------------------------------------------------*/
 
     $sql = "
-	CREATE TABLE IF NOT EXISTS `" . $prefix . "taxonomy` (
-		  `id` int(11) NOT NULL AUTO_INCREMENT,
-		  `name` varchar(255) NOT NULL,
-		  `slug` varchar(255) NOT NULL,
-		  `key` varchar(50) NOT NULL,
-		  `parent` int(11) NOT NULL,
-		  `status` varchar(255) NOT NULL,
+    CREATE TABLE IF NOT EXISTS `" . $prefix . "taxonomy` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `name` varchar(255) NOT NULL,
+      `slug` varchar(255) NOT NULL,
+      `key` varchar(50) NOT NULL,
+      `parent` int(11) NOT NULL,
+      `status` varchar(255) NOT NULL,
           `taxonomy_order` int(11),
-		  PRIMARY KEY (`id`)
-		) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
-	";
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+  ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
         $hmdb->exec($sql);
@@ -376,19 +372,19 @@ function install_db() {
     /**--------------------------------------------------------*/
 
     $sql = "
-	CREATE TABLE IF NOT EXISTS `" . $prefix . "users` (
-		  `id` int(11) NOT NULL AUTO_INCREMENT,
-		  `user_login` varchar(255) NOT NULL,
-		  `user_pass` varchar(255) NOT NULL,
-		  `salt` int(6) NOT NULL,
-		  `user_nicename` varchar(255) NOT NULL,
-		  `user_email` varchar(255) NOT NULL,
-		  `user_activation_key` varchar(255) NOT NULL,
-		  `user_role` int(11) NOT NULL,
-		  `user_group` int(11) NOT NULL,
-		  PRIMARY KEY (`id`)
-		) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
-	";
+    CREATE TABLE IF NOT EXISTS `" . $prefix . "users` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `user_login` varchar(255) NOT NULL,
+      `user_pass` varchar(255) NOT NULL,
+      `salt` int(6) NOT NULL,
+      `user_nicename` varchar(255) NOT NULL,
+      `user_email` varchar(255) NOT NULL,
+      `user_activation_key` varchar(255) NOT NULL,
+      `user_role` int(11) NOT NULL,
+      `user_group` int(11) NOT NULL,
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+  ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
         $hmdb->exec($sql);
@@ -399,9 +395,9 @@ function install_db() {
     echo '<p class="text-success">Created table: ' . $prefix . 'users</p>';
     /**--------------------------------------------------------*/
 
-	$sql = "
-	CREATE INDEX `indexed_content` ON `" . $prefix . "content` (`key`, `parent`, `status`, `content_order`);
-	";
+  $sql = "
+  CREATE INDEX `indexed_content` ON `" . $prefix . "content` (`key`, `parent`, `status`, `content_order`);
+  ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
         $hmdb->exec($sql);
@@ -410,11 +406,11 @@ function install_db() {
         die();
     }
     echo '<p class="text-success">Add Index : ' . $prefix . 'content</p>';
-	/**--------------------------------------------------------*/
+  /**--------------------------------------------------------*/
 
-	$sql = "
-	CREATE INDEX `indexed_taxonomy` ON `" . $prefix . "taxonomy` (`key`, `parent`, `status`, `taxonomy_order`);
-	";
+  $sql = "
+  CREATE INDEX `indexed_taxonomy` ON `" . $prefix . "taxonomy` (`key`, `parent`, `status`, `taxonomy_order`);
+  ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
         $hmdb->exec($sql);
@@ -423,11 +419,11 @@ function install_db() {
         die();
     }
     echo '<p class="text-success">Add Index : ' . $prefix . 'taxonomy</p>';
-	/**--------------------------------------------------------*/
+  /**--------------------------------------------------------*/
 
-	$sql = "
-	CREATE INDEX `indexed_field` ON `" . $prefix . "field` (`object_id`);
-	";
+  $sql = "
+  CREATE INDEX `indexed_field` ON `" . $prefix . "field` (`object_id`);
+  ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
         $hmdb->exec($sql);
@@ -436,11 +432,11 @@ function install_db() {
         die();
     }
     echo '<p class="text-success">Add Index : ' . $prefix . 'field</p>';
-	/**--------------------------------------------------------*/
+  /**--------------------------------------------------------*/
 
-	$sql = "
-	CREATE INDEX `indexed_media_groups` ON `" . $prefix . "media_groups` (`parent`, `order_number`);
-	";
+  $sql = "
+  CREATE INDEX `indexed_media_groups` ON `" . $prefix . "media_groups` (`parent`, `order_number`);
+  ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
         $hmdb->exec($sql);
@@ -449,11 +445,24 @@ function install_db() {
         die();
     }
     echo '<p class="text-success">Add Index : ' . $prefix . 'media_groups</p>';
-	/**--------------------------------------------------------*/
+  /**--------------------------------------------------------*/
 
-	$sql = "
-	CREATE INDEX `indexed_object` ON `" . $prefix . "object` (`key`, `parent`);
-	";
+  $sql = "
+  CREATE INDEX `indexed_media` ON `" . $prefix . "media` (`media_group_id`);
+  ";
+    /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
+    try {
+        $hmdb->exec($sql);
+    } catch (PDOException $e) {
+        echo '<p class="text-danger">Error: ' . $e->getMessage() . '</p>';
+        die();
+    }
+    echo '<p class="text-success">Add Index : ' . $prefix . 'media</p>';
+  /**--------------------------------------------------------*/
+
+  $sql = "
+  CREATE INDEX `indexed_object` ON `" . $prefix . "object` (`key`, `parent`);
+  ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
         $hmdb->exec($sql);
@@ -462,11 +471,11 @@ function install_db() {
         die();
     }
     echo '<p class="text-success">Add Index : ' . $prefix . 'object</p>';
-	/**--------------------------------------------------------*/
+  /**--------------------------------------------------------*/
 
-	$sql = "
-	CREATE INDEX `indexed_option` ON `" . $prefix . "option` (`key`, `section`);
-	";
+  $sql = "
+  CREATE INDEX `indexed_option` ON `" . $prefix . "option` (`key`, `section`);
+  ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
         $hmdb->exec($sql);
@@ -475,11 +484,11 @@ function install_db() {
         die();
     }
     echo '<p class="text-success">Add Index : ' . $prefix . 'option</p>';
-	/**--------------------------------------------------------*/
+  /**--------------------------------------------------------*/
 
-	$sql = "
-	CREATE INDEX `indexed_plugin` ON `" . $prefix . "plugin` (`key`, `active`);
-	";
+  $sql = "
+  CREATE INDEX `indexed_plugin` ON `" . $prefix . "plugin` (`key`, `active`);
+  ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
         $hmdb->exec($sql);
@@ -488,11 +497,11 @@ function install_db() {
         die();
     }
     echo '<p class="text-success">Add Index : ' . $prefix . 'plugin</p>';
-	/**--------------------------------------------------------*/
+  /**--------------------------------------------------------*/
 
-	$sql = "
-	CREATE INDEX `indexed_relationship` ON `" . $prefix . "relationship` (`object_id`, `target_id`, `relationship`);
-	";
+  $sql = "
+  CREATE INDEX `indexed_relationship` ON `" . $prefix . "relationship` (`object_id`, `target_id`, `relationship`);
+  ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
         $hmdb->exec($sql);
@@ -501,11 +510,11 @@ function install_db() {
         die();
     }
     echo '<p class="text-success">Add Index : ' . $prefix . 'relationship</p>';
-	/**--------------------------------------------------------*/
+  /**--------------------------------------------------------*/
 
-	$sql = "
-	CREATE INDEX `indexed_request_uri` ON `" . $prefix . "request_uri` (`object_id`, `object_type`);
-	";
+  $sql = "
+  CREATE INDEX `indexed_request_uri` ON `" . $prefix . "request_uri` (`object_id`, `object_type`);
+  ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
         $hmdb->exec($sql);
@@ -514,15 +523,15 @@ function install_db() {
         die();
     }
     echo '<p class="text-success">Add Index : ' . $prefix . 'request_uri</p>';
-	/**--------------------------------------------------------*/
+  /**--------------------------------------------------------*/
 
     /** user admin */
     $admin_salt      = rand(0, 999999);
     $password_encode = hm_encode_str(md5($admin_password . $admin_salt), $encryption_key);
     $sql             = "
-		INSERT INTO `" . $prefix . "users` (`id`, `user_login`, `user_pass`, `salt`, `user_nicename`, `user_email`, `user_activation_key`, `user_role`, `user_group`) VALUES
-		(1, '" . $admin_username . "', '" . $password_encode . "', '" . $admin_salt . "', '" . $admin_username . "', '" . $admin_email . "', '0', '1', '0');
-	";
+    INSERT INTO `" . $prefix . "users` (`id`, `user_login`, `user_pass`, `salt`, `user_nicename`, `user_email`, `user_activation_key`, `user_role`, `user_group`) VALUES
+    (1, '" . $admin_username . "', '" . $password_encode . "', '" . $admin_salt . "', '" . $admin_username . "', '" . $admin_email . "', '0', '1', '0');
+  ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
         $hmdb->exec($sql);
@@ -535,11 +544,11 @@ function install_db() {
 
     /** default theme */
     $sql = "
-		INSERT INTO `" . $prefix . "option` (`id`, `section`, `key`, `value`) VALUES
-		(1, 'system_setting', 'theme', 'hello'),
-		(2, 'system_setting', 'post_per_page', '10'),
-		(3, 'system_setting', 'from_email', '" . $admin_email . "');
-	";
+    INSERT INTO `" . $prefix . "option` (`id`, `section`, `key`, `value`) VALUES
+    (1, 'system_setting', 'theme', 'hello'),
+    (2, 'system_setting', 'post_per_page', '10'),
+    (3, 'system_setting', 'from_email', '" . $admin_email . "');
+  ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
         $hmdb->exec($sql);
@@ -552,11 +561,11 @@ function install_db() {
 
     /** default plugin */
     $sql = "
-		INSERT INTO `" . $prefix . "plugin` (`id`, `key`, `active`) VALUES
-		(1, 'post', '1'),
-		(2, 'hm_tinymce', '1'),
-		(3, 'hm_seo', '1');
-	";
+    INSERT INTO `" . $prefix . "plugin` (`id`, `key`, `active`) VALUES
+    (1, 'post', '1'),
+    (2, 'hm_tinymce', '1'),
+    (3, 'hm_seo', '1');
+  ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
         $hmdb->exec($sql);
@@ -569,27 +578,27 @@ function install_db() {
 
     /** Tạo .htaccess */
     $htaccess = '<IfModule mod_rewrite.c>
-	RewriteEngine On
-	RewriteBase /
-	RewriteRule ^index\.php$ - [L]
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteRule . ' . $url_path . 'index.php [L]
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.php$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . ' . $url_path . 'index.php [L]
 </IfModule>
 
 <FilesMatch "\.php$">
-	Order Deny,Allow
-	Deny from all
+  Order Deny,Allow
+  Deny from all
 </FilesMatch>
 <FilesMatch "^index\.php$">
-	Order Allow,Deny
-	Allow from all
+  Order Allow,Deny
+  Allow from all
 </FilesMatch>
 
 <IfModule pagespeed_module>
-	ModPagespeed on
-	ModPagespeedEnableFilters
-	extend_cache,combine_css,combine_javascript,collapse_whitespace,move_css_to_head
+  ModPagespeed on
+  ModPagespeedEnableFilters
+  extend_cache,combine_css,combine_javascript,collapse_whitespace,move_css_to_head
 </IfModule>
 
 # BEGIN GZIP
