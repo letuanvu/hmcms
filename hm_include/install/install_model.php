@@ -277,7 +277,7 @@ function install_db() {
     $sql = "
     CREATE TABLE IF NOT EXISTS `" . $prefix . "option` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
-      `section` varchar(500) NOT NULL,
+      `section` varchar(50) NOT NULL,
       `key` varchar(50) NOT NULL,
       `value` text NOT NULL,
       PRIMARY KEY (`id`)
