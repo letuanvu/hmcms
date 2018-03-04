@@ -6,11 +6,13 @@ if (getenv('SERVER_PORT') == '80') {
 } else {
     define('BASE_URL', $protocol . getenv('SERVER_NAME') . ':' . getenv('SERVER_PORT') . $url_path);
 }
-require_once(BASEPATH . '/hm_include/install/install_model.php');
+define('HM_ADMIN_DIR', 'hm_admin');
+define('HM_INCLUDE_DIR', 'hm_include');
+require_once(BASEPATH . '/' . HM_INCLUDE_DIR . '/install/install_model.php');
 $step = $_GET['step'];
 switch ($step) {
     case 1:
-        require_once(BASEPATH . '/hm_include/install/step1.php');
+        require_once(BASEPATH . '/' . HM_INCLUDE_DIR . '/install/step1.php');
         break;
     case 2:
         if (check_all()) {
@@ -22,7 +24,7 @@ switch ($step) {
                     $error = '<div class="alert alert-danger" role="alert">Không thể kết nối đến cơ sở dữ liệu</div>';
                 }
             }
-            require_once(BASEPATH . '/hm_include/install/step2.php');
+            require_once(BASEPATH . '/' . HM_INCLUDE_DIR . '/install/step2.php');
         } else {
             header('Location: ?step=1');
             exit();
@@ -31,9 +33,9 @@ switch ($step) {
     case 3:
         if (is_array($_SESSION['db'])) {
             if (isset($_POST['submit'])) {
-                require_once(BASEPATH . '/hm_include/install/step_install.php');
+                require_once(BASEPATH . '/' . HM_INCLUDE_DIR . '/install/step_install.php');
             } else {
-                require_once(BASEPATH . '/hm_include/install/step3.php');
+                require_once(BASEPATH . '/' . HM_INCLUDE_DIR . '/install/step3.php');
             }
         } else {
             header('Location: ?step=1');
@@ -41,6 +43,6 @@ switch ($step) {
         }
         break;
     default:
-        require_once(BASEPATH . '/hm_include/install/step1.php');
+        require_once(BASEPATH . '/' . HM_INCLUDE_DIR . '/install/step1.php');
 }
 ?>
