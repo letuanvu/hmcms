@@ -1,4 +1,7 @@
 {
+    "config": {
+        "vendor-dir": "hm_vendor"
+    },
     "name": "manhnam91/hmcms",
     "description": "HoaMai CMS - Simple and fast content management system",
     "keywords": ["cms", "hmcms"],
