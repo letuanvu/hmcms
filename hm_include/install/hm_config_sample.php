@@ -43,7 +43,10 @@ define('HM_PLUGIN_DIR', 'hm_plugins');
 define('HM_MODULE_DIR', 'hm_module');
 
 /** Thư mục quản trị */
-define('HM_ADMINCP_DIR', 'admin');
+define('HM_ADMINCP_DIR', 'hm_admin');
+
+/** Đường dẫn quản trị */
+define('HM_ADMINCP_PART', 'admin');
 
 /** Cổng kết nối (:80, :8080, :443 etc)*/
 define('SERVER_PORT', '');

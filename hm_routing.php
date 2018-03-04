@@ -123,7 +123,8 @@ if (is_numeric(hm_get('t'))) {
         exit();
     }
 }
-if ($segments[0] == HM_ADMINCP_DIR AND !isset($segments[1])) {
+
+if ($segments[0] == HM_ADMINCP_PART AND !isset($segments[1])) {
     /** Admin cp */
     require_once(BASEPATH . HM_ADMINCP_DIR . '/index.php');
 } elseif (isset($modules[$module_key])) {
