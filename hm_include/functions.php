@@ -7,7 +7,6 @@ if (!defined('BASEPATH'))
     exit('403');
 /** load class */
 $hmdiff     = new Diff();
-$hmsecurity = new Security();
 $hmcaptcha  = new SimpleCaptcha();
 if (!function_exists('_')) {
     function _($str) {
@@ -150,16 +149,6 @@ function hm_include($file, $data = NULL) {
     }
 }
 function hm_encode($str = NULL, $key = ENCRYPTION_KEY) {
-    global $hmsecurity;
-    $encoded = $hmsecurity->encrypt($str, $key);
-    return $encoded;
-}
-function hm_decode($str = NULL, $key = ENCRYPTION_KEY) {
-    global $hmsecurity;
-    $decoded = $hmsecurity->decrypt($str, $key);
-    return $decoded;
-}
-function hm_encode_str($str = NULL, $key = ENCRYPTION_KEY) {
     $iv = '12345678';
     if (is_array($str)) {
         $str = hm_json_encode($str);
@@ -170,13 +159,19 @@ function hm_encode_str($str = NULL, $key = ENCRYPTION_KEY) {
     mcrypt_generic_deinit($cipher);
     return $encrypted;
 }
-function hm_decode_str($str = NULL, $key = ENCRYPTION_KEY) {
+function hm_decode($str = NULL, $key = ENCRYPTION_KEY) {
     $iv = '12345678';
     $cipher = mcrypt_module_open(MCRYPT_BLOWFISH,'','cbc','');
     mcrypt_generic_init($cipher, $key, $iv);
     $decrypted = mdecrypt_generic($cipher,$str);
     mcrypt_generic_deinit($cipher);
     return $decrypted;
+}
+function hm_encode_str($str = NULL, $key = ENCRYPTION_KEY) {
+
+}
+function hm_decode_str($str = NULL, $key = ENCRYPTION_KEY) {
+
 }
 function json_string_encode($str) {
     $str = str_replace(",", "\,", $str);

@@ -75,7 +75,6 @@ require_once(BASEPATH . HM_INC . '/hook.php');
 
 /** PHP Class */
 require_once(BASEPATH . HM_INC . '/class.Diff.php');
-require_once(BASEPATH . HM_INC . '/class.Security.php');
 require_once(BASEPATH . HM_INC . '/class.SimpleCaptcha.php');
 require_once(BASEPATH . HM_INC . '/class.MobileDetect.php');
 require_once(BASEPATH . HM_INC . '/PHPMailer/PHPMailerAutoload.php');

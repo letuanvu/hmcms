@@ -64,7 +64,7 @@ function update_core($href = FALSE) {
                     unlink($saveto);
                     return hm_json_encode(array(
                         'status' => 'success',
-                        'mes' => hm_lang('server_download') . ' : ' . $filename
+                        'mes' => hm_lang('downloaded_to_server') . ' : ' . $filename
                     ));
                 } else {
                     return hm_json_encode(array(
