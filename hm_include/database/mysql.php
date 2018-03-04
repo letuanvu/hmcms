@@ -48,7 +48,7 @@ class MySQL {
     public $last_query = ""; // last mysql query
     private $time_diff = 0; // holds the difference in time
     private $time_start = 0; // start time for the timer
-    
+
     public $where = null;
     public $count = null;
     public $table = null;
@@ -57,8 +57,8 @@ class MySQL {
     public $column = null;
     public $value = null;
     public $order_by = array('id', 'DESC');
-    
-    
+
+
     /**
      * Determines if an error throws an exception
      *
@@ -113,7 +113,7 @@ class MySQL {
      *                           formatted dates, ect).
      * @return boolean Returns TRUE on success or FALSE on error
      */
-    
+
     public function where($where) {
         if (is_array($where)) {
             $where_sql_value = array();
@@ -161,7 +161,7 @@ class MySQL {
             $order
         );
     }
-    
+
     public function AutoInsertUpdate($tableName, $valuesArray, $whereArray) {
         $this->ResetError();
         $this->SelectRows($tableName, $whereArray);
@@ -211,7 +211,7 @@ class MySQL {
             case "array":
                 $sql = "";
                 foreach ($columns as $key => $value) {
-                    if ($value == 'NULL') {
+                    if ($value == 'NULL' && !is_numeric($value)) {
                         $value = "''";
                     }
                     // Build the columns
@@ -343,7 +343,7 @@ class MySQL {
      * @return string Returns a string containing the SQL WHERE clause
      */
     static public function BuildSQLWhereClause($whereArray) {
-        
+
         $where   = "";
         $compare = " = ";
         foreach ($whereArray as $key => $value) {
@@ -1087,7 +1087,7 @@ class MySQL {
         if ($charset !== null)
             $this->db_charset = $charset;
         $this->active_row = -1;
-        
+
         // Open PDO
         $dsn = "mysql:host=$this->db_host;dbname=$this->db_dbname;charset=$this->db_charset";
         try {
@@ -1103,10 +1103,10 @@ class MySQL {
         catch (PDOException $ex) {
             $this->SetError();
         }
-        
+
         // Open normal connection
         $this->mysql_link = @mysqli_connect($this->db_host, $this->db_user, $this->db_pass);
-        
+
         // Connect to mysql server failed?
         if (!$this->IsConnected()) {
             $this->SetError();
@@ -1528,7 +1528,7 @@ class MySQL {
         $this->Release();
         return $data;
     }
-    
+
     public function SelectRows($tableName = null, $whereArray = null, $columns = null, $sortColumns = null, $sortAscending = true, $limit = null) {
         $this->ResetError();
         if (!$this->IsConnected()) {
