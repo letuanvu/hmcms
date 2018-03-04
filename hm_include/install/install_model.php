@@ -139,12 +139,14 @@ function generateRandomString($length = 30) {
     }
     return $randomString;
 }
-function hm_encode_str($str, $key) {
-    if (is_array($str)) {
-        $str = hm_json_encode($str);
-    }
-    $encoded = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $str, MCRYPT_MODE_CBC, md5(md5($key))));
-    return $encoded;
+function hm_encode_str($string = NULL, $secret_key = ENCRYPTION_KEY) {
+    $secret_iv = '123456';
+    $output = false;
+    $encrypt_method = "AES-256-CBC";
+    $key = hash( 'sha256', $secret_key );
+    $iv = substr( hash( 'sha256', $secret_iv ), 0, 16 );
+    $output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
+    return $output;
 }
 function install_db() {
     $host            = $_SESSION['db']['host'];
