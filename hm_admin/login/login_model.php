@@ -1,7 +1,7 @@
 <?php
-/** 
+/**
  * Tệp tin model của login trong admin
- * Vị trí : admin/login/login_model.php 
+ * Vị trí : admin/login/login_model.php
  */
 if (!defined('BASEPATH'))
     exit('403');
@@ -24,7 +24,7 @@ function admin_cp_login() {
             $salt            = $row->salt;
             $user_pass       = $row->user_pass;
             $user_id         = $row->id;
-			$user_role       = $row->user_role;
+            $user_role       = $row->user_role;
             $password_encode = hm_encode_str(md5($password . $salt));
             if (MD5_PASSWORD) {
                 $password_encode_md5 = md5($password);
@@ -39,7 +39,7 @@ function admin_cp_login() {
                     'time' => $time,
                     'ip' => $ip,
                     'user_login' => $user_login,
-					'user_role' => $user_role,
+                    'user_role' => $user_role,
                     'admincp' => 'yes'
                 );
                 $cookie_user  = hm_encode_str($cookie_array);

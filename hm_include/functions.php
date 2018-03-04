@@ -168,6 +168,9 @@ function hm_decode($str = NULL, $key = ENCRYPTION_KEY) {
     return $decrypted;
 }
 function hm_encode_str($string = NULL, $secret_key = ENCRYPTION_KEY) {
+    if (is_array($string)) {
+        $string = hm_json_encode($string);
+    }
     $secret_iv = '123456';
     $output = false;
     $encrypt_method = "AES-256-CBC";
