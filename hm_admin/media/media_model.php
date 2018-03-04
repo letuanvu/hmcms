@@ -219,7 +219,7 @@ function breadcrumb_folder($id = 0, $i = 1) {
 }
 /** Ajax upload */
 function add_media() {
-    if (isset(getenv('CONTENT_LENGTH'))) {
+    if (null !== (getenv('CONTENT_LENGTH'))) {
         if (getenv('CONTENT_LENGTH') > ((int) ini_get('post_max_size') * 1024 * 1024)) {
             return hm_json_encode(array(
                 'status' => 'error',
