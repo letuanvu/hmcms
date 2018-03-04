@@ -181,7 +181,7 @@ function install_db() {
       `status` varchar(50) NOT NULL,
       `content_order` int(11) NOT NULL,
       PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+    ) ENGINE=MyISAM DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
   ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
@@ -201,7 +201,7 @@ function install_db() {
       `object_id` int(11) NOT NULL,
       `object_type` varchar(50) NOT NULL,
       PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+    ) ENGINE=MyISAM DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
   ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
@@ -221,7 +221,7 @@ function install_db() {
       `parent` int(11) NOT NULL,
       `order_number` int(11),
       PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+    ) ENGINE=MyISAM DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
   ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
@@ -242,7 +242,7 @@ function install_db() {
       `file_name` varchar(255) NOT NULL,
       `file_folder` varchar(255) NOT NULL,
       PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+    ) ENGINE=MyISAM DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
   ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
@@ -262,7 +262,7 @@ function install_db() {
       `parent` int(11) NOT NULL,
       `order_number` int(11) NOT NULL,
       PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+    ) ENGINE=MyISAM DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
   ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
@@ -281,7 +281,7 @@ function install_db() {
       `key` varchar(50) NOT NULL,
       `value` text NOT NULL,
       PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+    ) ENGINE=MyISAM DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
   ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
@@ -299,7 +299,7 @@ function install_db() {
       `key` varchar(50) NOT NULL,
       `active` int(1) NOT NULL,
       PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+    ) ENGINE=MyISAM DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
   ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
@@ -318,7 +318,7 @@ function install_db() {
       `target_id` int(1) NOT NULL,
       `relationship` varchar(255) NOT NULL,
       PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+    ) ENGINE=MyISAM DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
   ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
@@ -337,7 +337,7 @@ function install_db() {
       `object_type` varchar(50) NOT NULL,
       `uri` varchar(1000) NOT NULL,
       PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+    ) ENGINE=MyISAM DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
   ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
@@ -359,7 +359,7 @@ function install_db() {
       `status` varchar(255) NOT NULL,
           `taxonomy_order` int(11),
       PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+    ) ENGINE=MyISAM DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
   ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
@@ -383,7 +383,7 @@ function install_db() {
       `user_role` int(11) NOT NULL,
       `user_group` int(11) NOT NULL,
       PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+    ) ENGINE=MyISAM DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
   ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
