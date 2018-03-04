@@ -160,15 +160,23 @@ function hm_decode($str = NULL, $key = ENCRYPTION_KEY) {
     return $decoded;
 }
 function hm_encode_str($str = NULL, $key = ENCRYPTION_KEY) {
+    $iv = '12345678';
     if (is_array($str)) {
         $str = hm_json_encode($str);
     }
-    $encoded = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $str, MCRYPT_MODE_CBC, md5(md5($key))));
-    return $encoded;
+    $cipher = mcrypt_module_open(MCRYPT_BLOWFISH,'','cbc','');
+    mcrypt_generic_init($cipher, $key, $iv);
+    $encrypted = mcrypt_generic($cipher,$str);
+    mcrypt_generic_deinit($cipher);
+    return $encrypted;
 }
 function hm_decode_str($str = NULL, $key = ENCRYPTION_KEY) {
-    $decoded = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($str), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
-    return $decoded;
+    $iv = '12345678';
+    $cipher = mcrypt_module_open(MCRYPT_BLOWFISH,'','cbc','');
+    mcrypt_generic_init($cipher, $key, $iv);
+    $decrypted = mdecrypt_generic($cipher,$str);
+    mcrypt_generic_deinit($cipher);
+    return $decrypted;
 }
 function json_string_encode($str) {
     $str = str_replace(",", "\,", $str);
