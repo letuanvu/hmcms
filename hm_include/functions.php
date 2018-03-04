@@ -167,11 +167,23 @@ function hm_decode($str = NULL, $key = ENCRYPTION_KEY) {
     mcrypt_generic_deinit($cipher);
     return $decrypted;
 }
-function hm_encode_str($str = NULL, $key = ENCRYPTION_KEY) {
-
+function hm_encode_str($string = NULL, $secret_key = ENCRYPTION_KEY) {
+    $secret_iv = '123456';
+    $output = false;
+    $encrypt_method = "AES-256-CBC";
+    $key = hash( 'sha256', $secret_key );
+    $iv = substr( hash( 'sha256', $secret_iv ), 0, 16 );
+    $output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
+    return $output;
 }
-function hm_decode_str($str = NULL, $key = ENCRYPTION_KEY) {
-
+function hm_decode_str($string = NULL, $secret_key = ENCRYPTION_KEY) {
+    $secret_iv = '123456';
+    $output = false;
+    $encrypt_method = "AES-256-CBC";
+    $key = hash( 'sha256', $secret_key );
+    $iv = substr( hash( 'sha256', $secret_iv ), 0, 16 );
+    $output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
+    return $output;
 }
 function json_string_encode($str) {
     $str = str_replace(",", "\,", $str);
