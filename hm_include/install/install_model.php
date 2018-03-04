@@ -84,10 +84,10 @@ function check_all() {
             $check['uploadWritable'] = '0';
         }
     }
-    if (function_exists('mcrypt_encrypt')) {
-        $check['mcrypt'] = '1';
+    if (function_exists('openssl_encrypt')) {
+        $check['openssl'] = '1';
     } else {
-        $check['mcrypt'] = '0';
+        $check['openssl'] = '0';
     }
     if (function_exists('mysqli_connect')) {
         $check['mysqli'] = '1';
