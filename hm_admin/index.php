@@ -6,7 +6,7 @@
 define('IN_ADMIN', TRUE);
 if (!defined('BASEPATH')) {
     define('BASEPATH', dirname(__DIR__) . '/');
-    require_once(BASEPATH . 'vendor/autoload.php');
+    require_once(BASEPATH . 'hm_vendor/autoload.php');
     require_once(BASEPATH . 'hm_config.php');
     require_once(BASEPATH . 'hm_loader.php');
     require_once(BASEPATH . 'hm_setup.php');
