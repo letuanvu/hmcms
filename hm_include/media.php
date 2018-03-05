@@ -218,6 +218,32 @@ function get_file_location($id, $include_file_name = TRUE) {
         return FALSE;
     }
 }
+/** Tạo ảnh theo cỡ tùy chọn */
+function custom_size_image($args) {
+    $hmdb = new MySQL(true, DB_NAME, DB_HOST, DB_USER, DB_PASSWORD, DB_CHARSET);
+    $args = hook_filter('before_custom_size_image', $args);
+    hook_action('custom_size_image');
+    if (!is_array($args)) {
+        parse_str($args, $args);
+    }
+    $default_array = array(
+        'file' => 0,
+        'w' => '200',
+        'h' => '200',
+        'q' => get_option(array(
+            'section' => 'system_setting',
+            'key' => 'cropping_quality',
+            'default_value' => '100'
+        ))
+    );
+    $args          = hm_parse_args($args, $default_array);
+    if (isset_file($args['file'])) {
+        $row       = get_file_data($args['file']);
+        $file_info = $row->file_info;
+        $file_name = $row->file_name;
+    }
+    return BASE_URL . 'image_thumbnail/' . $args['file'] . '/' . $args['w'] . '/' . $args['h'] . '/' . $args['q'] . '/' . $file_name;
+}
 /** Cắt ảnh theo cỡ tùy chọn */
 function create_image($args) {
     $hmdb = new MySQL(true, DB_NAME, DB_HOST, DB_USER, DB_PASSWORD, DB_CHARSET);

@@ -99,11 +99,20 @@ if (HM_DEBUG) {
 }
 
 /** Kiểm tra segments 1 có phải là 1 module */
-$modules      = $hmmodule->hmmodule;
-$module_key   = FALSE;
-if (isset($segments[1])) {
-    $module_key = $segments[1];
+$modules = $hmmodule->hmmodule;
+if (is_array($modules)) {
+    foreach ($modules as $module) {
+        if (isset($module['module_key']) AND $module['module_key'] == $segments[0]) {
+            if (isset($module['module_index'])) {
+                if (file_exists(BASEPATH . HM_MODULE_DIR . '/' . $module['module_key']. '/' . $module['module_index'] . '.php')) {
+                    include(BASEPATH . HM_MODULE_DIR . '/' . $module['module_key']. '/' . $module['module_index'] . '.php');
+                    exit();
+                }
+            }
+        }
+    }
 }
+
 /** Quick link */
 if (is_numeric(hm_get('c'))) {
     $content_id = hm_get('c');
