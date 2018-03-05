@@ -119,7 +119,7 @@ Trong biến **$field_array**, chứa các trường dùng trong content và ta
 
 File giao diện của 1 custom content có tên file là **content-[content_key].php**, trong ví dụ trên là **content-product.php**
 
-File giao diện của 1 custom taxonomy có tên file là **taxonomy-[taxonomy_key].php**, trong ví dụ trên là **taxonomy****-product-category.php**
+File giao diện của 1 custom taxonomy có tên file là **taxonomy-[taxonomy_key].php**, trong ví dụ trên là **taxonomy-product-category.php**
 
 Đây là kết quả của đoạn mã ví dụ :
 

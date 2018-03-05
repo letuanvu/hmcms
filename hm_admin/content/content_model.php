@@ -146,7 +146,9 @@ function content_ajax_add($args = array()) {
         if (!isset($input_post['number_order']) OR !is_numeric($input_post['number_order'])) {
             $input_post['number_order'] = 0;
         }
-        $input_post['user_id']      = $_SESSION['admin_user']['user_id'];
+        if (!is_numeric($id_update)) {
+            $input_post['user_id'] = $_SESSION['admin_user']['user_id'];
+        }
         $input_post['last_edit_id'] = $_SESSION['admin_user']['user_id'];
         foreach ($input_post as $post_key => $post_val) {
             /** lưu content field vào data */
