@@ -268,7 +268,7 @@ function query_content($args = array()) {
         $order_field = get_option(array(
             'section' => 'system_setting',
             'key' => 'type_of_arrangement',
-            'default_value' => 'numerical_order'
+            'default_value' => 'number_order'
         ));
         $field_query = array(
             array(
