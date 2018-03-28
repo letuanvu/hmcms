@@ -265,14 +265,9 @@ function query_content($args = array()) {
     if (isset($args['field_query'])) {
         $field_query = $args['field_query'];
     } else {
-        $order_field = get_option(array(
-            'section' => 'system_setting',
-            'key' => 'type_of_arrangement',
-            'default_value' => 'number_order'
-        ));
         $field_query = array(
             array(
-                'field' => $order_field,
+                'field' => 'public_time',
                 'compare' => '<=',
                 'value' => time()
             )
@@ -381,7 +376,22 @@ function query_content($args = array()) {
     if (isset($args['order'])) {
         $order_by = $args['order'];
     } else {
-        $order_by = 'number_order,asc,number';
+        $order_field = get_option(array(
+            'section' => 'system_setting',
+            'key' => 'type_of_arrangement',
+            'default_value' => 'number_order'
+        ));
+        switch ($order_field) {
+          case 'number_order':
+            $order_by = 'number_order,asc,number';
+          break;
+          case 'public_time':
+            $order_by = 'public_time,desc,number';
+          break;
+          case 'update_time':
+            $order_by = 'update_time,desc,number';
+          break;
+        }
     }
     if (isset($args['limit'])) {
         $limit = $args['limit'];
