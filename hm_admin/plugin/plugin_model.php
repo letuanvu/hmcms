@@ -1,7 +1,7 @@
 <?php
-/** 
+/**
  * Tệp tin model của plugin trong admin
- * Vị trí : admin/plugin/plugin_model.php 
+ * Vị trí : admin/plugin/plugin_model.php
  */
 if (!defined('BASEPATH'))
     exit('403');
@@ -140,11 +140,8 @@ function drop_plugin($plugin_key = FALSE) {
 }
 /** Danh sách plugin */
 function api_plugin_data($server = FALSE, $args = array()) {
-    if (isset($args['keyword'])) {
-        $keyword = '?keyword=' . $args['keyword'];
-    }
     if (!$server) {
-        $server = HM_API_SERVER . '/api/plugins/json' . $keyword;
+        $server = HM_PLUGIN_GIT_RAW . '/list.json?time='.time();
     }
     $data = file_get_contents($server);
     $data = json_decode($data);

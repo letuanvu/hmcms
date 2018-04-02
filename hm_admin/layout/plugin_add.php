@@ -5,7 +5,7 @@ hm_admin_css('css/plugin.css');
 ?>
 <div class="row">
 	<div class="col-md-6">
-	
+
 	</div>
 	<div class="col-md-6">
 		<form action="" method="post">
@@ -19,12 +19,11 @@ hm_admin_css('css/plugin.css');
 	if(is_array($args)){
 		foreach($args as $item){
 			$name = $item->name;
-			$link = $item->link;
+			$alias = $item->alias;
+			$direct_link = HM_PLUGIN_GIT_RAW.'/'.$alias.'.tar.gz';
+			$img = HM_PLUGIN_GIT_RAW.'/'.$alias.'/thumb.png';
 			$description = $item->description;
-			$direct_link = $item->direct_link;
-			$img = $item->img;
 	?>
-	
 		<div class="plugin_item col-md-4">
 			<div class="plugin_item_wrapper">
 				<div class="plugin_top_block">
