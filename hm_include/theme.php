@@ -728,7 +728,7 @@ function live_editor($string, $key = '') {
     );
     $value = get_option($args);
     if (is_admin_login()) {
-        echo '<live_editor data-option_name="' . $option_name . '">' . $value . '<live_edit_btn data-option_name="' . $option_name . '"></live_edit_btn></live_editor>';
+        echo '<live_editor data-option_name="' . $option_name . '">' . $value . '<a target="_blank" href="' . BASE_URL . HM_ADMINCP_DIR . '?run=live_edit.php&live_edit=on&type=editor&option_name=' . $option_name . '' . '" class="live_edit_btn" data-option_name="' . $option_name . '"></a></live_editor>';
     } else {
         echo $value;
     }
@@ -792,22 +792,22 @@ function live_image($default_img, $key = '') {
 		$theme = activated_theme();
 		$value = BASE_URL . HM_THEME_DIR . '/' . $theme . '/' . $value;
 	}
-    
-    
+
+
     $args    = array(
         'section' => 'live_image',
         'key' => $option_name . '_alt',
         'default_value' => ''
     );
     $alt_tag = get_option($args);
-    
+
     $args = array(
         'section' => 'live_image',
         'key' => $option_name . '_href',
         'default_value' => ''
     );
     $href = get_option($args);
-    
+
     if (is_admin_login()) {
         echo '<live_image data-option_name="' . $option_name . '"><img src="' . $value . '" alt="' . $alt_tag . '" /><live_edit_btn data-option_name="' . $option_name . '"></live_edit_btn></live_image>';
     } else {
