@@ -137,6 +137,7 @@ $hmlang = array(
     'downloaded_to_server' => 'Downloaded to server',
     'unable_to_extract_the_file' => 'Unable to extract the file',
     'this_server_does_not_support_the_ZipArchive_class_unable_to_unpack_file' => 'This server does not support the ZipArchive class, unable to unpack file',
+    'this_server_does_not_support_the_PharData_class_unable_to_unpack_file' => 'This server does not support the PharData class, unable to unpack file',
     'can_not_save_file' => 'Can not save file',
     'can_not_connect_to_the_download_server' => 'Can not connect to the download server',
     'you_can_not_delete_the_actived_theme' => 'You can not delete the actived theme',

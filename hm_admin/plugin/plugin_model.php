@@ -159,29 +159,48 @@ function add_plugin($href = FALSE) {
         $saveto   = BASEPATH . '/' . HM_PLUGIN_DIR . '/' . $filename;
         file_put_contents($saveto, fopen($href, 'r'));
         if (file_exists($saveto)) {
-            if (class_exists('ZipArchive')) {
-                $zip = new ZipArchive;
-                $res = $zip->open($saveto);
-                if ($res === TRUE) {
-                    $zip->extractTo(BASEPATH . '/' . HM_PLUGIN_DIR . '/');
-                    $zip->close();
-                    unlink($saveto);
-                    return hm_json_encode(array(
-                        'status' => 'success',
-                        'mes' => hm_lang('downloaded_to_server') . ' : ' . $filename
-                    ));
-                } else {
-                    return hm_json_encode(array(
-                        'status' => 'error',
-                        'mes' => hm_lang('unable_to_extract_the_file')
-                    ));
-                }
-            } else {
+            $ext = pathinfo($filename, PATHINFO_EXTENSION);
+            if($ext == 'zip'){
+              if (class_exists('ZipArchive')) {
+                  $zip = new ZipArchive;
+                  $res = $zip->open($saveto);
+                  if ($res === TRUE) {
+                      $zip->extractTo(BASEPATH . '/' . HM_PLUGIN_DIR . '/');
+                      $zip->close();
+                      unlink($saveto);
+                      return hm_json_encode(array(
+                          'status' => 'success',
+                          'mes' => hm_lang('downloaded_to_server') . ' : ' . $filename
+                      ));
+                  } else {
+                      return hm_json_encode(array(
+                          'status' => 'error',
+                          'mes' => hm_lang('unable_to_extract_the_file')
+                      ));
+                  }
+              } else {
+                  return hm_json_encode(array(
+                      'status' => 'error',
+                      'mes' => hm_lang('this_server_does_not_support_the_ZipArchive_class_unable_to_unpack_file')
+                  ));
+              }
+            }else if($ext == 'gz'){
+              if (class_exists('PharData')) {
+                $phar = new PharData($saveto);
+                $phar->extractTo(BASEPATH . '/' . HM_PLUGIN_DIR . '/', null, true);
+                unlink($saveto);
                 return hm_json_encode(array(
-                    'status' => 'error',
-                    'mes' => hm_lang('this_server_does_not_support_the_ZipArchive_class_unable_to_unpack_file')
+                    'status' => 'success',
+                    'mes' => hm_lang('downloaded_to_server') . ' : ' . $filename
                 ));
+              } else {
+                  return hm_json_encode(array(
+                      'status' => 'error',
+                      'mes' => hm_lang('this_server_does_not_support_the_PharData_class_unable_to_unpack_file')
+                  ));
+              }
             }
+
         } else {
             return hm_json_encode(array(
                 'status' => 'error',
