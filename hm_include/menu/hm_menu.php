@@ -165,6 +165,7 @@ Class menu extends MySQL {
             'item' => 'li',
             'item_class' => '',
             'item_id' => '',
+            'sub_menu_class' => '',
             'permalink_class' => '',
             'permalink_attr' => '',
             'permalink_before' => '',
@@ -181,6 +182,7 @@ Class menu extends MySQL {
         $item               = $args['item'];
         $item_class         = $args['item_class'];
         $item_id            = $args['item_id'];
+        $sub_menu_class     = $args['sub_menu_class'];
         $permalink_class    = $args['permalink_class'];
         $permalink_attr     = $args['permalink_attr'];
         $permalink_before   = $args['permalink_before'];
@@ -281,9 +283,9 @@ Class menu extends MySQL {
                     $add_has_sub_class = ' ' . $has_sub_class;
                 }
                 if ($menu_class != '') {
-                    $item_class_html = ' class="' . $menu_class . $in_page_class . $add_has_sub_class . ' hm-menu-' . $id . '"';
+                    $item_class_html = ' class="' . $item_class . $menu_class . $in_page_class . $add_has_sub_class . ' hm-menu-' . $id . '"';
                 } else {
-                    $item_class_html = ' class="hm-menu-' . $id . $in_page_class . $add_has_sub_class . '"';
+                    $item_class_html = ' class="' . $item_class . $in_page_class . $add_has_sub_class . ' hm-menu-' . $id . '"';
                 }
                 /** item_id */
                 if ($item_id) {
@@ -312,7 +314,7 @@ Class menu extends MySQL {
                 if ($this->has_sub_menu($id)) {
                     $args['parent']        = $id;
                     $args['echo']          = FALSE;
-                    $args['wrapper_class'] = 'hm-sub-menu hm-sub-menu-of-' . $id . '';
+                    $args['wrapper_class'] = $sub_menu_class . ' hm-sub-menu hm-sub-menu-of-' . $id . '';
                     $args['wrapper_id']    = '';
                     $output_html .= $this->get_menu($args);
                 }
