@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	
+
 	$('.ajaxFormuserAdd').ajaxForm(function(data) {
 		var obj = jQuery.parseJSON(data);
 		var status = obj.status;
@@ -14,17 +14,17 @@ $(document).ready(function(){
 		if(status == 'updated'){
 			$('.add_user_noti').html('<div class="alert alert-success" role="alert">'+mes+'</div>');
 		}
-	}); 
-	
-	$('.content_table_user').ready(function() { 
-		var user_group = '0';
-		$.post( '?run=user_ajax.php&user_group='+user_group+'&action=data', function( data ) {
-			build_table(data,user_group);
+	});
+
+	$('.content_table_user').ready(function() {
+		var hm_user_group = '0';
+		$.post( '?run=user_ajax.php&hm_user_group='+hm_user_group+'&action=data', function( data ) {
+			build_table(data,hm_user_group);
 		});
 	});
-	
-	
-	var build_table = function (data,user_group){
+
+
+	var build_table = function (data,hm_user_group){
 		$('.content_table_user').html('<tr><td colspan="4">{lang:loading} ...</td></tr>');
 		var obj = jQuery.parseJSON(data);
 		var html_content = [];
@@ -38,10 +38,10 @@ $(document).ready(function(){
 		});
 		html_content = html_content.join(' ');
 		$('.content_table_user').html(html_content);
-		
+
 		var pagination = obj.pagination;
 		if ("first" in pagination){
-				
+
 			var first = pagination.first;
 			var previous = pagination.previous;
 			var next = pagination.next;
@@ -58,35 +58,35 @@ $(document).ready(function(){
 			}else{
 				var next_link = '<a data-paged="'+next+'" class="btn btn-default btn-xs">{lang:next_page}</a>';
 			}
-			
+
 			var pagination_bar = '<a data-paged="'+first+'" class="btn btn-default btn-xs">{lang:first_page}</a>'+previous_link+'<a data-paged="'+paged+'" class="btn btn-default btn-xs">'+paged+'</a>'+next_link+'<a data-paged="'+last+'" class="btn btn-default btn-xs">{lang:last_page}</a><span class="total_page">( {lang:page} '+paged+' {lang:in_total} '+last+' {lang:page}, '+total+' {lang:result} )</span>';
-			$('.pagination_bar').html(pagination_bar);	
-				
+			$('.pagination_bar').html(pagination_bar);
+
 		}else{
-			$('.pagination_bar').html('');	
+			$('.pagination_bar').html('');
 		}
-		
+
 	};
-	
+
 	$(document).on('change', 'select.select_perpage', function(){
 		var perpage = $(this).val();
 		var status = $(this).attr('data-status');
-		var user_group = '0';
-		$.post( '?run=user_ajax.php&user_group='+user_group+'&status='+status+'&perpage='+perpage+'&action=data', function( data ) {
+		var hm_user_group = '0';
+		$.post( '?run=user_ajax.php&hm_user_group='+hm_user_group+'&status='+status+'&perpage='+perpage+'&action=data', function( data ) {
 			build_table(data,status);
 		});
 	});
-	
+
 	$(document).on('click', '.pagination_bar .btn', function(){
 		var paged = $(this).attr('data-paged');
 		var status = $('select.select_perpage').attr('data-status');
 		var perpage = $('select.select_perpage').val();
-		var user_group = '0';
-		$.post( '?run=user_ajax.php&user_group='+user_group+'&status='+status+'&perpage='+perpage+'&paged='+paged+'&action=data', function( data ) {
+		var hm_user_group = '0';
+		$.post( '?run=user_ajax.php&hm_user_group='+hm_user_group+'&status='+status+'&perpage='+perpage+'&paged='+paged+'&action=data', function( data ) {
 			build_table(data,status);
 		});
 	});
-	
+
 	$(document).on('click', '.quick_deactive_user_button', function(){
 		var id = $(this).attr('data-id');
 		$.post( '?run=user_ajax.php&action=ban', { id:id }, function( data ) {
@@ -96,10 +96,10 @@ $(document).ready(function(){
 			$.notify('Đã khóa tài khoản', { globalPosition: 'top right',className: 'success' } );
 		});
 	});
-	
+
 	$(document).on('change', '.select-role', function(){
 		var value = $(this).val();
 		$(this).attr('class','select-role select-role-'+value);
 	});
-	
+
 });

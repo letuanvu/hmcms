@@ -254,4 +254,15 @@ function hm_shortcode_menu($args) {
     }
 }
 hook_action('after_web_setup');
+
+/**
+ * image_thumbnail module
+ */
+$args = array(
+    'module_name' => 'image_thumbnail',
+    'module_key' => 'image_thumbnail',
+    'module_index' => 'index',
+    'module_dir' => 'image_thumbnail'
+);
+register_module($args);
 ?>

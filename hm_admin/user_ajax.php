@@ -1,7 +1,7 @@
 <?php
-/** 
+/**
  * Tệp tin xử lý user trong admin
- * Vị trí : admin/user.php 
+ * Vị trí : admin/user.php
  */
 if (!defined('BASEPATH'))
     exit('403');
@@ -21,7 +21,7 @@ $action = hm_get('action');
 switch ($action) {
     case 'data':
         /** Show list user */
-        $user_group = hm_get('user_group', '1');
+        $user_group = hm_get('hm_user_group', '1');
         $perpage    = hm_get('perpage', '30');
         echo user_show_data($user_group, $perpage);
         break;
