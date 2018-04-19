@@ -20,7 +20,7 @@ hm_admin_css('css/plugin.css');
 		foreach($args as $item){
 			$name = $item->name;
 			$alias = $item->alias;
-			$direct_link = HM_PLUGIN_GIT_RAW.'/'.$alias.'.tar.gz';
+			$direct_link = HM_PLUGIN_GIT_RAW.'/'.$alias.'.zip';
 			$img = HM_PLUGIN_GIT_RAW.'/'.$alias.'/thumb.png';
 			$description = $item->description;
 	?>
