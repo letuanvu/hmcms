@@ -106,7 +106,7 @@ Class user extends MySQL {
                     return hm_lang('member');
                     break;
                 case 5:
-                    return hm_lang_('banned_account');
+                    return hm_lang('banned_account');
                     break;
             }
         } else {
