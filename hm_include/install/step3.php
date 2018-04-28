@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Cài đặt HoaMai CMS </title>
+  <title>Install</title>
   <script src="<?php echo BASE_URL . HM_ADMIN_DIR; ?>/layout/js/jquery-2.1.3.min.js"></script>
   <script src="<?php echo BASE_URL . HM_ADMIN_DIR; ?>/layout/bootstrap/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="<?php echo BASE_URL . HM_ADMIN_DIR; ?>/layout/bootstrap/css/bootstrap.min.css">
@@ -11,35 +11,35 @@
 </head>
 <body>
   <div id="content">
-    <h1 class="title">Bước 3: Thực hiện cài đặt</h1>
+    <h1 class="title">Step 3: Perform the installation</h1>
     <div class="form_content">
-      <div class="alert alert-success" role="alert">Kiểm tra kết nối cơ sở dữ liệu (<?php echo $_SESSION['db']['database']; ?>) thành công, vui lòng nhập các thông tin cần thiết</div>
+      <div class="alert alert-success" role="alert">Check the database connection successfully, please enter the necessary information</div>
       <?php
       if(isset($error)){echo $error;}
       ?>
       <form action="" method="post">
         <div class="form-group">
-          <label>Tài khoản quản trị</label>
-          <p class="input_des">Tài khoản dùng để đăng nhập vào trang quản trị</p>
-          <input required type="text" name="admin_username" class="form-control" id="" placeholder="Tài khoản" value="">
+          <label>Admin account</label>
+          <p class="input_des">The account is used to login to the administration page</p>
+          <input required type="text" name="admin_username" class="form-control" id="" placeholder="admin" value="">
         </div>
         <div class="form-group">
-          <label>Email admin</label>
-          <p class="input_des">Email để lấy lại mật khẩu</p>
-          <input required type="text" name="admin_email" class="form-control" id="" placeholder="Email của bạn" value="">
+          <label>Admin email</label>
+          <p class="input_des">Email to retrieve password</p>
+          <input required type="text" name="admin_email" class="form-control" id="" placeholder="admin@mysite.com" value="">
         </div>
         <div class="form-group">
-          <label>Mật khẩu quản trị</label>
-          <p class="input_des">Mật khẩu của tài khoản quản trị</p>
-          <input required type="password" name="admin_password" class="form-control" id="" placeholder="Mật khẩu" value="">
+          <label>Administrator password</label>
+          <p class="input_des">Administrator account password</p>
+          <input required type="password" name="admin_password" class="form-control" id="" placeholder="******" value="">
         </div>
         <div class="form-group">
-          <label>Chuỗi mã hóa</label>
-          <p class="input_des">Chuỗi dùng mã hóa dữ liệu, nếu bạn không chắc đây là gì, vui lòng không chỉnh sửa</p>
+          <label>Encryption key</label>
+          <p class="input_des">The string is encrypted data, if you are not sure what this is, please do not edit</p>
           <input required type="text" name="encryption_key" class="form-control" id="" placeholder="Tài khoản" value="<?php echo generateRandomString(); ?>">
         </div>
         <div class="form-group">
-          <input type="submit" class="btn btn-default" name="submit" value="Cài đặt mã nguồn">
+          <input type="submit" class="btn btn-default" name="submit" value="Install source code">
         </div>
       </form>
     </div>

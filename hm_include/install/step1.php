@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Cài đặt HoaMai CMS </title>
+  <title>Install</title>
   <script src="<?php echo BASE_URL . HM_ADMIN_DIR; ?>/layout/js/jquery-2.1.3.min.js"></script>
   <script src="<?php echo BASE_URL . HM_ADMIN_DIR; ?>/layout/bootstrap/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="<?php echo BASE_URL . HM_ADMIN_DIR; ?>/layout/bootstrap/css/bootstrap.min.css">
@@ -11,65 +11,65 @@
 </head>
 <body>
   <div id="content">
-    <p class="hello_world">Chào mừng bạn đến với HoaMai CMS, chúng ta cần cài đặt để bắt đầu sử dụng mã nguồn</p>
-    <h1 class="title">Bước 1: Kiểm tra cấu hình máy chủ</h1>
+    <p class="hello_world">Welcome to hmcms, we need to install to start using source code</p>
+    <h1 class="title">Step 1: Check the server configuration</h1>
     <div class="form_content">
       <?php
       $check = array();
 
       if(allow_version()){
         $check['allow_version'] = '1';
-        echo '<div class="alert alert-success" role="alert">Phiên bản PHP lớn hơn 5.6</div>';
+        echo '<div class="alert alert-success" role="alert">PHP version is greater than 7.0</div>';
       }else{
         $check['allow_version'] = '0';
-        echo '<div class="alert alert-danger" role="alert">Phiên bản PHP lớn hơn 5.6</div>';
+        echo '<div class="alert alert-danger" role="alert">PHP version is greater than 7.0</div>';
       }
 
       if($gdv = gdVersion()) {
         if ($gdv >=2) {
           $check['gdVersion'] = '1';
-          echo '<div class="alert alert-success" role="alert">Phiên bản thư viện GD lớn hơn 2.0</div>';
+          echo '<div class="alert alert-success" role="alert">The GD library version is larger than 2.0</div>';
         } else {
           $check['gdVersion'] = '0';
-          echo '<div class="alert alert-danger" role="alert">Phiên bản thư viện GD lớn hơn 2.0</div>';
+          echo '<div class="alert alert-danger" role="alert">The GD library version is larger than 2.0</div>';
         }
       } else {
         $check['gdVersion'] = '0';
-        echo '<div class="alert alert-danger" role="alert">Thư viện GD chưa được cài đặt</div>';
+        echo '<div class="alert alert-danger" role="alert">GD library is not installed</div>';
       }
 
 
       if(is_writable('hm_content/uploads')){
         $check['uploadWritable'] = '1';
-        echo '<div class="alert alert-success" role="alert">Thư mục hm_content/uploads được ghi</div>';
+        echo '<div class="alert alert-success" role="alert">The directory hm_content/uploads has the write permission</div>';
       }else{
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
           $check['uploadWritable'] = '1';
-          echo '<div class="alert alert-success" role="alert">Thư mục hm_content/uploads được ghi</div>';
+          echo '<div class="alert alert-success" role="alert">The directory hm_content/uploads has the write permission</div>';
         }else{
           $check['uploadWritable'] = '0';
-          echo '<div class="alert alert-danger" role="alert">Thư mục hm_content/uploads không được ghi, vui lòng chmod 0777</div>';
+          echo '<div class="alert alert-danger" role="alert">The directory hm_content / uploads does not have write permission, please chmod 0777</div>';
         }
       }
 
       if(function_exists('openssl_encrypt')){
         $check['mcrypt'] = '1';
-        echo '<div class="alert alert-success" role="alert">Hỗ trợ hàm openssl_encrypt</div>';
+        echo '<div class="alert alert-success" role="alert">Support openssl_encrypt function</div>';
       }else{
         $check['mcrypt'] = '0';
-        echo '<div class="alert alert-danger" role="alert">Không hỗ trợ hàm openssl_encrypt</div>';
+        echo '<div class="alert alert-danger" role="alert">Not support openssl_encrypt function</div>';
       }
 
       if(function_exists('mysqli_connect')){
         $check['mysqli'] = '1';
-        echo '<div class="alert alert-success" role="alert">Hỗ trợ hàm mysqli_connect</div>';
+        echo '<div class="alert alert-success" role="alert">Support mysqli_connect function</div>';
       }else{
         $check['mysqli'] = '0';
-        echo '<div class="alert alert-danger" role="alert">Không hỗ trợ hàm mysqli_connect</div>';
+        echo '<div class="alert alert-danger" role="alert">Not support mysqli_connect function</div>';
       }
 
       if(!in_array('0',$check)){
-        echo '<a href="?step=2" class="btn btn-default">Bước tiếp</a>';
+        echo '<a href="?step=2" class="btn btn-default">Next step</a>';
       }
       ?>
     </div>

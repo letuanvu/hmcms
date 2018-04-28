@@ -1,18 +1,18 @@
 <?php
 /**
- * Tệp tin cấu hình các cài đặt chính
- * Vị trí : /hm_config.php
- */
+ * The file configures the main settings
+ * Location: /hm_config.php
+ */
 if (!defined('BASEPATH'))
     exit('403');
 
-/** Tên database */
+/** Database name */
 define('DB_NAME', '');
 
-/** Tài khoản database */
+/** database account */
 define('DB_USER', '');
 
-/** Mật khẩu database */
+/** password database */
 define('DB_PASSWORD', '');
 
 /** Hostname */
@@ -21,95 +21,95 @@ define('DB_HOST', '');
 /** Database Charset */
 define('DB_CHARSET', 'utf8');
 
-/** Tiếp tiền tố */
+/** next prefix */
 define('DB_PREFIX', '');
 
-/** Thư mục chứa các file thư viện và xử lý */
+/** Folder contains library files and processors */
 define('HM_INC', 'hm_include');
 
-/** Thư mục chứa các file frontend */
+/** The directory containing the frontend */
 define('HM_FRONTENT_DIR', 'hm_frontend');
 
-/** Thư mục chứa các file upload và nội dung */
+/** Directory containing uploads and content */
 define('HM_CONTENT_DIR', 'hm_content');
 
-/** Thư mục chứa các giao diện */
+/** Folder contains interfaces */
 define('HM_THEME_DIR', 'hm_themes');
 
-/** Thư mục chứa các plugin */
+/** The directory containing the plugin */
 define('HM_PLUGIN_DIR', 'hm_plugins');
 
-/** Thư mục chứa các module tích hợp */
+/** The directory contains the integrated modules */
 define('HM_MODULE_DIR', 'hm_module');
 
-/** Thư mục quản trị */
+/** Admin directory */
 define('HM_ADMINCP_DIR', 'hm_admin');
 
-/** Đường dẫn quản trị */
+/** Admin Path */
 define('HM_ADMINCP_PART', 'admin');
 
-/** Cổng kết nối (:80, :8080, :443 etc)*/
+/** Connection port (: 80,: 8080,: 443 etc) */
 define('SERVER_PORT', '');
 
-/** Tên website */
-define('SITE_NAME', 'HoaMai CMS');
+/** Website name */
+define('SITE_NAME', 'UnitedMai CMS');
 
-/** Xóa copyright ở trong admin */
+/** Delete copyright in admin */
 define('REMOVE_ADMINCP_COPYRIGHT', false);
 
-/** Hiển trị trang plugin trong admin */
+/** Display plugin page in admin */
 define('ALLOW_PLUGIN_PAGE', true);
 
-/** Hiển trị trang theme trong admin */
+/** Theme page theme in admin */
 define('ALLOW_THEME_PAGE', true);
 
-/** Hiển trị trang command trong admin */
+/** Command page display in admin */
 define('ALLOW_COMMAND_PAGE', true);
 
-/** Nhắc nhở và cho phép update */
+/** Prompt and allow update */
 define('ALLOW_UPDATE', true);
 
-/** Nội dung cập nhật */
+/** Updates */
 define('SYSTEM_DASHBOARD', true);
 
-/** Sử dụng ký tự captcha đơn giản */
+/** Use a simple captcha */
 define('SIMPLE_CAPTCHA', true);
 
-/** Địa chỉ website */
+/** Website address */
 $protocol = '//';
-
 define('SITE_URL', $protocol . getenv('SERVER_NAME') . SERVER_PORT);
 
-/** Đường dẫn thư mục */
+/** Directory paths */
 define('FOLDER_PATH', '');
 
-/** Ngôn ngữ */
+/** Language */
 define('LANG', 'vi_VN');
 
-/** Định dạng ngày tháng */
+/** Date format */
 define('DATE_FORMAT', 'H:i:s d-m-Y');
 
-/** Mã hóa */
+/** Encode */
 define('ENCRYPTION_KEY', '');
 
-/** Cho phép login bằng mật khẩu mã hóa md5 */
+/** Allow login with password md5 */
 define('MD5_PASSWORD', false);
 
-/** Thời gian cookie */
+/** Cookie Time */
 define('COOKIE_EXPIRES', 3600);
 
-/** Giao diện mặc định */
+/** default interface */
 define('DEFAULT_THEME', 'hello');
 
-/** Báo lỗi */
+/** Error */
 define('HM_DEBUG', false);
 
-/** Cơ sở để phân trang */
-define('PAGE_BASE', 'trang-');
+/** The basis for paging */
+define('PAGE_BASE', 'page-');
 
 /** Time zone */
-date_default_timezone_set('Asia/Ho_Chi_Minh');
+date_default_timezone_set('Asia / Ho_Chi_Minh');
 
-/** Tự tạo thư mục ảnh theo tháng */
+/** Create your own photo folder by month */
 define('MEDIA_FOLDER_BY_MONTH', false);
+
 ?>

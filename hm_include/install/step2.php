@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Cài đặt HoaMai CMS </title>
+  <title>Install</title>
   <script src="<?php echo BASE_URL . HM_ADMIN_DIR; ?>/layout/js/jquery-2.1.3.min.js"></script>
   <script src="<?php echo BASE_URL . HM_ADMIN_DIR; ?>/layout/bootstrap/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="<?php echo BASE_URL . HM_ADMIN_DIR; ?>/layout/bootstrap/css/bootstrap.min.css">
@@ -11,39 +11,39 @@
 </head>
 <body>
   <div id="content">
-    <h1 class="title">Bước 2: Kết nối tới cơ sở dữ liệu</h1>
+    <h1 class="title">Step 2: Connect to the database</h1>
     <div class="form_content">
       <?php
       if(isset($error)){echo $error;}
       ?>
       <form action="" method="post">
         <div class="form-group">
-          <label>Tên cơ sở dữ liệu</label>
-          <p class="input_des">Cơ sở dữ liệu bạn sẽ dùng để cài đặt HoaMai CMS</p>
-          <input type="text" name="database" class="form-control" id="" placeholder="Tên cơ sở dữ liệu" value="">
+          <label>Database name</label>
+          <p class="input_des">The database you will use to install the CMS</p>
+          <input type="text" name="database" class="form-control" id="" placeholder="Database name" value="">
         </div>
         <div class="form-group">
-          <label>Tài khoản</label>
-          <p class="input_des">Tài khoản để kết nối đến database</p>
-          <input type="text" name="username" class="form-control" id="" placeholder="Tài khoản" value="">
+          <label>Database account</label>
+          <p class="input_des">Database account</p>
+          <input type="text" name="username" class="form-control" id="" placeholder="Database account" value="">
         </div>
         <div class="form-group">
-          <label>Mật khẩu</label>
-          <p class="input_des">Mật khẩu của tài khoản database</p>
-          <input type="password" name="password" class="form-control" id="" placeholder="Mật khẩu" value="">
+          <label>Database password</label>
+          <p class="input_des">The password of the database account</p>
+          <input type="password" name="password" class="form-control" id="" placeholder="Database password" value="">
         </div>
         <div class="form-group">
-          <label>Máy chủ database</label>
-          <p class="input_des">Địa chỉ máy chủ databse, thường là localhost</p>
-          <input type="text" name="host" class="form-control" id="" placeholder="Host" value="localhost">
+          <label>Database server</label>
+          <p class="input_des">The database server address, usually localhost</p>
+          <input type="text" name="host" class="form-control" id="" placeholder="Database server" value="localhost">
         </div>
         <div class="form-group">
-          <label>Tiền tố bảng</label>
-          <p class="input_des">Tiền tố của bảng trong trường hợp bạn dùng trên 1 database đã có sẵn dữ liệu khác</p>
-          <input type="text" name="prefix" class="form-control" id="" placeholder="Tiền tố" value="hm_">
+          <label>Prefix table</label>
+          <p class="input_des">The prefix of the table in case you used on a database already has other data available</p>
+          <input type="text" name="prefix" class="form-control" id="" placeholder="Prefix table" value="hm_">
         </div>
         <div class="form-group">
-          <input type="submit" class="btn btn-default" name="submit" value="Kết nối">
+          <input type="submit" class="btn btn-default" name="submit" value="Connect">
         </div>
       </form>
     </div>
