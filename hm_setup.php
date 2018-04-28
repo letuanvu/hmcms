@@ -5,7 +5,7 @@
  * Điều khác biệt là các hàm ở /hm_setup.php luôn chạy không phụ thuộc vào
  * plugin hay theme bạn đang dùng, còn nếu khai báo ở plugin hay theme thì
  * chỉ chạy khi plugin hoặc theme đó đã kích hoạt.
- * Trong mã nguồn này HoaMai được build dưới dạng một blog
+ * Trong mã nguồn này hmcms được build dưới dạng một blog
  * Cấu trúc cho blog gồm 1 taxonomy "Danh mục bài viết" và 1 content type "Bài viết"
  * Để thực hiện việc này chúng ta sử dụng hàm register_taxonomy(); và register_content();
  * Vị trí : /hm_setup.php
@@ -62,52 +62,6 @@ $args = array(
 register_user_field($args);
 if (SYSTEM_DASHBOARD == TRUE) {
     /**
-     * Dashboard box bài viết mới từ trang chủ
-     */
-    $args = array(
-        'width' => '4',
-        'function' => 'hm_newsfeed',
-        'label' => hm_lang('new_post')
-    );
-    register_dashboard_box($args);
-    function hm_newsfeed() {
-        $server = HM_API_SERVER . '/api/news/json';
-        @$data = file_get_contents($server);
-        $data = json_decode($data);
-        if (is_array($data)) {
-            echo '<ul class="dashboard_box_list">';
-            foreach ($data as $item) {
-                $name = $item->name;
-                $link = $item->link;
-                echo '<li><a href="' . $link . '" target="_blank">' . $name . '</a></li>';
-            }
-            echo '</ul>';
-        }
-    }
-    /**
-     * Dashboard box giao diện mới từ trang chủ
-     */
-    $args = array(
-        'width' => '4',
-        'function' => 'hm_newthemes',
-        'label' => hm_lang('new_theme')
-    );
-    register_dashboard_box($args);
-    function hm_newthemes() {
-        $server = HM_API_SERVER . '/api/themes/json';
-        @$data = file_get_contents($server);
-        $data = json_decode($data);
-        if (is_array($data)) {
-            echo '<ul class="dashboard_box_list">';
-            foreach ($data as $item) {
-                $name = $item->name;
-                $link = $item->link;
-                echo '<li><a href="' . $link . '" target="_blank">' . $name . '</a></li>';
-            }
-            echo '</ul>';
-        }
-    }
-    /**
      * Dashboard box plugin mới từ trang chủ
      */
     $args = array(
@@ -117,7 +71,7 @@ if (SYSTEM_DASHBOARD == TRUE) {
     );
     register_dashboard_box($args);
     function hm_newplugins() {
-        $server = HM_API_SERVER . '/api/plugins/json';
+        $server = HM_PLUGIN_GIT_RAW . '/list.json?time='.time();
         @$data = file_get_contents($server);
         $data = json_decode($data);
         if (is_array($data)) {
