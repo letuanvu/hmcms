@@ -78,7 +78,7 @@ if (SYSTEM_DASHBOARD == TRUE) {
             echo '<ul class="dashboard_box_list">';
             foreach ($data as $item) {
                 $name = $item->name;
-                $link = $item->link;
+                $link = HM_PLUGIN_GIT . '/tree/master/' . $item->alias;
                 echo '<li><a href="' . $link . '" target="_blank">' . $name . '</a></li>';
             }
             echo '</ul>';

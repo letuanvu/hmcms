@@ -2,6 +2,11 @@
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
+/**
+ * Load libraries and required files
+ * Location: /hm_loader.php
+ */
+
 /** create log channel */
 $hmlog = array();
 $hmlog['sql'] = new Logger('sql');
@@ -11,10 +16,6 @@ $hmlog['media_file']->pushHandler(new StreamHandler(BASEPATH . HM_CONTENT_DIR . 
 $hmlog['request'] = new Logger('request');
 $hmlog['request']->pushHandler(new StreamHandler(BASEPATH . HM_CONTENT_DIR . '/logs/request.log', Logger::DEBUG));
 
-/**
- * Load các thư viện và file cần thiết
- * Vị trí : /hm_loader.php
- */
 if (!defined('BASEPATH'))
     exit('403');
 if (HM_DEBUG) {
@@ -64,8 +65,11 @@ define('HM_API_SERVER', 'http://hoamaisoft.com');
 /** Git Raw */
 define('HM_GIT_RAW', 'https://raw.githubusercontent.com/manhnam91/hmcms/master');
 
-/** Git Raw */
+/** Git Plugins Raw */
 define('HM_PLUGIN_GIT_RAW', 'https://raw.githubusercontent.com/manhnam91/hmcms_plugin/master');
+
+/** Git Plugins */
+define('HM_PLUGIN_GIT', 'https://github.com/manhnam91/hmcms_plugin');
 
 /** Database */
 require_once(BASEPATH . HM_INC . '/database.php');
