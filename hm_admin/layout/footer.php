@@ -2,11 +2,11 @@
 if(REMOVE_ADMINCP_COPYRIGHT==FALSE){
 ?>
 
-<p class="footer_thank">Cảm ơn bạn đã sử dụng Hoa Mai CMS</p>
-<p class="footer_version">Phiên bản <?php echo HM_VERSION_NAME; ?> </p>
+<p class="footer_thank">Thank you for using HMCMS</p>
+<p class="footer_version">Version <?php echo HM_VERSION_NAME; ?> </p>
 <p class="footer_link">
-	<a href="http://hoamaisoft.com/" target="_blank">Trang chủ</a> | 
-	<a href="?run=our_team.php">Nhóm phát triển</a> | 
+    <a href="https://github.com/manhnam91/hmcms" target="_blank">Gihub</a> |
+    <a href="?run=our_team.php">Develop team</a> |
 </p>
 
 <?php
@@ -23,7 +23,7 @@ if(REMOVE_ADMINCP_COPYRIGHT==FALSE){
                 <h4 class="modal-title" id="media_box_modalLabel"><?php echo hm_lang('file_manager'); ?></h4>
             </div>
             <div class="modal-body media_box">
-				<?php win8_loading(); ?>
+                <?php win8_loading(); ?>
             </div>
         </div>
     </div>
@@ -39,9 +39,8 @@ if(REMOVE_ADMINCP_COPYRIGHT==FALSE){
                 <h4 class="modal-title" id="popup_box_modalLabel"><?php echo hm_lang('edit'); ?></h4>
             </div>
             <div class="modal-body popup_box">
-				<?php win8_loading(); ?>
+                <?php win8_loading(); ?>
             </div>
         </div>
     </div>
 </div>
-
