@@ -5,7 +5,7 @@ if(REMOVE_ADMINCP_COPYRIGHT==FALSE){
 <p class="footer_thank">Thank you for using HMCMS</p>
 <p class="footer_version">Version <?php echo HM_VERSION_NAME; ?> </p>
 <p class="footer_link">
-    <a href="https://github.com/manhnam91/hmcms" target="_blank">Gihub</a> |
+    <a href="https://github.com/manhnam91/hmcms" target="_blank">Github</a> |
     <a href="?run=our_team.php">Develop team</a> |
 </p>
 
