@@ -1,7 +1,7 @@
 <?php
 /*
     JSON-RPC Server implemenation
-    Copyright (C) 2009 Jakub Jankiewicz <http://jcubic.pl> 
+    Copyright (C) 2009 Jakub Jankiewicz <http://jcubic.pl>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,14 +20,14 @@
 /*
     USAGE: create one class with public methods and call handle_json_rpc function
            with instance of this class
-           
+
            <?php
                require('json_rpc.php');
                class Server {
                    public function test($message) {
                        retrun "you send " . $message;
                    }
-                   
+
                }
 
                handle_json_rpc(new Server());
@@ -40,7 +40,7 @@
                     ...
                     public static $test_documentation = "doc string";
                 }
-            
+
             It alway create one method 'help' which return string
             with list of methods if call with no arguments and
             return documentation string for method passed as parameter.
@@ -103,13 +103,11 @@ function extract_id() {
 
 // ----------------------------------------------------------------------------
 function handle_json_rpc($object) {
-  /*
+  $msg = '';
+  $input = $GLOBALS['HTTP_RAW_POST_DATA'];
   if ($input == '') {
     $input = file_get_contents('php://input');
   }
-  */
-  $msg = '';
-  $input = $GLOBALS['HTTP_RAW_POST_DATA'];
   $encoding = mb_detect_encoding($input, 'auto');
   //convert to unicode
   if ($encoding != 'UTF-8') {
@@ -166,7 +164,7 @@ function handle_json_rpc($object) {
       $params = get_object_vars($params);
     }
   }
-  
+
   // call Service Method
   try {
     $class = get_class($object);
