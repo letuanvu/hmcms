@@ -344,7 +344,7 @@ function content_ajax_add($args = array()) {
                 $hmdb->DeleteRows($tableName, $whereArray);
             }
         }
-        /** Gỡ bỏ contag cũ */
+        /** delete old contag */
         if (is_numeric($id_update)) {
             $whereArray = array(
                 'object_id' => MySQL::SQLValue($id_update, MySQL::SQLVALUE_NUMBER),
@@ -352,47 +352,90 @@ function content_ajax_add($args = array()) {
             );
             $hmdb->DeleteRows($tableName, $whereArray);
         }
-        /** lưu tags vào data */
+
+        /** save tags to data */
+        $inserted_tag_ids = array();
         if (isset($input_post['tags'])) {
             $tags = explode(',', $input_post['tags']);
             $tags = array_map("trim", $tags);
             foreach ($tags as $tag) {
-                /** Lưu tag vào bảng taxonomy */
+                /** save tag to taxonomy table */
                 if ($tag != '') {
-                    $tableName      = DB_PREFIX . 'taxonomy';
-                    $tag_slug       = sanitize_title($tag);
-                    $values["name"] = MySQL::SQLValue($tag);
-                    $values["slug"] = MySQL::SQLValue($tag_slug);
-                    $values["key"]  = MySQL::SQLValue('tag');
-                    $whereArray     = array(
-                        'key' => MySQL::SQLValue('tag'),
-                        'slug' => MySQL::SQLValue($tag_slug)
-                    );
-                    $hmdb->AutoInsertUpdate($tableName, $values, $whereArray);
-                    unset($values);
-                    /** lưu relationship content - tag */
-                    $tableName  = DB_PREFIX . "taxonomy";
+                    $tableName  = DB_PREFIX . 'request_uri';
+                    $tag_slug   = sanitize_title($tag);
                     $whereArray = array(
-                        'key' => MySQL::SQLValue('tag'),
-                        'slug' => MySQL::SQLValue($tag_slug)
+                        'uri' => MySQL::SQLValue($tag_slug)
                     );
                     $hmdb->SelectRows($tableName, $whereArray);
                     if ($hmdb->HasRecords()) {
-                        $row                    = $hmdb->Row();
-                        $tableName              = DB_PREFIX . 'relationship';
-                        $values["object_id"]    = MySQL::SQLValue($insert_id, MySQL::SQLVALUE_NUMBER);
-                        $values["target_id"]    = MySQL::SQLValue($row->id, MySQL::SQLVALUE_NUMBER);
-                        $values["relationship"] = MySQL::SQLValue('contag');
-                        if (is_numeric($id_update)) {
-                            $hmdb->AutoInsertUpdate($tableName, $values, $values);
-                        } else {
-                            $hmdb->InsertRow($tableName, $values);
+                        $row    = $hmdb->Row();
+                        $tag_id = $row->object_id;
+                    } else {
+                        $tag_slug         = add_request_uri($tag);
+                        $values           = array(
+                          'name' => MySQL::SQLValue($tag),
+                          'slug' => MySQL::SQLValue($tag_slug),
+                          'key' => MySQL::SQLValue('tag'),
+                          'status' => MySQL::SQLValue('public')
+                        );
+                        $tableName        = DB_PREFIX . 'taxonomy';
+                        $tag_id           = $hmdb->InsertRow($tableName, $values);
+                        if (is_numeric($tag_id)) {
+                            $args = array(
+                                'uri' => $tag_slug,
+                                'object_id' => $tag_id,
+                                'object_type' => 'taxonomy',
+                                'type' => 'null_object'
+                            );
+                            up_date_request_uri_object($args);
                         }
-                        unset($values);
                     }
+                    $inserted_tag_ids[] = $tag_id;
                 }
             }
         }
+
+        /** save tag_ids to $inserted_tag_ids */
+        if (isset($input_post['tag_ids'])) {
+            $tag_ids = explode(',', $input_post['tag_ids']);
+            $tag_ids = array_map("trim", $tag_ids);
+            foreach ($tag_ids as $tag_id) {
+                if(is_numeric($tag_id)){
+                  $inserted_tag_ids[] = $tag_id;
+                }
+            }
+        }
+
+        /** save $inserted_tag_ids to field */
+        $inserted_tag_ids = array_unique($inserted_tag_ids);
+        $inserted_tag_ids_string = implode(",", $inserted_tag_ids);
+        $tableName  = DB_PREFIX . 'field';
+        $values     = array(
+            'name' => MySQL::SQLValue('tag_ids'),
+            'val' => MySQL::SQLValue($inserted_tag_ids_string),
+            'object_id' => MySQL::SQLValue($insert_id, MySQL::SQLVALUE_NUMBER),
+            'object_type' => MySQL::SQLValue('content')
+        );
+        $whereArray = array(
+            'name' => MySQL::SQLValue('tag_ids'),
+            'object_id' => MySQL::SQLValue($insert_id, MySQL::SQLVALUE_NUMBER),
+            'object_type' => MySQL::SQLValue('content')
+        );
+        $hmdb->AutoInsertUpdate($tableName, $values, $whereArray);
+
+        /** save relationship content - tag */
+        foreach ($inserted_tag_ids as $tag_id) {
+            $row       = $hmdb->Row();
+            $tableName = DB_PREFIX . 'relationship';
+            $values    = array(
+                'object_id' => MySQL::SQLValue($insert_id, MySQL::SQLVALUE_NUMBER),
+                'target_id' => MySQL::SQLValue($tag_id, MySQL::SQLVALUE_NUMBER),
+                'relationship' => MySQL::SQLValue('contag')
+            );
+            $hmdb->AutoInsertUpdate($tableName, $values, $values);
+            $inserted_tag_ids[] = $row->id;
+        }
+
         /** show latest */
         $latest = array(
             'id' => $insert_id,

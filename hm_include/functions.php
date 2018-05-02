@@ -439,18 +439,16 @@ function input_data($field_array = array()) {
                 $taxonomy      = $hmtaxonomy->hmtaxonomy;
                 $suggest_label = $taxonomy[$tax_key]['taxonomy_name'];
                 $object_id     = $id;
-                $object_name   = get_tax_val('name=name&id=' . $id);
+                $object_name   = $row->name;
                 $object_type   = 'taxonomy';
                 if ($tax_data['taxonomy']->parent > 0) {
-                    $taxonomy_parent = taxonomy_parent_breadcrumb($tax_data['taxonomy']->id);
+                    $taxonomy_parent = taxonomy_parent_breadcrumb($id);
                     krsort($taxonomy_parent);
                     $object_name = array();
                     foreach ($taxonomy_parent as $taxonomy) {
                         $object_name[] = $taxonomy['name'];
                     }
                     $object_name = implode("&nbsp;&raquo;&nbsp;", $object_name);
-                } else {
-                    $object_name = get_tax_val('name=name&id=' . $id);
                 }
                 $return .= '<li data-id="' . $id . '" data-input="' . $field_array['name'] . '" data-name="' . $object_name . '" object_id="' . $object_id . '" object_type="' . $object_type . '" class="data_item_choiced">';
                 $return .= '<span class="suggest_label">' . $suggest_label . ': </span><b>' . $object_name . '</b>';
