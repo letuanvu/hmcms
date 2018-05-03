@@ -563,8 +563,9 @@ function install_db() {
     $sql = "
     INSERT INTO `" . $prefix . "plugin` (`id`, `key`, `active`) VALUES
     (1, 'post', '1'),
-    (2, 'hm_tinymce', '1'),
-    (3, 'hm_seo', '1');
+    (2, 'tag', '1'),
+    (3, 'hm_tinymce', '1'),
+    (4, 'hm_seo', '1');
   ";
     /** echo '<p class="text-info">Query: ' . $sql . '</p>'; */
     try {
