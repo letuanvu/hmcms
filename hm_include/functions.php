@@ -6,8 +6,8 @@
 if (!defined('BASEPATH'))
     exit('403');
 /** load class */
-$hmdiff     = new Diff();
-$hmcaptcha  = new SimpleCaptcha();
+$hmdiff    = new Diff();
+$hmcaptcha = new SimpleCaptcha();
 if (!function_exists('_')) {
     function _($str) {
         return $str;
@@ -153,17 +153,17 @@ function hm_encode($str = NULL, $key = ENCRYPTION_KEY) {
     if (is_array($str)) {
         $str = hm_json_encode($str);
     }
-    $cipher = mcrypt_module_open(MCRYPT_BLOWFISH,'','cbc','');
+    $cipher = mcrypt_module_open(MCRYPT_BLOWFISH, '', 'cbc', '');
     mcrypt_generic_init($cipher, $key, $iv);
-    $encrypted = mcrypt_generic($cipher,$str);
+    $encrypted = mcrypt_generic($cipher, $str);
     mcrypt_generic_deinit($cipher);
     return $encrypted;
 }
 function hm_decode($str = NULL, $key = ENCRYPTION_KEY) {
-    $iv = '12345678';
-    $cipher = mcrypt_module_open(MCRYPT_BLOWFISH,'','cbc','');
+    $iv     = '12345678';
+    $cipher = mcrypt_module_open(MCRYPT_BLOWFISH, '', 'cbc', '');
     mcrypt_generic_init($cipher, $key, $iv);
-    $decrypted = mdecrypt_generic($cipher,$str);
+    $decrypted = mdecrypt_generic($cipher, $str);
     mcrypt_generic_deinit($cipher);
     return $decrypted;
 }
@@ -171,21 +171,21 @@ function hm_encode_str($string = NULL, $secret_key = ENCRYPTION_KEY) {
     if (is_array($string)) {
         $string = hm_json_encode($string);
     }
-    $secret_iv = '123456';
-    $output = false;
+    $secret_iv      = '123456';
+    $output         = false;
     $encrypt_method = "AES-256-CBC";
-    $key = hash( 'sha256', $secret_key );
-    $iv = substr( hash( 'sha256', $secret_iv ), 0, 16 );
-    $output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
+    $key            = hash('sha256', $secret_key);
+    $iv             = substr(hash('sha256', $secret_iv), 0, 16);
+    $output         = base64_encode(openssl_encrypt($string, $encrypt_method, $key, 0, $iv));
     return $output;
 }
 function hm_decode_str($string = NULL, $secret_key = ENCRYPTION_KEY) {
-    $secret_iv = '123456';
-    $output = false;
+    $secret_iv      = '123456';
+    $output         = false;
     $encrypt_method = "AES-256-CBC";
-    $key = hash( 'sha256', $secret_key );
-    $iv = substr( hash( 'sha256', $secret_iv ), 0, 16 );
-    $output = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
+    $key            = hash('sha256', $secret_key);
+    $iv             = substr(hash('sha256', $secret_iv), 0, 16);
+    $output         = openssl_decrypt(base64_decode($string), $encrypt_method, $key, 0, $iv);
     return $output;
 }
 function json_string_encode($str) {
