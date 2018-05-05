@@ -1,3 +1,3 @@
-[Custom content and custom taxonomy](https://github.com/manhnam91/hmcms/blob/master/docs/sub-page/custom-content-and-custom-taxonomy.md)
+[Cơ bản về việc sử dụng custom content và custom taxonomy taxonomy](https://github.com/manhnam91/hmcms/blob/master/docs/sub-page/vi/custom-content-and-custom-taxonomy.md)
 
-[Create a simple theme](https://github.com/manhnam91/hmcms/blob/master/docs/sub-page/create-simple-theme.md)
+[Hướng dẫn tạo giao diện căn bản theme](https://github.com/manhnam91/hmcms/blob/master/docs/sub-page/vi/create-simple-theme.md)
