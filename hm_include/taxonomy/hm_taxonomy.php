@@ -29,6 +29,21 @@ Class taxonomy extends MySQL {
             }
         }
     }
+    /** Cập nhật 1 taxonomy */
+    public function update_taxonomy($args = NULL) {
+        if ($args == NULL)
+            exit('Missing argument for register_taxonomy');
+        if (is_array($args)) {
+            if ($args['taxonomy_name'] AND $args['taxonomy_key']) {
+                if ($this->isset_taxonomy($args)) {
+                    $this->set_taxonomy($args);
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+            }
+        }
+    }
     /** Trả về tổng số taxonomy */
     public function total_taxonomy() {
         return sizeof($this->hmtaxonomy);

@@ -40,6 +40,14 @@ function register_taxonomy($args = array()) {
     $return = hook_filter('register_taxonomy', $return);
     return $return;
 }
+function update_taxonomy($args = array()) {
+    $args = hook_filter('before_update_taxonomy', $args);
+    global $hmtaxonomy;
+    hook_action('update_taxonomy');
+    $return = $hmtaxonomy->update_taxonomy($args);
+    $return = hook_filter('update_taxonomy', $return);
+    return $return;
+}
 function destroy_taxonomy($args = array()) {
     $args = hook_filter('before_destroy_taxonomy', $args);
     global $hmtaxonomy;
@@ -257,6 +265,15 @@ function get_biggest_parent_tax($tax_id = 0) {
         if (isset_taxonomy_id($parent) AND $parent != $tax_id) {
             return get_biggest_parent_tax($parent);
         }
+    }
+}
+function replace_taxonomy_field($taxonomy_key = '', $field_array = array()) {
+    global $hmtaxonomy;
+    $all_hmtaxonomy = $hmtaxonomy->hmtaxonomy;
+    if (isset($all_hmtaxonomy[$taxonomy_key])) {
+        $this_taxonomy                   = $all_hmtaxonomy[$taxonomy_key];
+        $this_taxonomy["taxonomy_field"] = $field_array;
+        update_taxonomy($this_taxonomy);
     }
 }
 ?>
