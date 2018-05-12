@@ -319,13 +319,33 @@ function query_content($args = array()) {
                 $i = 0;
                 foreach ($all_field_query as $single_field_query) {
                     if ($i == 0) {
-                        $query_field .= " " . $single_field_query;
+                        $query_field .= " " . $single_field_query . " ";
                     } else {
-                        $query_field .= " AND " . $single_field_query;
+                        $query_field .= " OR " . $single_field_query . " ";
                     }
                     $i++;
                 }
-                $query_field .= " GROUP BY  `object_id`";
+                $hmdb->Query($query_field);
+                $query_field_ids = array(
+                    '0'
+                );
+                while ($row = $hmdb->Row()) {
+                    $query_field_ids[] = $row->object_id;
+                }
+                $count_values = array();
+                foreach ($query_field_ids as $a) {
+                    @$count_values[$a]++;
+                }
+                $query_field_ids = array(
+                    '0'
+                );
+                foreach ($count_values as $key => $count) {
+                    if ($count == $i) {
+                        $query_field_ids[] = $key;
+                    }
+                }
+                $query_field_ids_str = implode(',', $query_field_ids);
+                $query_field         = "SELECT `object_id` FROM `" . DB_PREFIX . "field` WHERE `object_id` IN (" . $query_field_ids_str . ") ";
                 break;
         }
         /**
@@ -382,15 +402,15 @@ function query_content($args = array()) {
             'default_value' => 'number_order'
         ));
         switch ($order_field) {
-          case 'number_order':
-            $order_by = 'number_order,asc,number';
-          break;
-          case 'public_time':
-            $order_by = 'public_time,desc,number';
-          break;
-          case 'update_time':
-            $order_by = 'update_time,desc,number';
-          break;
+            case 'number_order':
+                $order_by = 'number_order,asc,number';
+                break;
+            case 'public_time':
+                $order_by = 'public_time,desc,number';
+                break;
+            case 'update_time':
+                $order_by = 'update_time,desc,number';
+                break;
         }
     }
     if (isset($args['limit'])) {
