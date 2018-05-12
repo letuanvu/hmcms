@@ -52,7 +52,7 @@ define('HM_ADMINCP_PART', 'admin');
 define('SERVER_PORT', '');
 
 /** Website name */
-define('SITE_NAME', 'UnitedMai CMS');
+define('SITE_NAME', 'HMCMS');
 
 /** Delete copyright in admin */
 define('REMOVE_ADMINCP_COPYRIGHT', false);
