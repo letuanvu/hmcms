@@ -316,22 +316,17 @@ function query_content($args = array()) {
                 }
                 break;
             case 'and':
-                $i = 0;
-                foreach ($all_field_query as $single_field_query) {
-                    if ($i == 0) {
-                        $query_field .= " " . $single_field_query . " ";
-                    } else {
-                        $query_field .= " OR " . $single_field_query . " ";
-                    }
-                    $i++;
-                }
-                $hmdb->Query($query_field);
                 $query_field_ids = array(
                     '0'
                 );
-                while ($row = $hmdb->Row()) {
-                    $query_field_ids[] = $row->object_id;
+                foreach ($all_field_query as $single_field_query) {
+                    $this_query_field = $query_field . " " . $single_field_query . " ";
+                    $hmdb->Query($this_query_field);
+                    while ($row = $hmdb->Row()) {
+                        $query_field_ids[] = $row->object_id;
+                    }
                 }
+
                 $count_values = array();
                 foreach ($query_field_ids as $a) {
                     @$count_values[$a]++;
@@ -340,7 +335,7 @@ function query_content($args = array()) {
                     '0'
                 );
                 foreach ($count_values as $key => $count) {
-                    if ($count == $i) {
+                    if ($count == sizeof($all_field_query)) {
                         $query_field_ids[] = $key;
                     }
                 }
