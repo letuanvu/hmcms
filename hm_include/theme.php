@@ -90,6 +90,8 @@ function build_css($file = NULL, $attr = array()) {
                     $fp = fopen($log_file_local, 'w');
                     fwrite($fp, $file_time);
                     fclose($fp);
+                } else {
+                    return '<link rel="stylesheet" type="text/css" href="' . BASE_URL . HM_THEME_DIR . '/' . $theme . '/' . $file . '"' . $attr_str . '>' . "\n";
                 }
                 $mincss_file_local = $optimizer_folder . '/' . $mincss_file_name;
                 if (!file_exists($mincss_file_local)) {
@@ -250,6 +252,8 @@ function js($file = NULL, $attr = array()) {
                     $fp = fopen($log_file_local, 'w');
                     fwrite($fp, $file_time);
                     fclose($fp);
+                } else {
+                    return '<script src="' . BASE_URL . HM_THEME_DIR . '/' . $theme . '/' . $file . '"' . $attr_str . '></script>' . "\n";
                 }
                 $minjs_file_local = $optimizer_folder . '/' . $minjs_file_name;
                 if (!file_exists($minjs_file_local)) {
